@@ -1,0 +1,101 @@
+{
+  "clues": {
+    "DAN": {
+      "clue": "Short form of Daniel",
+      "theme": "people"
+    },
+    "DO": {
+      "clue": "Perform"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "ENID": {
+      "clue": "First name, or a town on the plains",
+      "theme": "people"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "JOE": {
+      "clue": "Average ___",
+      "theme": "people"
+    },
+    "NEST": {
+      "clue": "Where a bird lays its eggs",
+      "theme": "garden"
+    },
+    "NO": {
+      "clue": "Refusal"
+    },
+    "ON": {
+      "clue": "Atop"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "PAN": {
+      "clue": "Frying vessel",
+      "theme": "kitchen"
+    },
+    "POND": {
+      "clue": "Small still water",
+      "theme": "garden"
+    },
+    "ROSE": {
+      "clue": "Thorny bloom",
+      "theme": "garden"
+    },
+    "SALT": {
+      "clue": "Seasoning from the sea",
+      "theme": "kitchen"
+    },
+    "SEED": {
+      "clue": "What a gardener sows",
+      "theme": "garden"
+    },
+    "SO": {
+      "clue": "Therefore"
+    },
+    "SODA": {
+      "clue": "Fizzy drink",
+      "theme": "kitchen"
+    },
+    "TREE": {
+      "clue": "Oak or elm",
+      "theme": "garden"
+    }
+  },
+  "rows": [
+    "JANE..A.A",
+    "O.E.DO.P.",
+    "E.S.ONION",
+    "..T.E..N.",
+    "SO...SODA",
+    "A.ROSE...",
+    "L..V.ENID",
+    "TREE.D..A",
+    "...NO.PAN"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

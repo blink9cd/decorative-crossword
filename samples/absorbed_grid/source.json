@@ -1,0 +1,23 @@
+{
+  "clues": {
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "JOE": {
+      "clue": "Average ___",
+      "theme": "people"
+    }
+  },
+  "rows": [
+    "JANE.",
+    "O....",
+    "E...."
+  ],
+  "themes": {
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

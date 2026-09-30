@@ -1,0 +1,3 @@
+# The two placeholder names this grid pins. Written the way the phrase is said:
+# the spaces close up, so the line joins the two entries JANE and DOE.
+Jane Doe

@@ -1,0 +1,80 @@
+{
+  "clues": {
+    "MIST": {
+      "clue": "Thin low cloud",
+      "theme": "weather"
+    },
+    "ON": {
+      "clue": "Atop"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "PUDDLE": {
+      "clue": "Rain pool on the path",
+      "theme": "weather"
+    },
+    "SLEET": {
+      "clue": "Rain and snow at once",
+      "theme": "weather"
+    },
+    "SO": {
+      "clue": "Therefore"
+    },
+    "SOIL": {
+      "clue": "What a gardener digs",
+      "theme": "garden"
+    },
+    "SPADE": {
+      "clue": "Digging tool",
+      "theme": "garden"
+    },
+    "SPOON": {
+      "clue": "It stirs the soup",
+      "theme": "kitchen"
+    },
+    "STORM": {
+      "clue": "Rough weather",
+      "theme": "weather"
+    },
+    "TEAPOT": {
+      "clue": "Pours a hot drink",
+      "theme": "kitchen"
+    },
+    "TO": {
+      "clue": "Toward"
+    },
+    "TULIP": {
+      "clue": "Spring bulb flower",
+      "theme": "garden"
+    }
+  },
+  "rows": [
+    "TO.....",
+    ".V.S.S.",
+    "TEAPOT.",
+    ".N.O.O.",
+    "M.SO.R.",
+    "I.ON.M.",
+    "S.I.S.S",
+    "TULIP.L",
+    "....A.E",
+    ".PUDDLE",
+    "....E.T"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "weather": {
+      "label": "Weather",
+      "summary": "What the sky is doing today"
+    }
+  }
+}

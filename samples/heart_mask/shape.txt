@@ -1,0 +1,10 @@
+# A heart, 8 rows by 11 columns. Every X is a cell that may never hold a
+# letter, so the shape is what the fill writes in the cells left over.
+XX..XXX..XX
+X.........X
+X.........X
+X.........X
+XX.......XX
+XXX.....XXX
+XXXX...XXXX
+XXXXX.XXXXX

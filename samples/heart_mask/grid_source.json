@@ -1,0 +1,56 @@
+{
+  "clues": {
+    "ADORE": {
+      "clue": "Rather more than merely like",
+      "theme": "feelings"
+    },
+    "INK": {
+      "clue": "It makes a note hard to take back",
+      "theme": "letters"
+    },
+    "ODE": {
+      "clue": "A poem addressed to its subject",
+      "theme": "letters"
+    },
+    "PROMISE": {
+      "clue": "A vow before there are witnesses",
+      "theme": "feelings"
+    },
+    "REGARD": {
+      "clue": "Warmth kept at a polite distance",
+      "theme": "feelings"
+    },
+    "ROSE": {
+      "clue": "Pressed flat between two pages",
+      "theme": "keepsakes"
+    },
+    "TIE": {
+      "clue": "A knot, or what a ribbon makes",
+      "theme": "keepsakes"
+    }
+  },
+  "rows": [
+    "...R...R...",
+    ".TIE.P.ODE.",
+    "...G.R.S...",
+    "...ADORE...",
+    "...R.M.....",
+    "...D.INK...",
+    ".....S.....",
+    ".....E....."
+  ],
+  "themes": {
+    "feelings": {
+      "label": "Feelings",
+      "summary": "The plain words for what a keepsake is kept for"
+    },
+    "keepsakes": {
+      "label": "Keepsakes",
+      "summary": "The small things kept in a drawer long after the day itself"
+    },
+    "letters": {
+      "label": "Letters and verses",
+      "summary": "What gets written down and posted when saying it aloud is harder"
+    }
+  }
+}

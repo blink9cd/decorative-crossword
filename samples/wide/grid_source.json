@@ -1,0 +1,63 @@
+{
+  "clues": {
+    "GIRAFFE": {
+      "clue": "Tallest of the browsing mammals",
+      "theme": "animals"
+    },
+    "GOAT": {
+      "clue": "Browser that will eat the washing",
+      "theme": "animals"
+    },
+    "MIST": {
+      "clue": "Thin cloud lying on the fields",
+      "theme": "weather"
+    },
+    "MONSOON": {
+      "clue": "Season of the heavy rains",
+      "theme": "weather"
+    },
+    "ORCHARD": {
+      "clue": "Where the apple trees stand in rows",
+      "theme": "plants"
+    },
+    "RAIN": {
+      "clue": "What the water butt waits for",
+      "theme": "weather"
+    },
+    "SEED": {
+      "clue": "What a tray of compost is sown with",
+      "theme": "plants"
+    },
+    "TERRIER": {
+      "clue": "Small, determined breed of dog",
+      "theme": "animals"
+    },
+    "TRELLIS": {
+      "clue": "Frame a climbing plant is tied to",
+      "theme": "plants"
+    }
+  },
+  "rows": [
+    ".GOAT.G..MIST",
+    "..R.R.I..O..E",
+    "..C.E.RAIN..R",
+    "..H.L.A..S..R",
+    "..A.L.F..O..I",
+    "..R.I.F..O..E",
+    "..D.SEED.N..R"
+  ],
+  "themes": {
+    "animals": {
+      "label": "Animals",
+      "summary": "Every creature the garden and the zoo have to offer"
+    },
+    "plants": {
+      "label": "Plants and gardens",
+      "summary": "Hedges, flowers and the grass that becomes hay"
+    },
+    "weather": {
+      "label": "Weather",
+      "summary": "What the sky is doing, and what it does to a walk"
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "themes": {
+    "letters": {
+      "label": "Letters and verses",
+      "summary": "What gets written down and posted when saying it aloud is harder"
+    },
+    "keepsakes": {
+      "label": "Keepsakes",
+      "summary": "The small things kept in a drawer long after the day itself"
+    },
+    "feelings": {
+      "label": "Feelings",
+      "summary": "The plain words for what a keepsake is kept for"
+    }
+  },
+  "entries": [
+    {
+      "answer": "SONNET",
+      "theme": "letters",
+      "clue": "Fourteen lines, with a turn near the end"
+    },
+    {
+      "answer": "VERSE",
+      "theme": "letters",
+      "clue": "A stanza, or the whole middle of a song"
+    },
+    {
+      "answer": "LETTER",
+      "theme": "letters",
+      "clue": "Posted, and kept far longer than it took to write"
+    },
+    {
+      "answer": "NOTE",
+      "theme": "letters",
+      "clue": "Left on a kitchen table"
+    },
+    {
+      "answer": "RIBBON",
+      "theme": "keepsakes",
+      "clue": "Tied round the bundle in the drawer"
+    },
+    {
+      "answer": "LOCKET",
+      "theme": "keepsakes",
+      "clue": "Hinged, and holding a photograph"
+    },
+    {
+      "answer": "ROSE",
+      "theme": "keepsakes",
+      "clue": "Pressed flat between two pages"
+    },
+    {
+      "answer": "TOKEN",
+      "theme": "keepsakes",
+      "clue": "A small thing standing for a larger one"
+    },
+    {
+      "answer": "DEVOTION",
+      "theme": "feelings",
+      "clue": "Steady, and not much given to speeches"
+    },
+    {
+      "answer": "ARDOR",
+      "theme": "feelings",
+      "clue": "The opposite of devotion's steadiness"
+    },
+    {
+      "answer": "REGARD",
+      "theme": "feelings",
+      "clue": "Warmth kept at a polite distance"
+    },
+    {
+      "answer": "ESTEEM",
+      "theme": "feelings",
+      "clue": "What a respected colleague is held in"
+    },
+    {
+      "answer": "TENDER",
+      "theme": "feelings",
+      "clue": "Careful of a bruise"
+    },
+    {
+      "answer": "ADORE",
+      "theme": "feelings",
+      "clue": "Rather more than merely like"
+    },
+    {
+      "answer": "TRINKET",
+      "theme": "keepsakes",
+      "clue": "Worth little, kept anyway"
+    },
+    {
+      "answer": "PROMISE",
+      "theme": "feelings",
+      "clue": "A vow before there are witnesses"
+    },
+    {
+      "answer": "ODE",
+      "theme": "letters",
+      "clue": "A poem addressed to its subject"
+    },
+    {
+      "answer": "PEN",
+      "theme": "letters",
+      "clue": "What a sonnet needs before paper"
+    },
+    {
+      "answer": "INK",
+      "theme": "letters",
+      "clue": "It makes a note hard to take back"
+    },
+    {
+      "answer": "POEM",
+      "theme": "letters",
+      "clue": "Lines chosen for how they sound"
+    },
+    {
+      "answer": "TIE",
+      "theme": "keepsakes",
+      "clue": "A knot, or what a ribbon makes"
+    },
+    {
+      "answer": "LACE",
+      "theme": "keepsakes",
+      "clue": "Edging on a handkerchief"
+    },
+    {
+      "answer": "TRUE",
+      "clue": "As an aim, or as a friend"
+    },
+    {
+      "answer": "DEAR",
+      "clue": "How a letter opens"
+    },
+    {
+      "answer": "VOW",
+      "clue": "Said once, and meant for good"
+    },
+    {
+      "answer": "KEEN",
+      "clue": "Sharp, or eager"
+    },
+    {
+      "answer": "OATH",
+      "clue": "A vow with witnesses"
+    },
+    {
+      "answer": "SEAL",
+      "clue": "Wax, pressed with a ring"
+    }
+  ]
+}

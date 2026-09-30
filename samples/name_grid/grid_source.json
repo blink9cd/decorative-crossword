@@ -1,0 +1,81 @@
+{
+  "clues": {
+    "AN": {
+      "clue": "Article before a vowel"
+    },
+    "ANN": {
+      "clue": "Short form of Anne",
+      "theme": "people"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "NEST": {
+      "clue": "Where a bird lays its eggs",
+      "theme": "garden"
+    },
+    "NORA": {
+      "clue": "Short form of Eleanor",
+      "theme": "people"
+    },
+    "NUT": {
+      "clue": "Snack in a hard shell",
+      "theme": "kitchen"
+    },
+    "ON": {
+      "clue": "Atop"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "POND": {
+      "clue": "Small still water",
+      "theme": "garden"
+    },
+    "ROSE": {
+      "clue": "Thorny bloom",
+      "theme": "garden"
+    },
+    "SODA": {
+      "clue": "Fizzy drink",
+      "theme": "kitchen"
+    },
+    "TEA": {
+      "clue": "Brewed leaves",
+      "theme": "kitchen"
+    }
+  },
+  "rows": [
+    "JANE.....",
+    "..E.D..P.",
+    "..S.ONION",
+    "NUT.E..N.",
+    "O..T.SODA",
+    "ROSE....N",
+    "AN.A.OVEN"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

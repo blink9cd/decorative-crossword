@@ -1,0 +1,85 @@
+{
+  "clues": {
+    "AS": {
+      "clue": "In the manner of"
+    },
+    "DAN": {
+      "clue": "Short form of Daniel",
+      "theme": "people"
+    },
+    "DEAN": {
+      "clue": "Head of a college faculty",
+      "theme": "people"
+    },
+    "DO": {
+      "clue": "Perform"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "NORA": {
+      "clue": "Short form of Eleanor",
+      "theme": "people"
+    },
+    "OAT": {
+      "clue": "Porridge grain",
+      "theme": "kitchen"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "POND": {
+      "clue": "Small still water",
+      "theme": "garden"
+    },
+    "POT": {
+      "clue": "Deep cooking vessel",
+      "theme": "kitchen"
+    },
+    "REED": {
+      "clue": "Tall waterside grass",
+      "theme": "garden"
+    },
+    "ROOT": {
+      "clue": "Underground part of a plant",
+      "theme": "garden"
+    },
+    "SODA": {
+      "clue": "Fizzy drink",
+      "theme": "kitchen"
+    }
+  },
+  "rows": [
+    "POT.SODA",
+    "O..J..E.",
+    "NORA..AS",
+    "D.ONION.",
+    ".DOE.V..",
+    "OAT.REED",
+    ".N...N.O"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

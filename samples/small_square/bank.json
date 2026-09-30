@@ -1,0 +1,18 @@
+{
+  "themes": {
+    "animals": { "label": "Animals", "summary": "Every creature the garden and the zoo have to offer" },
+    "weather": { "label": "Weather", "summary": "What the sky is doing, and what it does to a walk" },
+    "plants": { "label": "Plants and gardens", "summary": "Hedges, flowers and the grass that becomes hay" }
+  },
+  "entries": [
+    {"answer": "GIRAFFE", "theme": "animals", "clue": "Tallest of the browsing mammals"},
+    {"answer": "WOLF", "theme": "animals", "clue": "Pack hunter that howls"},
+    {"answer": "EEL", "theme": "animals", "clue": "Long, slippery swimmer"},
+    {"answer": "RAIN", "theme": "weather", "clue": "What the water butt waits for"},
+    {"answer": "SUN", "theme": "weather", "clue": "It burns the morning mist off"},
+    {"answer": "WET", "theme": "weather", "clue": "How a walk in a downpour leaves you"},
+    {"answer": "HEDGE", "theme": "plants", "clue": "Living boundary between two gardens"},
+    {"answer": "PETAL", "theme": "plants", "clue": "One colored leaf of a flower"},
+    {"answer": "HAY", "theme": "plants", "clue": "Dried grass, baled for winter"}
+  ]
+}

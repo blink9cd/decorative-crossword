@@ -1,0 +1,78 @@
+{
+  "clues": {
+    "ALGEBRA": {
+      "clue": "Branch of math with letters for numbers",
+      "theme": "school"
+    },
+    "ANTELOPE": {
+      "clue": "Fast grazer of the open plain",
+      "theme": "animals"
+    },
+    "CERTAIN": {
+      "clue": "In no doubt at all"
+    },
+    "EXAMINE": {
+      "clue": "Look over closely, as a marker does",
+      "theme": "school"
+    },
+    "INCLUDE": {
+      "clue": "Count in, rather than leave out"
+    },
+    "LEARNING": {
+      "clue": "What a term at school is for",
+      "theme": "school"
+    },
+    "OATMEAL": {
+      "clue": "What a bowl of porridge is made from",
+      "theme": "food"
+    },
+    "PASTA": {
+      "clue": "Dried shapes boiled for supper",
+      "theme": "food"
+    },
+    "RACCOON": {
+      "clue": "Masked night raider of the bins",
+      "theme": "animals"
+    },
+    "RISOTTO": {
+      "clue": "Rice dish stirred slowly",
+      "theme": "food"
+    },
+    "RUSH": {
+      "clue": "Hurry, or a marsh plant"
+    },
+    "SPANIEL": {
+      "clue": "Long-eared gun dog",
+      "theme": "animals"
+    }
+  },
+  "rows": [
+    "...RISOTTO...",
+    "...U.....A...",
+    ".I.S..L..T...",
+    ".N.H..E..M..A",
+    ".C..SPANIEL.L",
+    ".L.P..R..A..G",
+    ".U.A.ANTELOPE",
+    ".D.S..I.X...B",
+    "CERTAIN.A...R",
+    "...A..G.M...A",
+    "........I....",
+    "..RACCOON....",
+    "........E...."
+  ],
+  "themes": {
+    "animals": {
+      "label": "Animals",
+      "summary": "Every creature the garden and the zoo have to offer"
+    },
+    "food": {
+      "label": "Food and drink",
+      "summary": "What ends up on the table, and what is drunk beside it"
+    },
+    "school": {
+      "label": "School days",
+      "summary": "Terms, lessons and everything a classroom runs on"
+    }
+  }
+}

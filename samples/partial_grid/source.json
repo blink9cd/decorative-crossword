@@ -1,0 +1,35 @@
+{
+  "clues": {
+    "PUDDLE": {
+      "clue": "Rain pool on the path",
+      "theme": "weather"
+    },
+    "TEAPOT": {
+      "clue": "Pours a hot drink",
+      "theme": "kitchen"
+    }
+  },
+  "rows": [
+    ".......",
+    ".......",
+    "TEAPOT.",
+    ".......",
+    "M......",
+    "I......",
+    "S...S..",
+    ".......",
+    ".......",
+    ".PUDDLE",
+    "......."
+  ],
+  "themes": {
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "weather": {
+      "label": "Weather",
+      "summary": "What the sky is doing today"
+    }
+  }
+}

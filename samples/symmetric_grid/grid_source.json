@@ -1,0 +1,86 @@
+{
+  "clues": {
+    "DATE": {
+      "clue": "Sticky palm fruit",
+      "theme": "kitchen"
+    },
+    "DEAN": {
+      "clue": "Head of a college faculty",
+      "theme": "people"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "EDNA": {
+      "clue": "First name in 'Aunt ___'",
+      "theme": "people"
+    },
+    "EGG": {
+      "clue": "Breakfast staple, boiled or fried",
+      "theme": "kitchen"
+    },
+    "IN": {
+      "clue": "Inside"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "NEST": {
+      "clue": "Where a bird lays its eggs",
+      "theme": "garden"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OR": {
+      "clue": "Word between two choices"
+    },
+    "PAN": {
+      "clue": "Frying vessel",
+      "theme": "kitchen"
+    },
+    "REED": {
+      "clue": "Tall waterside grass",
+      "theme": "garden"
+    },
+    "ROSE": {
+      "clue": "Thorny bloom",
+      "theme": "garden"
+    },
+    "TEA": {
+      "clue": "Brewed leaves",
+      "theme": "kitchen"
+    },
+    "TREE": {
+      "clue": "Oak or elm",
+      "theme": "garden"
+    }
+  },
+  "rows": [
+    "JANE.P..",
+    "....DATE",
+    ".ONION.D",
+    "..E.E..N",
+    "ROSE.TEA",
+    "E.T.OR..",
+    "E..I.E..",
+    "DEAN.EGG"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.0 0.0 639.6 540.0">
+<style>
+  .cw-page{fill:#ffffff}
+  .cw-cells rect{stroke:#1a1a1a;stroke-width:1.4}
+  .cw-swatches rect{stroke:#1a1a1a;stroke-width:1.4}
+  .cw-cell{fill:#ffffff}
+  .cw-block{fill:#1a1a1a}
+  .cw-feature{fill:#c9c9c9}
+  .cw-marks{fill:#1a1a1a}
+  .cw-legend-marks{fill:#1a1a1a}
+  .cw-letters text{font-family:sans-serif;font-size:28.8px;fill:#1a1a1a;text-anchor:middle;dominant-baseline:central}
+  .cw-legend text{font-family:sans-serif;font-size:14.4px;fill:#1a1a1a;dominant-baseline:central}
+  .cw-caption text{font-family:sans-serif;font-size:12.5px;fill:#1a1a1a;dominant-baseline:central}
+  .cw-theme-0{fill:#cfe0f4}
+  .cw-theme-1{fill:#d9ecd2}
+  .cw-theme-2{fill:#f7e0cf}
+</style>
+<rect class="cw-page" x="0.0" y="0.0" width="639.6" height="540.0"/>
+<g class="cw-cells">
+  <rect class="cw-theme-1" x="24.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="72.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="120.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="216.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="264.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="312.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="24.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="72.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="120.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="216.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="264.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="312.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="24.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="72.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="120.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="216.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="264.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="312.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="24.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="72.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="120.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="168.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="216.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="264.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="312.0" y="168.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="24.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="72.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="120.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="216.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="264.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="312.0" y="216.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="24.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="72.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="120.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="216.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="264.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-1" x="312.0" y="264.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="24.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="72.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-2" x="120.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="216.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="264.0" y="312.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="312.0" y="312.0" width="48.0" height="48.0"/>
+</g>
+<g class="cw-marks">
+  <rect x="57.6" y="61.1" width="10.6" height="3.6"/>
+  <rect x="105.6" y="61.1" width="10.6" height="3.6"/>
+  <rect x="153.6" y="61.1" width="10.6" height="3.6"/>
+  <polygon points="249.6,68.2 260.2,68.2 254.9,57.6"/>
+  <polygon points="297.6,68.2 308.2,68.2 302.9,57.6"/>
+  <polygon points="345.6,68.2 356.2,68.2 350.9,57.6"/>
+  <circle cx="62.9" cy="206.9" r="5.3"/>
+  <circle cx="110.9" cy="206.9" r="5.3"/>
+  <circle cx="158.9" cy="206.9" r="5.3"/>
+  <circle cx="206.9" cy="206.9" r="5.3"/>
+  <circle cx="254.9" cy="206.9" r="5.3"/>
+  <circle cx="302.9" cy="206.9" r="5.3"/>
+  <circle cx="350.9" cy="206.9" r="5.3"/>
+  <polygon points="57.6,356.2 68.2,356.2 62.9,345.6"/>
+  <polygon points="105.6,356.2 116.2,356.2 110.9,345.6"/>
+  <polygon points="153.6,356.2 164.2,356.2 158.9,345.6"/>
+  <circle cx="254.9" cy="350.9" r="5.3"/>
+  <circle cx="302.9" cy="350.9" r="5.3"/>
+  <circle cx="350.9" cy="350.9" r="5.3"/>
+  <rect x="57.6" y="109.1" width="10.6" height="3.6"/>
+  <rect x="57.6" y="157.1" width="10.6" height="3.6"/>
+  <rect x="57.6" y="253.1" width="10.6" height="3.6"/>
+  <polygon points="153.6,260.2 164.2,260.2 158.9,249.6"/>
+  <polygon points="153.6,308.2 164.2,308.2 158.9,297.6"/>
+  <circle cx="254.9" cy="110.9" r="5.3"/>
+  <circle cx="254.9" cy="158.9" r="5.3"/>
+  <rect x="345.6" y="157.1" width="10.6" height="3.6"/>
+  <rect x="345.6" y="253.1" width="10.6" height="3.6"/>
+  <rect x="345.6" y="301.1" width="10.6" height="3.6"/>
+</g>
+<g class="cw-letters">
+  <text x="48.0" y="48.0">H</text>
+  <text x="96.0" y="48.0">A</text>
+  <text x="144.0" y="48.0">Y</text>
+  <text x="240.0" y="48.0">W</text>
+  <text x="288.0" y="48.0">E</text>
+  <text x="336.0" y="48.0">T</text>
+  <text x="48.0" y="96.0">E</text>
+  <text x="240.0" y="96.0">O</text>
+  <text x="48.0" y="144.0">D</text>
+  <text x="240.0" y="144.0">L</text>
+  <text x="336.0" y="144.0">P</text>
+  <text x="48.0" y="192.0">G</text>
+  <text x="96.0" y="192.0">I</text>
+  <text x="144.0" y="192.0">R</text>
+  <text x="192.0" y="192.0">A</text>
+  <text x="240.0" y="192.0">F</text>
+  <text x="288.0" y="192.0">F</text>
+  <text x="336.0" y="192.0">E</text>
+  <text x="48.0" y="240.0">E</text>
+  <text x="144.0" y="240.0">A</text>
+  <text x="336.0" y="240.0">T</text>
+  <text x="144.0" y="288.0">I</text>
+  <text x="336.0" y="288.0">A</text>
+  <text x="48.0" y="336.0">S</text>
+  <text x="96.0" y="336.0">U</text>
+  <text x="144.0" y="336.0">N</text>
+  <text x="240.0" y="336.0">E</text>
+  <text x="288.0" y="336.0">E</text>
+  <text x="336.0" y="336.0">L</text>
+</g>
+<g class="cw-swatches">
+  <rect class="cw-theme-0" x="24.0" y="380.4" width="19.2" height="19.2"/>
+  <rect class="cw-theme-1" x="24.0" y="406.8" width="19.2" height="19.2"/>
+  <rect class="cw-theme-2" x="24.0" y="433.2" width="19.2" height="19.2"/>
+</g>
+<g class="cw-legend-marks">
+  <circle cx="33.6" cy="390.0" r="4.8"/>
+  <rect x="28.8" y="414.8" width="9.6" height="3.3"/>
+  <polygon points="28.8,447.6 38.4,447.6 33.6,438.0"/>
+</g>
+<g class="cw-legend">
+  <text x="53.8" y="390.0">Animals</text>
+  <text x="53.8" y="416.4">Plants and gardens</text>
+  <text x="53.8" y="442.8">Weather</text>
+</g>
+<g class="cw-caption">
+  <text x="24.0" y="483.6">7x7 grid | 40.8% blocked | Animals: 3 | Plants and gardens: 3 | Weather: 3</text>
+  <text x="24.0" y="505.2">requested blocked: 30.0-45.0% | seed: 11 | theme floor: 3 theme(s) x 3 entry(s)</text>
+</g>
+</svg>

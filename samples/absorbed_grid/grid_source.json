@@ -1,0 +1,37 @@
+{
+  "clues": {
+    "ANN": {
+      "clue": "Short form of Anne",
+      "theme": "people"
+    },
+    "ENID": {
+      "clue": "First name, or a town on the plains",
+      "theme": "people"
+    },
+    "JANET": {
+      "clue": "Placeholder first name, one letter longer",
+      "theme": "people"
+    },
+    "JOE": {
+      "clue": "Average ___",
+      "theme": "people"
+    },
+    "ON": {
+      "clue": "Atop"
+    },
+    "TO": {
+      "clue": "Toward"
+    }
+  },
+  "rows": [
+    "JANET",
+    "ON..O",
+    "ENID."
+  ],
+  "themes": {
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

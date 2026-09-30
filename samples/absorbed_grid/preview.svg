@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0.0 0.0 632.1 316.8">
+<style>
+  .cw-page{fill:#ffffff}
+  .cw-cells rect{stroke:#1a1a1a;stroke-width:1.4}
+  .cw-swatches rect{stroke:#1a1a1a;stroke-width:1.4}
+  .cw-cell{fill:#ffffff}
+  .cw-block{fill:#1a1a1a}
+  .cw-feature{fill:#c9c9c9}
+  .cw-marks{fill:#1a1a1a}
+  .cw-legend-marks{fill:#1a1a1a}
+  .cw-letters text{font-family:sans-serif;font-size:28.8px;fill:#1a1a1a;text-anchor:middle;dominant-baseline:central}
+  .cw-legend text{font-family:sans-serif;font-size:14.4px;fill:#1a1a1a;dominant-baseline:central}
+  .cw-caption text{font-family:sans-serif;font-size:12.5px;fill:#1a1a1a;dominant-baseline:central}
+  .cw-fixed-letters text{font-family:sans-serif;font-size:28.8px;fill:#1a1a1a;text-anchor:middle;dominant-baseline:central;font-weight:bold}
+  .cw-theme-0{fill:#cfe0f4}
+</style>
+<rect class="cw-page" x="0.0" y="0.0" width="632.1" height="316.8"/>
+<g class="cw-cells">
+  <rect class="cw-theme-0" x="24.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="72.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="120.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="168.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="216.0" y="24.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="24.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="72.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="120.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="168.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-cell" x="216.0" y="72.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="24.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="72.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="120.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-theme-0" x="168.0" y="120.0" width="48.0" height="48.0"/>
+  <rect class="cw-block" x="216.0" y="120.0" width="48.0" height="48.0"/>
+</g>
+<g class="cw-marks">
+  <circle cx="62.9" cy="62.9" r="5.3"/>
+  <circle cx="110.9" cy="62.9" r="5.3"/>
+  <circle cx="158.9" cy="62.9" r="5.3"/>
+  <circle cx="206.9" cy="62.9" r="5.3"/>
+  <circle cx="254.9" cy="62.9" r="5.3"/>
+  <circle cx="62.9" cy="158.9" r="5.3"/>
+  <circle cx="110.9" cy="158.9" r="5.3"/>
+  <circle cx="158.9" cy="158.9" r="5.3"/>
+  <circle cx="206.9" cy="158.9" r="5.3"/>
+  <circle cx="62.9" cy="110.9" r="5.3"/>
+  <circle cx="110.9" cy="110.9" r="5.3"/>
+</g>
+<g class="cw-letters">
+  <text x="240.0" y="48.0">T</text>
+  <text x="96.0" y="96.0">N</text>
+  <text x="240.0" y="96.0">O</text>
+  <text x="96.0" y="144.0">N</text>
+  <text x="144.0" y="144.0">I</text>
+  <text x="192.0" y="144.0">D</text>
+</g>
+<g class="cw-fixed-letters">
+  <text x="48.0" y="48.0">J</text>
+  <text x="96.0" y="48.0">A</text>
+  <text x="144.0" y="48.0">N</text>
+  <text x="192.0" y="48.0">E</text>
+  <text x="48.0" y="96.0">O</text>
+  <text x="48.0" y="144.0">E</text>
+</g>
+<g class="cw-swatches">
+  <rect class="cw-theme-0" x="24.0" y="188.4" width="19.2" height="19.2"/>
+</g>
+<g class="cw-legend-marks">
+  <circle cx="33.6" cy="198.0" r="4.8"/>
+</g>
+<g class="cw-legend">
+  <text x="53.8" y="198.0">People</text>
+</g>
+<g class="cw-caption">
+  <text x="24.0" y="238.8">3x5 grid | 20.0% blocked | People: 4</text>
+  <text x="24.0" y="260.4">Fixed from --source: 6 letter(s), in bold</text>
+  <text x="24.0" y="282.0">requested blocked: 20.0-50.0% | seed: 1 | theme floor: 1 theme(s) x 2 entry(s)</text>
+</g>
+</svg>

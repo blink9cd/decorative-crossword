@@ -1,0 +1,18 @@
+{
+  "themes": {
+    "animals": { "label": "Animals", "summary": "Every creature the garden and the zoo have to offer" },
+    "weather": { "label": "Weather", "summary": "What the sky is doing, and what it does to a walk" },
+    "plants": { "label": "Plants and gardens", "summary": "Hedges, flowers and the grass that becomes hay" }
+  },
+  "entries": [
+    {"answer": "GIRAFFE", "theme": "animals", "clue": "Tallest of the browsing mammals"},
+    {"answer": "TERRIER", "theme": "animals", "clue": "Small, determined breed of dog"},
+    {"answer": "GOAT", "theme": "animals", "clue": "Browser that will eat the washing"},
+    {"answer": "MONSOON", "theme": "weather", "clue": "Season of the heavy rains"},
+    {"answer": "MIST", "theme": "weather", "clue": "Thin cloud lying on the fields"},
+    {"answer": "RAIN", "theme": "weather", "clue": "What the water butt waits for"},
+    {"answer": "ORCHARD", "theme": "plants", "clue": "Where the apple trees stand in rows"},
+    {"answer": "TRELLIS", "theme": "plants", "clue": "Frame a climbing plant is tied to"},
+    {"answer": "SEED", "theme": "plants", "clue": "What a tray of compost is sown with"}
+  ]
+}

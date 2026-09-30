@@ -1,0 +1,105 @@
+{
+  "clues": {
+    "DATE": {
+      "clue": "Sticky palm fruit",
+      "theme": "kitchen"
+    },
+    "DEAN": {
+      "clue": "Head of a college faculty",
+      "theme": "people"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "EDNA": {
+      "clue": "First name in 'Aunt ___'",
+      "theme": "people"
+    },
+    "IVY": {
+      "clue": "Climbing evergreen",
+      "theme": "garden"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "JOE": {
+      "clue": "Average ___",
+      "theme": "people"
+    },
+    "NEST": {
+      "clue": "Where a bird lays its eggs",
+      "theme": "garden"
+    },
+    "NORA": {
+      "clue": "Short form of Eleanor",
+      "theme": "people"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OR": {
+      "clue": "Word between two choices"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "PAN": {
+      "clue": "Frying vessel",
+      "theme": "kitchen"
+    },
+    "POND": {
+      "clue": "Small still water",
+      "theme": "garden"
+    },
+    "SALT": {
+      "clue": "Seasoning from the sea",
+      "theme": "kitchen"
+    },
+    "SEED": {
+      "clue": "What a gardener sows",
+      "theme": "garden"
+    },
+    "SO": {
+      "clue": "Therefore"
+    },
+    "SODA": {
+      "clue": "Fizzy drink",
+      "theme": "kitchen"
+    },
+    "SOIL": {
+      "clue": "What a gardener digs",
+      "theme": "garden"
+    },
+    "TO": {
+      "clue": "Toward"
+    }
+  },
+  "rows": [
+    "JANE.SEED.",
+    "O.E..A..E.",
+    "E.SOIL.PAN",
+    "..T..TO.N.",
+    ".O..E..P.D",
+    "IVY.D.SODA",
+    ".E.ONION.T",
+    ".NORA..DOE"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

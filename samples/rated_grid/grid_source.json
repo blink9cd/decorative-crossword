@@ -1,0 +1,73 @@
+{
+  "clues": {
+    "DATE": {
+      "clue": "Sticky palm fruit",
+      "theme": "kitchen"
+    },
+    "DO": {
+      "clue": "Perform"
+    },
+    "DOE": {
+      "clue": "Placeholder surname on a sample form",
+      "theme": "people"
+    },
+    "EDNA": {
+      "clue": "First name in 'Aunt ___'",
+      "theme": "people"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "LEAF": {
+      "clue": "Green blade on a branch",
+      "theme": "garden"
+    },
+    "NORA": {
+      "clue": "Short form of Eleanor",
+      "theme": "people"
+    },
+    "NUT": {
+      "clue": "Snack in a hard shell",
+      "theme": "kitchen"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "OVEN": {
+      "clue": "Where the bread bakes",
+      "theme": "kitchen"
+    },
+    "PAN": {
+      "clue": "Frying vessel",
+      "theme": "kitchen"
+    },
+    "POND": {
+      "clue": "Small still water",
+      "theme": "garden"
+    }
+  },
+  "rows": [
+    "JANE.PAN",
+    "....DO.O",
+    ".ONION.R",
+    ".V..EDNA",
+    "LEAF..U.",
+    ".N..DATE"
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "clues": {
+    "ANN": {
+      "clue": "Short form of Anne",
+      "theme": "people"
+    },
+    "AS": {
+      "clue": "In the manner of"
+    },
+    "ATTABOY": {
+      "clue": "Well done (4-3)",
+      "theme": "sayings"
+    },
+    "EGG": {
+      "clue": "Breakfast staple, boiled or fried",
+      "theme": "kitchen"
+    },
+    "ELM": {
+      "clue": "Tall shade tree",
+      "theme": "garden"
+    },
+    "ENID": {
+      "clue": "First name, or a town on the plains",
+      "theme": "people"
+    },
+    "HELLOTHERE": {
+      "clue": "Friendly greeting (5,5)",
+      "theme": "sayings"
+    },
+    "JANE": {
+      "clue": "Placeholder first name on a sample form",
+      "theme": "people"
+    },
+    "NEST": {
+      "clue": "Where a bird lays its eggs",
+      "theme": "garden"
+    },
+    "NOONE": {
+      "clue": "",
+      "theme": "sayings"
+    },
+    "OAK": {
+      "clue": "Tree that grows from an acorn",
+      "theme": "garden"
+    },
+    "OCLOCK": {
+      "clue": "On the hour",
+      "theme": "sayings"
+    },
+    "ONION": {
+      "clue": "Bulb that brings a tear to the eye",
+      "theme": "kitchen"
+    },
+    "ROCKNROLL": {
+      "clue": "Music of the fifties (4,1,4)",
+      "theme": "sayings"
+    },
+    "SO": {
+      "clue": "Therefore"
+    },
+    "SODA": {
+      "clue": "Fizzy drink",
+      "theme": "kitchen"
+    },
+    "TO": {
+      "clue": "Toward"
+    }
+  },
+  "rows": [
+    "NEST.H.A..J",
+    ".NOONE.SODA",
+    ".I...L..A.N",
+    ".D.OCLOCK.E",
+    ".....O.....",
+    ".O.ATTABOY.",
+    "ANN..H.....",
+    ".I...E..EGG",
+    "ROCKNROLL..",
+    ".N...E..M.."
+  ],
+  "themes": {
+    "garden": {
+      "label": "Garden",
+      "summary": "Things outside the back door"
+    },
+    "kitchen": {
+      "label": "Kitchen",
+      "summary": "Things on the counter"
+    },
+    "people": {
+      "label": "People",
+      "summary": "Placeholder names, standing in for whoever the grid is for"
+    },
+    "sayings": {
+      "label": "Sayings",
+      "summary": "Things said out loud, written as more than one word"
+    }
+  }
+}

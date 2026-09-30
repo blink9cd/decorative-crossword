@@ -1,0 +1,43 @@
+{
+  "themes": {
+    "kitchen": { "label": "Kitchen", "summary": "Things on the counter" },
+    "garden": { "label": "Garden", "summary": "Things outside the back door" },
+    "weather": { "label": "Weather", "summary": "What the sky is doing today" }
+  },
+  "entries": [
+    {"answer": "TEAPOT", "theme": "kitchen", "clue": "Pours a hot drink"},
+    {"answer": "OVEN", "theme": "kitchen", "clue": "Where the bread bakes"},
+    {"answer": "SALT", "theme": "kitchen", "clue": "Seasoning from the sea"},
+    {"answer": "SODA", "theme": "kitchen", "clue": "Fizzy drink"},
+    {"answer": "SPOON", "theme": "kitchen", "clue": "It stirs the soup"},
+    {"answer": "PLATE", "theme": "kitchen", "clue": "Dinner dish"},
+    {"answer": "STEW", "theme": "kitchen", "clue": "Slow-cooked dish"},
+    {"answer": "SOUP", "theme": "kitchen", "clue": "Served in a bowl"},
+    {"answer": "ROSE", "theme": "garden", "clue": "Thorny bloom"},
+    {"answer": "SEED", "theme": "garden", "clue": "What a gardener sows"},
+    {"answer": "SOIL", "theme": "garden", "clue": "What a gardener digs"},
+    {"answer": "TREE", "theme": "garden", "clue": "Oak or elm"},
+    {"answer": "ROOT", "theme": "garden", "clue": "Underground part of a plant"},
+    {"answer": "NEST", "theme": "garden", "clue": "Where a bird lays its eggs"},
+    {"answer": "POND", "theme": "garden", "clue": "Small still water"},
+    {"answer": "REED", "theme": "garden", "clue": "Tall waterside grass"},
+    {"answer": "RAKE", "theme": "garden", "clue": "It gathers the leaves"},
+    {"answer": "MOSS", "theme": "garden", "clue": "Soft green growth on a stone"},
+    {"answer": "PEAT", "theme": "garden", "clue": "Dark potting soil"},
+    {"answer": "PLOT", "theme": "garden", "clue": "Patch for growing"},
+    {"answer": "SPADE", "theme": "garden", "clue": "Digging tool"},
+    {"answer": "TULIP", "theme": "garden", "clue": "Spring bulb flower"},
+    {"answer": "WEED", "theme": "garden", "clue": "Unwanted plant"},
+    {"answer": "STEM", "theme": "garden", "clue": "Stalk of a flower"},
+    {"answer": "RAIN", "theme": "weather", "clue": "Falls from a gray sky"},
+    {"answer": "MIST", "theme": "weather", "clue": "Thin low cloud"},
+    {"answer": "STORM", "theme": "weather", "clue": "Rough weather"},
+    {"answer": "SLEET", "theme": "weather", "clue": "Rain and snow at once"},
+    {"answer": "AN", "clue": "Article before a vowel"},
+    {"answer": "ON", "clue": "Atop"},
+    {"answer": "DO", "clue": "Perform"},
+    {"answer": "TO", "clue": "Toward"},
+    {"answer": "AT", "clue": "In the location of"},
+    {"answer": "SO", "clue": "Therefore"}
+  ]
+}

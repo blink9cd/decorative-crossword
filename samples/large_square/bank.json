@@ -1,0 +1,23 @@
+{
+  "themes": {
+    "school": { "label": "School days", "summary": "Terms, lessons and everything a classroom runs on" },
+    "animals": { "label": "Animals", "summary": "Every creature the garden and the zoo have to offer" },
+    "food": { "label": "Food and drink", "summary": "What ends up on the table, and what is drunk beside it" }
+  },
+  "entries": [
+    {"answer": "LEARNING", "theme": "school", "clue": "What a term at school is for"},
+    {"answer": "ALGEBRA", "theme": "school", "clue": "Branch of math with letters for numbers"},
+    {"answer": "EXAMINE", "theme": "school", "clue": "Look over closely, as a marker does"},
+    {"answer": "ANTELOPE", "theme": "animals", "clue": "Fast grazer of the open plain"},
+    {"answer": "RACCOON", "theme": "animals", "clue": "Masked night raider of the bins"},
+    {"answer": "SPANIEL", "theme": "animals", "clue": "Long-eared gun dog"},
+    {"answer": "CARROTS", "theme": "food", "clue": "Orange roots pulled for the pot"},
+    {"answer": "PASTA", "theme": "food", "clue": "Dried shapes boiled for supper"},
+    {"answer": "RISOTTO", "theme": "food", "clue": "Rice dish stirred slowly"},
+    {"answer": "OATMEAL", "theme": "food", "clue": "What a bowl of porridge is made from"},
+    {"answer": "CERTAIN", "clue": "In no doubt at all"},
+    {"answer": "GREATER", "clue": "Larger than the other one"},
+    {"answer": "INCLUDE", "clue": "Count in, rather than leave out"},
+    {"answer": "RUSH", "clue": "Hurry, or a marsh plant"}
+  ]
+}

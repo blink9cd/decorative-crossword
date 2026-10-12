@@ -1,6 +1,6 @@
 [project]
 name = "decorative-crossword"
-version = "0.1.0"
+version = "0.1.1"
 description = "Offline crossword grid generator: fills a grid from a word bank"
 readme = "README.md"
 license = "AGPL-3.0-or-later"

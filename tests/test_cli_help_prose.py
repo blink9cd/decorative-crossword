@@ -35,6 +35,7 @@ import ast
 import unittest
 from pathlib import Path
 
+import cw_grid
 import decorative_crossword
 from tests import cli_fixtures
 
@@ -53,6 +54,14 @@ _HELP_SUFFIX = "_HELP"
 #: over an empty set -- the shape that reports a clean result while measuring
 #: nothing at all. This is what makes the others mean something.
 _MIN_HELP_CONSTANTS = 10
+
+#: The two refusals `preview`, `shade` and `gaps` make of the grid file they
+#: read, pinned in the one phrasing their three epilogs share: a grid past the
+#: size cap, and a theme label or summary the bank screen would refuse.
+_GRID_FILE_REFUSALS = (
+    f"wider or taller than {cw_grid.MAX_SIDE} cells",
+    "whose theme label or summary holds a character a bank refuses",
+)
 
 
 def _parse(path: Path) -> ast.Module:
@@ -244,6 +253,18 @@ class TestEachEpilogNamesWhatItClaims(cli_fixtures.QuietCase):
                 "forbids a letter the grid already holds",
             ),
         )
+
+    # One method per subcommand rather than a loop: `printed` accumulates
+    # over a test, so a later subcommand's check would also read an earlier
+    # one's help and could pass on text its own epilog never printed.
+    def test_preview_names_both_grid_file_refusals(self) -> None:
+        self._assert_help_names("preview", _GRID_FILE_REFUSALS)
+
+    def test_shade_names_both_grid_file_refusals(self) -> None:
+        self._assert_help_names("shade", _GRID_FILE_REFUSALS)
+
+    def test_gaps_names_both_grid_file_refusals(self) -> None:
+        self._assert_help_names("gaps", _GRID_FILE_REFUSALS)
 
 
 if __name__ == "__main__":  # pragma: no cover - the suite runs under the aggregator

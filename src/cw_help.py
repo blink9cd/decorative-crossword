@@ -17,11 +17,17 @@ script imports from here.
 
 `%(prog)s` in these strings is expanded by argparse when the help is formatted,
 wherever the string was defined.
+
+The `preview`, `shade` and `gaps` epilogs are f-strings, so the size cap they
+state is `cw_grid.MAX_SIDE` itself and cannot drift from the cap the code
+enforces. An f-string fills only braces, so `%(prog)s` reaches argparse intact.
 """
 
 from __future__ import annotations
 
 import argparse
+
+import cw_grid
 
 
 class HelpFormatter(
@@ -110,7 +116,7 @@ read or holds no usable line, and an --out or
 a file the run reads or the other output writes.
 """
 
-PREVIEW_EPILOG = """\
+PREVIEW_EPILOG = f"""\
 Renders an existing grid_source.json and runs no search, so it takes no seed,
 no size and no density -- the grid it is handed already carries all three.
 
@@ -122,15 +128,16 @@ absent, because a file this tool did not generate cannot honestly report them.
 
 Exit codes: 0 on a render, 2 on a --cell out of range, 2 on a --feature that
 carries a position, names one answer twice, or names an answer the grid does
-not hold, and 2 on a source it cannot read, cannot decode as UTF-8, cannot
-parse, or that is not a coherent grid, and 2 on an --out that is the source, a
-directory, or in a directory that does not exist. There is no exit 1 --
-preview has no constraint to miss, and a grid whose CONTENT is questionable is
-drawn rather than refused.
+not hold, and 2 on a source it cannot read, cannot decode as UTF-8 or cannot
+parse, one that is not a coherent grid or is wider or taller than {cw_grid.MAX_SIDE}
+cells, or one whose theme label or summary holds a character a bank refuses,
+and 2 on an --out that is the source, a directory, or in a directory that
+does not exist. There is no exit 1 -- preview has no constraint to miss, and
+a grid whose CONTENT is questionable is drawn rather than refused.
 """
 
 
-SHADE_EPILOG = """\
+SHADE_EPILOG = f"""\
 Runs on a grid that already exists, so it takes no bank, no seed and no size.
 It has two modes, and exactly one of --words / --word selects which:
 
@@ -160,13 +167,15 @@ and --out in the ranked-search mode, which has no single word to draw.
 
 Exit codes: 0 candidates were found (or the named word was placed), 1 the
 search ran and found none, 2 the run could not happen -- an unreadable or
-incoherent grid, an unreadable word list, one holding no usable word at all, a
-contradictory configuration, a --word this grid cannot spell, or an --out
-that is the grid, a directory, or in a directory that does not exist.
+incoherent grid, one wider or taller than {cw_grid.MAX_SIDE} cells, one whose theme
+label or summary holds a character a bank refuses, an unreadable word list, one
+holding no usable word at all, a contradictory configuration, a --word this
+grid cannot spell, or an --out that is the grid, a directory, or in a directory
+that does not exist.
 """
 
 
-GAPS_EPILOG = """\
+GAPS_EPILOG = f"""\
 Runs on a grid that already exists, so it takes no seed and no size. It writes
 nothing into the grid: a blocked cell only ever becomes a letter the ordinary
 way, by an answer joining the bank and `fill` running again.
@@ -206,13 +215,15 @@ report derives the --max-blocked ceiling that makes the search reach for a gap;
 re-run `fill` with it.
 
 Exit codes: 0 this grid has a gap worth reporting, 1 the analysis ran and it
-has none, 2 the run could not happen -- an unreadable or incoherent grid; an
-unreadable bank, word list, phrase list or --mask picture; two banks that
-disagree or are one file; a list holding no usable line; a --mask picture with
-a blank line, no rows, a ragged row or a character other than '.' and 'X', or
-one that masks every cell, is not the grid's size, or forbids a letter the
-grid already holds; a contradictory configuration; or an --out naming a file
-the run reads, a directory, or a path in a directory that does not exist.
+has none, 2 the run could not happen -- an unreadable or incoherent grid, one
+wider or taller than {cw_grid.MAX_SIDE} cells, or one whose theme label or summary holds
+a character a bank refuses; an unreadable bank, word list, phrase list or
+--mask picture; two banks that disagree or are one file; a list holding no
+usable line; a --mask picture with a blank line, no rows, a ragged row or a
+character other than '.' and 'X', or one that masks every cell, is not the
+grid's size, or forbids a letter the grid already holds; a contradictory
+configuration; or an --out naming a file the run reads, a directory, or a
+path in a directory that does not exist.
 """
 
 

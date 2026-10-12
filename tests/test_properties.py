@@ -37,6 +37,7 @@ sys.path.insert(0, str(_HERE.parent / "src"))
 
 import cw_answer  # noqa: E402 - import follows the sys.path bootstrap above
 import cw_bank  # noqa: E402 - same bootstrap
+import cw_config  # noqa: E402 - same bootstrap
 import cw_grid  # noqa: E402 - same bootstrap
 
 # A REGISTERED profile, loaded at import, never an `@settings` decorator on the
@@ -202,9 +203,10 @@ _UNDECLARED_KEY = "z"
 def _theme_record(key: str) -> dict[str, str]:
     """A theme record `parse_bank` accepts: an object with a label and a summary.
 
-    Every theme record in this file that is meant to parse is built here; the
-    near-miss strategy's bare values are meant to be refused. A record of the
-    wrong shape is refused before any entry is read, so a payload holding a
+    Every theme record in this file that is meant to parse is built here, and
+    so is each one `_wrong_themes` breaks; the near-miss strategy's bare values
+    are meant to be refused. A record of the wrong shape is refused before any
+    entry is read, so a payload holding a
     stale copy of the shape never reaches the entry check it was written for --
     and the property still passes, because a refusal is an allowed outcome.
 
@@ -252,9 +254,30 @@ _CORRUPTIONS = {
     ),
 }
 
+#: Text the parse screen refuses, one of each kind it names: a newline, the
+#: script close tag, and a terminal control character (ESC, built with `chr` so
+#: this file holds no raw control byte).
+_SCREENED_TEXT = st.sampled_from(
+    ("two\nlines", "a </script tag", f"red {chr(0x1B)}[31m")
+)
+
+#: Stands for a theme field left out of its record. Not None: `record.get` reads
+#: the two alike today, but a `record[field]` would raise KeyError on this one --
+#: a crash, the failure this property exists to catch.
+_ABSENT = object()
+
+#: The wrong value for one field of an otherwise-good theme record, one branch
+#: per refusal a field can reach: missing, the wrong type, empty, or screened.
+_THEME_FIELD_CORRUPTIONS = st.one_of(
+    st.just(_ABSENT),
+    st.one_of(st.integers(), st.none(), st.lists(st.text())),
+    st.just(""),
+    _SCREENED_TEXT,
+)
+
 
 def _widened(record: Mapping[str, object]) -> dict[str, object]:
-    """A drawn entry as a mutable dict whose values are typed `object`.
+    """A drawn entry or theme record as a mutable dict whose values are typed `object`.
 
     `st.fixed_dictionaries` types its result from the field strategies, so a
     drawn entry is a `dict[str, str | None]` and no corruption of another type
@@ -264,6 +287,29 @@ def _widened(record: Mapping[str, object]) -> dict[str, object]:
     without a cast.
     """
     return dict(record)
+
+
+@st.composite
+def _wrong_themes(draw: st.DrawFn) -> tuple[object, dict[str, object]]:
+    """One more theme for a payload, as a key and record wrong in exactly one place.
+
+    The themes sibling of `_CORRUPTIONS`. The near-miss strategy's bare records
+    are refused for their shape before any field is read, so without this
+    nothing drew an object record with one bad field. No entry names its key,
+    and the parse reads every record before any entry, so a parser that let
+    this theme through returns a bank still holding it.
+    """
+    record = _widened(_theme_record("x"))
+    field = draw(st.sampled_from(("key", "label", "summary")))
+    if field == "key":
+        # A record fit to parse, under a key the parse must refuse.
+        return draw(st.one_of(st.integers(), _SCREENED_TEXT)), record
+    value = draw(_THEME_FIELD_CORRUPTIONS)
+    if value is _ABSENT:
+        del record[field]
+    else:
+        record[field] = value
+    return "x", record
 
 
 @st.composite
@@ -277,8 +323,8 @@ def _conforming_payloads(draw: st.DrawFn) -> dict[str, object]:
     other half: it always supplies a `themes` map of records `parse_bank`
     accepts and a non-empty `entries` list of the right shape, draws each
     entry's fields from values `parse_bank` accepts, and only then optionally
-    corrupts ONE field of ONE entry. Because its theme records parse, a
-    returned bank can be a themed one.
+    makes ONE thing wrong: one field of one entry, or one extra theme. Every
+    record an entry may name parses, so a returned bank can be a themed one.
 
     Answers still repeat, because `_VALID_ANSWER` draws from a small pool on
     one of its branches, and one of its written spellings closes up to an
@@ -300,20 +346,27 @@ def _conforming_payloads(draw: st.DrawFn) -> dict[str, object]:
         },
     ).map(_widened)
     entries = draw(st.lists(entry, min_size=1, max_size=5))
-    field = draw(st.one_of(st.none(), st.sampled_from(sorted(_CORRUPTIONS))))
-    if field is not None:
+    themes: dict[object, object] = {key: _theme_record(key) for key in keys}
+    fault = draw(st.sampled_from(("none", "entry", "theme")))
+    if fault == "entry":
+        field = draw(st.sampled_from(sorted(_CORRUPTIONS)))
         index = draw(st.integers(min_value=0, max_value=len(entries) - 1))
         entries[index][field] = draw(_CORRUPTIONS[field])
-    return {
-        "themes": {key: _theme_record(key) for key in keys},
-        "entries": entries,
-    }
+    elif fault == "theme":
+        key, record = draw(_wrong_themes())
+        themes[key] = record
+    return {"themes": themes, "entries": entries}
 
 
 #: The full payload space this property explores: pure JSON garbage, payloads
 #: shaped enough like a bank to exercise the per-entry validators, and payloads
 #: built to parse so the assertions about a returned Bank are reachable at all.
 _PAYLOAD = st.one_of(_JSON_LIKE, _BANK_LIKE, _conforming_payloads())
+
+
+def _bank_declaring(key: object, record: object) -> dict[str, object]:
+    """A one-entry payload declaring the one theme `key`, for pinning its refusals."""
+    return {"themes": {key: record}, "entries": [{"answer": "AB"}]}
 
 
 class TestBankProperties(unittest.TestCase):
@@ -365,6 +418,12 @@ class TestBankProperties(unittest.TestCase):
     @example({"themes": {}, "entries": [{"answer": "AB", "clue": 7}]})
     @example({"themes": {}, "entries": [{"answer": "AB", "rating": True}]})
     @example({"themes": {}, "entries": [{"answer": "AB", "rating": 6}]})
+    @example({"themes": {}, "entries": [{"answer": "AB", "clue": "a </script tag"}]})
+    @example(_bank_declaring("a", {"label": "A", "summary": ""}))
+    @example(_bank_declaring("a", {"label": "two\nlines", "summary": "Some words"}))
+    @example(_bank_declaring("a </script", _theme_record("a")))
+    @example(_bank_declaring(7, _theme_record("a")))
+    @example(_bank_declaring("a", "A bare label"))
     def test_fuzz_parse_bank(self, payload: object) -> None:
         """Every payload yields a Bank or a BankError, never any other exception,
         and a returned Bank is never itself malformed.
@@ -405,6 +464,10 @@ class TestBankProperties(unittest.TestCase):
                 self.assertIn(entry.theme, bank.themes)
             if entry.clue is not None:
                 self.assertIsInstance(entry.clue, str)
+                # The screen is asserted on every string a bank hands the
+                # emitter -- this clue, each theme key, label and summary: a
+                # parser that skipped it returns a bank the type checks accept.
+                self.assertIsNone(cw_config.forbidden_clue_fragment(entry.clue))
             if entry.rating is not None:
                 # `type(...) is int`, not isinstance: a bool is an int too.
                 self.assertIs(type(entry.rating), int)
@@ -412,10 +475,14 @@ class TestBankProperties(unittest.TestCase):
                 self.assertLessEqual(entry.rating, cw_bank.MAX_RATING)
         for key, info in bank.themes.items():
             self.assertIsInstance(key, str)
+            self.assertIsNone(cw_config.forbidden_clue_fragment(key), f"key {key!r}")
             self.assertIsInstance(info, cw_bank.ThemeInfo)
             for field, text in (("label", info.label), ("summary", info.summary)):
                 self.assertIsInstance(text, str, f"theme {key!r} {field}")
                 self.assertTrue(text, f"theme {key!r} has an empty {field}")
+                self.assertIsNone(
+                    cw_config.forbidden_clue_fragment(text), f"theme {key!r} {field}"
+                )
 
 
 if __name__ == "__main__":

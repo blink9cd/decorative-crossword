@@ -18,14 +18,14 @@ from tests import cli_fixtures, samples_fixtures, svg_fixtures
 _SHADE_SOURCE = "large_square"
 
 #: The word the shade sample places, and what the tool must still say about it.
-#: Pinned as a triple so a drift in the CHOOSER -- which cells it picks, and
-#: therefore how far they spread and what they cost -- fails here rather than
+#: Pinned as a triple so a drift in the chooser (which cells it picks, and
+#: therefore how far they spread and what they cost) fails here rather than
 #: quietly changing what the sample demonstrates. The committed SVG is compared
-#: byte for byte beside it, but the SVG alone would not say WHY those cells
+#: byte for byte beside it, but the SVG alone would not say why those cells
 #: were the right ones.
 _HIDDEN_WORD = "LANTERN"
 
-#: What the sample exists to demonstrate, pinned so a drift in the ANALYSIS
+#: What the sample exists to demonstrate, pinned so a drift in the analysis
 #: fails here rather than quietly changing what a reader is shown. The shared
 #: pattern is the whole argument for grouping: three separate blocked cells
 #: are one idea, and a report that split them into three lines would be the
@@ -62,12 +62,12 @@ class TestHiddenWordSample(cli_fixtures.QuietCase):
                     / samples_fixtures.SHADE_SAMPLE
                     / "hidden.svg"
                 ).read_bytes(),
-                f"samples/{samples_fixtures.SHADE_SAMPLE}/hidden.svg has drifted -- regenerate "
+                f"samples/{samples_fixtures.SHADE_SAMPLE}/hidden.svg has drifted: regenerate "
                 "it with the command in samples/README.md",
             )
 
     def test_the_placed_word_still_scatters(self) -> None:
-        """The sample's whole point is the CONTRAST it demonstrates.
+        """The sample's whole point is the contrast it demonstrates.
 
         A chooser that started clustering would still produce a report and an
         SVG, and the byte comparison above would catch the change without
@@ -91,7 +91,7 @@ class TestHiddenWordSample(cli_fixtures.QuietCase):
         self.assertIn(f"{_HIDDEN_WORD} - {len(_HIDDEN_WORD)} letters", self.printed)
         # Scoped to the candidates block by its own heading rather than to the
         # first indented line anywhere: several blocks carry indented detail,
-        # and the claim here is about the RANKING, not about the report's
+        # and the claim here is about the ranking, not about the report's
         # overall shape.
         lines = self.printed.splitlines()
         heading = next(
@@ -137,7 +137,7 @@ class TestGapsSample(cli_fixtures.QuietCase):
                 (
                     samples_fixtures.SAMPLES / samples_fixtures.GAPS_SAMPLE / "gaps.svg"
                 ).read_bytes(),
-                f"samples/{samples_fixtures.GAPS_SAMPLE}/gaps.svg has drifted -- regenerate it "
+                f"samples/{samples_fixtures.GAPS_SAMPLE}/gaps.svg has drifted: regenerate it "
                 "with the command in samples/README.md",
             )
 
@@ -162,7 +162,7 @@ class TestGapsSample(cli_fixtures.QuietCase):
         """The honest outcome on a real grid, and the reason the tool exists.
 
         Every gap here needs an answer that does not yet exist, which is the
-        demand-on-the-bank the tool's one rule already implies -- made
+        demand-on-the-bank the tool's one rule already implies, made
         specific. A vocabulary that started paying for one would change what
         the sample demonstrates, so it is pinned rather than assumed.
         """
@@ -197,8 +197,8 @@ class TestSilhouetteSample(cli_fixtures.QuietCase):
                     / samples_fixtures.SILHOUETTE_SAMPLE
                     / "shape.svg"
                 ).read_bytes(),
-                f"samples/{samples_fixtures.SILHOUETTE_SAMPLE}/shape.svg has drifted "
-                "-- regenerate it with the command in samples/README.md",
+                f"samples/{samples_fixtures.SILHOUETTE_SAMPLE}/shape.svg has drifted: "
+                "regenerate it with the command in samples/README.md",
             )
 
     def test_the_committed_sample_paints_no_block(self) -> None:
@@ -210,7 +210,7 @@ class TestSilhouetteSample(cli_fixtures.QuietCase):
         self.assertIn(cw_svg.EMPTY_BLOCK_CLASS, svg_fixtures.cell_classes(committed))
 
     def test_the_same_grid_without_the_flag_still_paints_blocks(self) -> None:
-        """The control: the sample differs by the FLAG, not by its source grid."""
+        """The control: the sample differs by the flag, not by its source grid."""
         with tempfile.TemporaryDirectory() as folder:
             out = Path(folder) / "filled.svg"
             self.assertEqual(self._preview(out), 0)

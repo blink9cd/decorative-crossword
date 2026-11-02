@@ -4,7 +4,7 @@ A grid's density is a ratio of two cell counts, and the window it is judged
 against is two percentages the operator typed. Binary floating point holds
 neither exactly: 28 blocked cells of 100 computes as 28.000000000000004%, so a
 float comparison refuses a grid standing exactly on a `--max-blocked 28`
-ceiling, while a cell count done the other way calls it within -- two
+ceiling, while a cell count done the other way calls it within: two
 sentences about one grid, in one report, disagreeing.
 
 So every question about the window is answered here, once, over `Fraction`s:
@@ -13,7 +13,7 @@ blocked cells a ceiling allows and a floor requires (`most_blocked`,
 `fewest_blocked`), and the one-decimal figure an operator can adopt to clear a
 miss (`ceil_tenth`, `floor_tenth`).
 
-A grid's percentage is SHOWN from `cw_grid.percent_of`, to one decimal,
+A grid's percentage is shown from `cw_grid.percent_of`, to one decimal,
 wherever a report describes the grid, so it reads the same in every line. Two
 kinds of figure are printed from here instead, because each answers a question
 about the window: the advice figures above, rounded the way that clears a
@@ -95,8 +95,8 @@ def blocked_share(
 def window_miss(rows: Sequence[str], config: cw_config.FillConfig) -> Fraction:
     """How far `rows` sits outside the requested window: under 0 below it, over 0 above.
 
-    Zero exactly when the grid is inside, both bounds included -- the one
-    statement of acceptance by density. Signed, so a caller that must know WHICH
+    Zero exactly when the grid is inside, both bounds included: the one
+    statement of acceptance by density. Signed, so a caller that must know which
     bound was missed reads it here rather than comparing a second time.
     """
     share = blocked_share(rows, config.masked)
@@ -112,7 +112,7 @@ def window_miss(rows: Sequence[str], config: cw_config.FillConfig) -> Fraction:
 def window_figures(rows: Sequence[str], config: cw_config.FillConfig) -> WindowFigures:
     """`rows`' blocked percentage and the window's two bounds, printed to show a miss.
 
-    To `DECIMALS` places, as every report prints them -- unless the grid misses
+    To `DECIMALS` places, as every report prints them, unless the grid misses
     the window and, at that precision, would read as standing on or inside the
     bound it misses: 182 of 625 cells is 29.12%, which one decimal prints as
     the 29.1 ceiling it is over. Then all three are printed at the fewest more
@@ -180,7 +180,7 @@ def fewest_blocked(total: int, min_blocked: float) -> int:
 
 
 def ceil_tenth(share: Fraction) -> Fraction:
-    """`share` rounded UP to a whole tenth: the lowest `--max-blocked` that admits it.
+    """`share` rounded up to a whole tenth: the lowest `--max-blocked` that admits it.
 
     Rounding to nearest would turn an achieved 44.44% into 44.4, a ceiling still
     under the grid, which would refuse the very next run.

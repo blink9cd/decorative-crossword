@@ -5,7 +5,7 @@ one may have curated. `test_loader_properties.py` holds it to returning or
 refusing and nothing else; this holds what it returns to the lines re-derived
 here, whatever the file holds. The draw is the whole file: bytes that are
 not UTF-8, a byte-order mark, every line ending an editor uses and those it
-does not, comments, blank lines, spaces, hyphens and apostrophes -- read both
+does not, comments, blank lines, spaces, hyphens and apostrophes, each read both
 as words and, closed up, as phrases.
 
 The property, with the line split and the closing up re-derived here: a file

@@ -1,4 +1,4 @@
-"""What the `fill --source` samples are FOR, read back out of their committed files.
+"""What the `fill --source` samples are for, read back out of their committed files.
 
 `tests/test_samples.py` regenerates every `fill` sample and compares bytes, which
 proves each file is what the tool produces today. It does not say the file still
@@ -39,7 +39,7 @@ def _source_path(name: str) -> Path:
 
 
 class TestPartialGridSample(unittest.TestCase):
-    """The committed partial grid shows what it is FOR: a source kept, and finished.
+    """The committed partial grid shows what it is for: a source kept, and finished.
 
     The byte comparison proves the files are what the tool produces. These say
     the files still show `--source` doing its job, so a change that moved a
@@ -105,7 +105,7 @@ class TestPartialGridSample(unittest.TestCase):
 
 
 class TestGrownGridSample(unittest.TestCase):
-    """The committed grown grid shows what it is FOR: a source placed on a larger grid.
+    """The committed grown grid shows what it is for: a source placed on a larger grid.
 
     These say the files still show `--rows` and `--cols` growing a source, so a
     change that centered the source, stopped growing the grid, or read a pin in
@@ -157,7 +157,7 @@ class TestGrownGridSample(unittest.TestCase):
 
 
 class TestAbsorbedGridSample(unittest.TestCase):
-    """The committed absorbed grid shows what it is FOR: a source entry grown in place.
+    """The committed absorbed grid shows what it is for: a source entry grown in place.
 
     These say the files still show `--absorb-entries` growing an entry, so a
     change that stopped growing it, moved a source letter while growing it, or

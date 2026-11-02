@@ -3,7 +3,7 @@
 Shared by the emit suites: every builder here is scaffolding rather than an
 assertion, and each suite would otherwise have to copy them.
 
-Every bank here is constructed DIRECTLY rather than through `parse_bank`. That
+Every bank here is constructed directly rather than through `parse_bank`. That
 is deliberate and is what several of the screening tests depend on:
 `build_document` accepts any Bank, including one that never crossed the parse
 boundary, and it is the last thing between operator text and emitted bytes.
@@ -21,7 +21,7 @@ import cw_place
 import cw_search
 
 #: The grid every document test emits from. Its runs are CAT and WET across,
-#: COW down -- so column 0 spells a third entry no ACROSS row contains.
+#: COW down, so column 0 spells a third entry no ACROSS row contains.
 _ROWS = ("CAT", "O..", "WET")
 
 
@@ -44,8 +44,8 @@ def _outcome_with_a_free_run() -> cw_search.SearchOutcome:
     """The same grid, with WET arriving as a crossing rather than a placement.
 
     The input shape a `placed`-driven emitter gets wrong: one placement can
-    create more than one entry, so the grid's runs -- not the placement
-    history -- are what the document must cover.
+    create more than one entry, so the grid's runs, not the placement
+    history, are what the document must cover.
     """
     return dataclasses.replace(_outcome(), placed=_outcome().placed[:2])
 
@@ -78,7 +78,7 @@ def _bank_clued(answer: str, clue: str) -> cw_bank.Bank:
 
 
 def _bank_keyed(key: str) -> cw_bank.Bank:
-    """The standard bank with the placed theme's KEY replaced.
+    """The standard bank with the placed theme's key replaced.
 
     Constructed directly, like every bank here: `parse_bank` screens a theme
     key, so a hostile key cannot reach the emitter that way, and the emitter's

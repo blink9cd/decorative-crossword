@@ -2,8 +2,8 @@
 
 Every route a size arrives by is refused past the cap at exit 2, naming the
 input that asked for more: `fill`'s `--rows` and `--cols`, a `--mask` picture,
-and every grid file read -- `fill --source`, `preview`, `shade` and `gaps`
-alike. A `--source` that would GROW past the cap is refused by the flag that
+and every grid file read: `fill --source`, `preview`, `shade` and `gaps`
+alike. A `--source` that would grow past the cap is refused by the flag that
 grows it, before a grid of that size is built. Exactly 25 is accepted on each
 route, so a cap that crept one cell lower fails here as surely as one that went
 missing. `fill --help` states the cap on both size flags, and what else
@@ -237,7 +237,7 @@ class TestTheWalkHasRoomToRecurse(unittest.TestCase):
     def test_a_limit_too_low_for_the_walk_is_raised_before_it(self) -> None:
         # Ten frames above this one: far fewer than a search stands on. A 25x25
         # can need 1,975 against the default 1,000, so the search makes room
-        # for its own grid -- here a 9x9, 3 x 81 + 100 -- before it walks.
+        # for its own grid (here a 9x9, 3 x 81 + 100) before it walks.
         outcome, left = self._search_under(len(inspect.stack(0)) + 10, _config())
         self.assertTrue(outcome.conforming)
         self.assertEqual(

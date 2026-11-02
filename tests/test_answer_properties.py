@@ -1,7 +1,7 @@
 """Grouped suite: property tests for cw_answer's normalization and spelling rule.
 
-`cw_answer.grid_form` is applied to every answer an operator types -- bank
-answers, `--feature`, `--prefer`, `--phrases` lines and `--excluded-terms` --
+`cw_answer.grid_form` is applied to every answer an operator types (bank
+answers, `--feature`, `--prefer`, `--phrases` lines and `--excluded-terms`),
 and `cw_answer.is_spelling` reads the bank's untrusted answers, so both carry
 the `# fuzz-target` marker, paired with `test_fuzz_grid_form` and
 `test_fuzz_is_spelling` below.
@@ -59,8 +59,8 @@ _JOINERS = "-'"
 #: The two characters that separate words, and so split an enumeration.
 _WORD_BREAKS = " -"
 
-#: Text weighted toward the characters the rule is about -- letters of both
-#: cases, both word breaks, the apostrophe, a tab, and a few it refuses --
+#: Text weighted toward the characters the rule is about (letters of both
+#: cases, both word breaks, the apostrophe, a tab, and a few it refuses),
 #: because arbitrary Unicode almost never holds a well-formed spelling.
 _NEAR_SPELLING = st.text(
     alphabet="ABCXYZ"

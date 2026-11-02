@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """decorative_crossword: fill a crossword grid from a word bank, offline.
 
-One subcommand per verb. `fill` searches for a grid
-and writes `grid_source.json`; `preview` draws an existing one as a
-self-contained SVG; `shade` reads an existing one and reports which words it
-can spell in shaded cells, and which cells to shade; `gaps` reads one and
-reports what a letter in each of its blocked cells would demand of the bank.
-The split follows what each verb does -- "search a grid", "draw a grid" and
-"read a grid" -- and it is what makes the last three useful on grids this tool
-never produced.
+One subcommand per verb. `fill` searches for a grid and writes
+`grid_source.json`; `preview` draws an existing one as a self-contained SVG;
+`shade` reads an existing one and reports which words it can spell in shaded
+cells, and which cells to shade; `gaps` reads one and reports what a letter in
+each of its blocked cells would demand of the bank. The split follows what each
+verb does ("search a grid", "draw a grid" and "read a grid"), and it is what
+makes the last three useful on grids this tool never produced.
 
 **Everything in this file is argument parsing.** Not one line decides what a
 run does: `build_parser` builds the surface and `main` dispatches into the
@@ -18,7 +17,7 @@ documentation check can find each option without following imports. Helpers
 *within* this file are fine, and the `_add_*_arguments` functions below are
 where the option tables actually live.
 
-What an option SAYS is a separate question from where it is declared, and the
+What an option says is a separate question from where it is declared, and the
 answer is `cw_help`: help long enough to need a paragraph lives there, beside
 the epilogs, so this file stays a table of option declarations. A one-line
 help stays here at its own call, where a reader still meets the flag and its
@@ -28,7 +27,8 @@ each constant to exactly one option.
 No optional's default is written here. Every one reads from
 `cw_config.DEFAULTS`, and `--help` renders it from the live `default=` through
 the formatter, so the flag, the help text and the tool cannot disagree. The
-exception is `None`, argparse's "not given", which the formatter leaves unstated.
+exception is `None`, argparse's "not given", which the formatter leaves
+unstated: an on/off flag takes it too, and is read through `bool()`.
 """
 
 from __future__ import annotations
@@ -39,18 +39,18 @@ import sys
 from pathlib import Path
 from typing import cast
 
-# This project's modules live in src/, which is NOT what a script's sys.path[0]
+# This project's modules live in src/, which is not what a script's sys.path[0]
 # points at (that is this file's own directory). Inserted rather than making
 # src/ a package, so this entry point and the test suites reach the modules by
 # the same bare name.
 #
 # Unconditional, not guarded on "is it already there": the suites insert the
 # same directory before importing this module, so a guard would be a branch
-# whose taken side no run of this file can reach -- and a repeated sys.path
+# whose taken side no run of this file can reach, and a repeated sys.path
 # entry costs nothing, since a module is imported once.
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
 
-# The shared UTF-8 stdio policy library, at ONE fixed place: the stdio_utf8/ folder beside
+# The shared UTF-8 stdio policy library, at one fixed place: the stdio_utf8/ folder beside
 # this file. Appended, not inserted, so it can shadow neither src/ nor the standard library.
 # Not a search of the parent directories: with this folder missing, a search would reach
 # past the clone and import whatever folder of that name it found above it; a fixed path
@@ -144,9 +144,10 @@ def _add_fill_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--absorb-entries",
         action="store_true",
+        default=None,
         help=cw_help.FILL_ABSORB_ENTRIES_HELP,
     )
-    # Registered here and again under `gaps`, each with its OWN help, rather
+    # Registered here and again under `gaps`, each with its own help, rather
     # than through one shared loop like `--empty-blocks`: that flag means the
     # same thing in every subcommand it reaches, and this one does not.
     parser.add_argument(
@@ -313,6 +314,7 @@ def _add_shade_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--exclude-grid-answers",
         action="store_true",
+        default=None,
         help="Drop words this grid already answers; they are repeats, not bonuses.",
     )
     parser.add_argument(
@@ -338,11 +340,11 @@ def _add_shade_arguments(parser: argparse.ArgumentParser) -> None:
 def _add_gaps_arguments(parser: argparse.ArgumentParser) -> None:
     """Register `gaps`' options.
 
-    `--bank` and `--words` are two plain optionals that UNION rather than a
+    `--bank` and `--words` are two plain optionals that union rather than a
     mutually exclusive group, which is the opposite of `shade`'s mode flags and
-    right for the opposite reason: those select which PRODUCT the run makes,
+    right for the opposite reason: those select which product the run makes,
     while these are two halves of one vocabulary that are naturally kept in
-    separate files -- a curated bank, and filler lists.
+    separate files: a curated bank, and filler lists.
     """
     parser.add_argument(
         "--source",
@@ -386,6 +388,7 @@ def _add_gaps_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--include-absorbing",
         action="store_true",
+        default=None,
         help="List the gaps whose fill would retire an existing answer.",
     )
     parser.add_argument(
@@ -460,14 +463,14 @@ def build_parser() -> argparse.ArgumentParser:
     _add_gaps_arguments(gaps_parser)
     gaps_parser.set_defaults(func=cw_gaps_command.run_gaps, tool=_TOOL_NAME)
 
-    # One loop, not four blocks: every subcommand that can write an SVG takes
-    # this one and it means the same thing in each. The name stays a LITERAL at
-    # the call, so a reader, or a check scanning this file's `add_argument`
-    # calls, finds it; a helper taking the name as a parameter would hide it.
+    # One loop, not four blocks: the flag means one thing in every subcommand
+    # that can write an SVG. Its name stays a literal at the call, where a reader
+    # or a check scanning `add_argument` calls finds it; a parameter would not.
     for renderer in (fill_parser, preview_parser, shade_parser, gaps_parser):
         renderer.add_argument(
             "--empty-blocks",
             action="store_true",
+            default=None,
             help=cw_help.EMPTY_BLOCKS_HELP,
         )
     return parser

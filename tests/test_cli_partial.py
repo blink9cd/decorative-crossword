@@ -68,7 +68,7 @@ class TestCompletingAPartialRun(SourceCase):
 
     def test_a_declared_run_is_held_exactly_and_never_completed(self) -> None:
         # Declared, ALPH is an entry the source keeps: held as its exact run, so
-        # ALPHA never grows out of it -- and a kept entry never grows even under
+        # ALPHA never grows out of it, and a kept entry never grows even under
         # --absorb-entries (test_cli_absorb).
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
@@ -116,7 +116,7 @@ class TestAPinCompletingAPartialRun(SourceCase):
         )
 
     def test_a_down_pin_growing_a_partial_run_at_its_start_completes_it(self) -> None:
-        # MBER down from (1, 0): AMBER's first letter lands BEFORE the run, so
+        # MBER down from (1, 0): AMBER's first letter lands before the run, so
         # the completion's first cell is not the run's.
         rows = [_BLANK, "M........", "B........", "E........", "R........"]
         code, written = self._pinned(rows, "--feature", "AMBER@0,0,down")
@@ -132,7 +132,7 @@ class TestAPinCompletingAPartialRun(SourceCase):
 
     def test_a_crossing_pin_lengthening_a_partial_run_is_refused(self) -> None:
         # A down pin starting just past ALPH's last letter lengthens it without
-        # lying along it -- whether the longer run is no answer (ALPHB) or one
+        # lying along it, whether the longer run is no answer (ALPHB) or one
         # the bank holds (ALPHA): a pin completes a run only by covering it.
         for pin in ("BRAVO@0,4,down", "AMBER@0,4,down"):
             with self.subTest(pin=pin):

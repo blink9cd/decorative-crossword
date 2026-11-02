@@ -1,9 +1,9 @@
 """Tests for cw_source.start_from: which --source grids a fill can start from.
 
 Every source entry must be a bank answer or a key of the source's own `clues`
-map; the second kind is KEPT, carried with its source clue and theme. A run that
+map; the second kind is kept, carried with its source clue and theme. A run that
 is neither, but that some unused bank answer could still be laid over, is a
-PARTIAL run the fill must complete. A source that repeats an answer, holds a
+partial run the fill must complete. A source that repeats an answer, holds a
 barred entry, or holds a run nothing declares and nothing could complete is
 refused.
 """
@@ -98,7 +98,7 @@ class TestStartFrom(unittest.TestCase):
         self.assertIn("twice", str(caught.exception))
 
     def test_a_bank_entry_the_screen_dropped_is_refused_not_kept(self) -> None:
-        # Declared in the source AND dropped from the bank: keeping it would let
+        # Declared in the source and dropped from the bank: keeping it would let
         # the source smuggle past the very screen that removed it.
         document = _document(_ROWS, clues={"WET": {}})
         bank = _bank(("CAT", "a"), ("COW", "b"))
@@ -171,7 +171,7 @@ class TestStartFrom(unittest.TestCase):
 
     def test_a_dropped_entry_the_source_declares_is_never_parsed_as_kept(self) -> None:
         # Its theme is declared nowhere, so parsing it as a kept entry would
-        # refuse it for THAT; the screen is the reason it must be refused for.
+        # refuse it for that; the screen is the reason it must be refused for.
         document = _document(_ROWS, clues={"WET": {"theme": "nowhere"}})
         bank = _bank(("CAT", "a"), ("COW", "b"))
         with self.assertRaises(cw_source.SourceError) as caught:
@@ -215,7 +215,7 @@ class TestPartialRuns(unittest.TestCase):
         self.assertIn("nor completable by a bank answer", str(caught.exception))
 
     def test_two_partial_runs_spelling_the_same_letters_are_no_repeat(self) -> None:
-        # A repeat is an ANSWER held twice; AN is no answer, and ANT and AND
+        # A repeat is an answer held twice; AN is no answer, and ANT and AND
         # could finish the two copies differently.
         start = cw_source.start_from(
             _document(("AN..", "....", "AN..")),

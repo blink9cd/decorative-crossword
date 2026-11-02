@@ -2,8 +2,8 @@
 
 `gaps --out` marks blocked cells, and a block is the one thing the shading path
 cannot reach: `cw_svg._cell_class` resolves `BLOCK_CLASS` before it consults
-`shaded_cells`, deliberately, because shading IS the cell fill and a block's
-fill is the block. So the mark has to be drawn OVER the
+`shaded_cells`, deliberately, because shading is the cell fill and a block's
+fill is the block. So the mark has to be drawn over the
 block in a layer of its own.
 
 Its own module rather than another function in `cw_svg`: this layer belongs to
@@ -25,8 +25,8 @@ def gap_layer(cells: Sequence[tuple[int, int]], geometry: cw_svg_style.Geometry)
     sits: a gap's cell is empty, so there is no letter to keep clear of, and
     the center is where a reader scanning for one looks.
 
-    Returns "" -- and is then dropped from the document rather than emitted as
-    an empty group -- when nothing is marked. That is a deliberate departure
+    Returns "" (and is then dropped from the document rather than emitted as
+    an empty group) when nothing is marked. That is a deliberate departure
     from `cw_svg_style.group`'s "an empty layer is still emitted" rule: only
     `gaps --out` ever has a gap to draw, so every other render carries no empty
     gap group.

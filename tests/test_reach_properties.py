@@ -4,9 +4,9 @@
 broken board builds only the placements laid over a break, and a step check asks
 only the answers holding a run's letters (`test_search_cost.py`). The walk sorts
 its candidates on a total key, so it takes the steps the straightforward reads
-would take, in the same order, exactly when each node offers the same SET of
+would take, in the same order, exactly when each node offers the same set of
 placements and each step gets the same verdict. That is what these properties
-assert -- over generated boards rather than examples -- so the grids and their
+assert (over generated boards rather than examples), so the grids and their
 density are the ones the straightforward reads would give.
 
 The oracles are those straightforward reads, written out from public pieces:
@@ -15,7 +15,7 @@ The oracles are those straightforward reads, written out from public pieces:
 have full oracles of their own: every filled cell asked every answer, each
 alignment fit-checked on the board (`_scanned_crossings`); every line scanned afresh
 (`_scanned_runs`); and the pins and the breaks read off the rows separately. The
-first two are compared EXACTLY, order included, because `crossing_candidates` and
+first two are compared exactly, order included, because `crossing_candidates` and
 `runs_from_rows` both document their order as a contract.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s

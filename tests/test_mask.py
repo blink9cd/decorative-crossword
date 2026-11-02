@@ -30,7 +30,7 @@ class TestMaskCharacters(unittest.TestCase):
 
     def test_the_stamp_is_neither_a_block_nor_a_letter(self) -> None:
         # `cw_place._fits_line` accepts a cell only when it is BLOCK or the
-        # wanted letter, so the stamp rejects a placement for free -- but only
+        # wanted letter, so the stamp rejects a placement for free, but only
         # while it is neither. MASKED itself is "X", a letter a bank can want.
         self.assertNotEqual(cw_mask.STAMP, cw_grid.BLOCK)
         self.assertFalse("A" <= cw_mask.STAMP <= "Z")
@@ -99,7 +99,7 @@ class TestLoadMaskRefusals(unittest.TestCase):
 
     def test_the_ragged_line_number_counts_comments(self) -> None:
         # The operator fixes the file by line number, so the count is the
-        # FILE's, not the picture's -- a comment still occupies a line.
+        # file's, not the picture's: a comment still occupies a line.
         self.assertIn("line 3", self._refusal("# note\n...\n..\n"))
 
     def test_a_blank_line_is_refused_naming_the_line(self) -> None:
@@ -135,7 +135,7 @@ class TestLoadMaskRefusals(unittest.TestCase):
         self.assertIn("no rows", self._refusal("# just a note\n"))
 
     def test_a_picture_masking_every_cell_is_refused(self) -> None:
-        # It forbids every letter, so no grid could be filled -- and it is the
+        # It forbids every letter, so no grid could be filled, and it is the
         # one picture that leaves the density denominator at zero.
         message = self._refusal("XX\nXX\n")
         self.assertIn("every cell", message)
@@ -153,7 +153,7 @@ class TestLoadMaskRefusals(unittest.TestCase):
     def test_a_file_that_is_not_valid_utf_8_is_refused(self) -> None:
         # A UnicodeDecodeError is a ValueError rather than an OSError, so it
         # needs naming separately or it escapes the CLI's refusal set as a
-        # traceback -- the reason `cw_bank` names it too.
+        # traceback, the reason `cw_bank` names it too.
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "shape.txt"
             path.write_bytes(b"..\n.\xff\n")
@@ -189,8 +189,8 @@ class TestStampedRows(unittest.TestCase):
         self.assertEqual(cw_mask.stamped_rows(("CAT",), frozenset({(5, 5)})), ("CAT",))
 
     def test_a_masked_letter_is_stamped_over(self) -> None:
-        # Not reachable from a validated run either -- a letter in a masked cell
-        # is refused before the search -- but the view must not silently keep a
+        # Not reachable from a validated run either (a letter in a masked cell
+        # is refused before the search), but the view must not silently keep a
         # letter the mask forbids, since that letter would then satisfy a match.
         self.assertEqual(
             cw_mask.stamped_rows(("CAT",), frozenset({(0, 0)})),
@@ -236,7 +236,7 @@ class TestForbiddenLetter(unittest.TestCase):
         self.assertIsNone(cw_mask.forbidden_letter(("A.", ".."), frozenset({(1, 1)})))
 
     def test_a_masked_blocked_cell_is_no_fault(self) -> None:
-        # A masked cell IS blocked in every grid that reaches here; the rule is
+        # A masked cell is blocked in every grid that reaches here; the rule is
         # about a letter, so the ordinary case must not be reported as one.
         self.assertIsNone(cw_mask.forbidden_letter(("..", ".."), frozenset({(0, 0)})))
 

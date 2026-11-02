@@ -47,7 +47,7 @@ def run_at(direction: str, index: int) -> cw_grid.Run:
 
 
 def pinned_lines() -> tuple[cw_grid.Run, ...]:
-    """The middle column and two rows through it -- the lines a name grid would pin.
+    """The middle column and two rows through it: the lines a name grid would pin.
 
     Pinning them fixes the orientation, which an empty board leaves to the seed.
     """

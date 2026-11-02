@@ -73,9 +73,9 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
     def test_a_pre_flight_refusal_writes_no_preview_only_because_none_was_asked(
         self,
     ) -> None:
-        # The exit-1 pair, stated as its own case: the grid IS written on a
+        # The exit-1 pair, stated as its own case: the grid is written on a
         # pre-flight refusal (steps == 0, nothing searched), and the SVG is
-        # absent for the ordinary reason that --preview was omitted -- not
+        # absent for the ordinary reason that --preview was omitted, not
         # because exit 1 suppresses it. Without this,
         # `test_exit_one_still_writes_the_best_effort_grid`'s two assertions
         # could both be satisfied by a rule that keyed on "conforming" rather
@@ -113,11 +113,11 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
             self.assertEqual(decorative_crossword.main(argv), 2)
 
     def test_a_refusal_after_the_search_leaves_no_grid_behind(self) -> None:
-        # The no-undo ordering rule: the preview is RENDERED before anything is
+        # The no-undo ordering rule: the preview is rendered before anything is
         # written, so a refusal that could have been found first does not leave
         # a grid on disk, since exit 2 writes no file.
         # Reached through the renderer because nothing a real bank can hold
-        # makes a render of a searched grid fail -- which is exactly why the
+        # makes a render of a searched grid fail, which is exactly why the
         # ordering would otherwise be an untested claim.
         with (
             tempfile.TemporaryDirectory() as folder,
@@ -132,7 +132,7 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
             self.assertFalse(space.svg.exists())
 
     def test_a_mis_encoded_bank_exits_two(self) -> None:
-        # `UnicodeDecodeError` is a ValueError, NOT an OSError, so an
+        # `UnicodeDecodeError` is a ValueError, not an OSError, so an
         # `except OSError` read seam lets it past the CLI's refusal set
         # entirely: traceback, exit 1, no diagnostic. A bank saved from an
         # editor in a legacy code page is the ordinary way here.
@@ -144,7 +144,7 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
             self.assertIn("decorative_crossword:", self.errors)
 
     def test_a_failed_grid_write_leaves_no_preview_behind(self) -> None:
-        # Pins the no-undo ORDER, not just that both files appear: with the
+        # Pins the no-undo order, not just that both files appear: with the
         # preview written first, this passes only if the grid write is what
         # comes first. Nothing else in the suite can tell the two orders apart.
         with (
@@ -164,7 +164,7 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
         # The refusal set names each type rather than their common base.
         # Collapsing it to `ValueError` would turn a genuine bug in the search
         # or the renderer into "decorative_crossword: <internal message>" and
-        # exit 2 -- an operator told to fix their bank for a fault in the tool.
+        # exit 2: an operator told to fix their bank for a fault in the tool.
         with (
             tempfile.TemporaryDirectory() as folder,
             mock.patch.object(cw_search, "search", side_effect=ValueError("a bug")),
@@ -177,7 +177,7 @@ class TestFillExitCodes(cli_fixtures.QuietCase):
         """`--placeholder-clue` is not an option.
 
         argparse rejects the unknown option during parsing, so this is a
-        SystemExit rather than one of the tool's own exit codes -- the flag is
+        SystemExit rather than one of the tool's own exit codes: the flag is
         absent, not merely inert.
         """
         with tempfile.TemporaryDirectory() as folder:
@@ -216,7 +216,7 @@ class TestFillDiagnostics(cli_fixtures.QuietCase):
 
     def test_the_report_goes_to_stdout_on_exit_one_too(self) -> None:
         # The report is the tool's human-facing product on both 0 and 1, and
-        # it NAMES the missed constraint.
+        # it names the missed constraint.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
             argv = space.fill()
@@ -262,7 +262,7 @@ class TestFillOptions(cli_fixtures.QuietCase):
             self.assertEqual(decorative_crossword.main(argv), 2)
 
     def test_each_of_rows_and_cols_is_required_on_its_own(self) -> None:
-        # Omitting BOTH proves only that one of them is required: a default on
+        # Omitting both proves only that one of them is required: a default on
         # --rows alone would still pass the test above, because --cols alone
         # still fails the check. Each is dropped separately here, and the
         # message has to name the one that is missing. Refused by the tool
@@ -336,8 +336,8 @@ class TestFillOptions(cli_fixtures.QuietCase):
 
     def test_a_tightened_density_range_actually_binds(self) -> None:
         # The end-to-end claim that density is not merely accepted but obeyed.
-        # The lower bound is the interesting half -- it forces the search to
-        # STOP placing, which a window checked only from above would never
+        # The lower bound is the interesting half: it forces the search to
+        # stop placing, which a window checked only from above would never
         # exercise.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
@@ -375,7 +375,7 @@ class TestFillOptions(cli_fixtures.QuietCase):
     def test_an_unclued_bank_answer_reaches_the_page_with_an_empty_clue(self) -> None:
         # The end-to-end counterpart of test_emit's unit case: the default bank
         # writes no clues at all, so every emitted record must carry the key
-        # with an empty value -- not a generated sentence, and not no key.
+        # with an empty value, not a generated sentence, and not no key.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
             self.assertEqual(decorative_crossword.main(space.fill()), 0)
@@ -468,11 +468,11 @@ class TestParser(cli_fixtures.QuietCase):
         self.assertIn("--bank", rendered)
 
     def test_the_worked_invocation_carries_a_size_and_a_density(self) -> None:
-        # The epilog must carry a COMPLETE command line, with a size and a
+        # The epilog must carry a complete command line, with a size and a
         # density on it. An epilog listing flag names would pass the test
         # above; this one needs values beside them.
         rendered = self._help_for("fill")
-        # A VALUE beside each flag: the options list can only ever render
+        # A value beside each flag: the options list can only ever render
         # "--rows ROWS", so a token carrying a number can have come from
         # nowhere but the worked invocation.
         for token in ("--rows 13", "--cols 13", "--min-blocked 30", "--seed 1"):

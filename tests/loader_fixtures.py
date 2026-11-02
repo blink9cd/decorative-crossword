@@ -1,6 +1,6 @@
 r"""Strategies for the loader property suites: every kind of file an operator could hand over.
 
-Each file strategy draws the BYTES of one input file. A property writes them to
+Each file strategy draws the bytes of one input file. A property writes them to
 a real file and hands its path to the loader under test, which reads it exactly
 as it reads the operator's own. The draws deliberately include the classes a
 narrower strategy leaves out, because those are the ones a hand-edited file
@@ -19,7 +19,7 @@ has turned out to hold:
 * nesting deep enough that the parser, or a later `repr` of what it built,
   runs out of stack;
 * a well-formed file with exactly one field, or one line, replaced by any of
-  the above -- a file wrong in one place and right everywhere else is a narrow
+  the above: a file wrong in one place and right everywhere else is a narrow
   target that garbage alone rarely hits.
 
 It also holds what the oracle suites re-derive without the readers: which
@@ -139,7 +139,7 @@ _EDGE = st.one_of(
 )
 
 #: The text of any JSON value, built from the values above and from arrays and
-#: objects of them. Built as TEXT rather than dumped from a value, because the
+#: objects of them. Built as text rather than dumped from a value, because the
 #: long number and the deep nesting cannot make the trip: `json.dumps` can no
 #: more write them than the reader can take them.
 JSON_TEXT = st.recursive(
@@ -196,7 +196,7 @@ def spliced(document: object, path: tuple[Step, ...], fragment: str) -> str:
 def json_files(document: dict[str, object]) -> st.SearchStrategy[bytes]:
     """A JSON input file: `document`, `document` with one field replaced, or any value.
 
-    The whole document is never the replaced field -- that is the any-value
+    The whole document is never the replaced field: that is the any-value
     branch already. A string field gets a branch of its own, replaced by one
     no output can carry: drawing a field and a value independently, from
     every field and every kind of value, reaches that pairing only by luck.

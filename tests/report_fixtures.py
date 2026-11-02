@@ -22,7 +22,7 @@ import cw_search
 _CELL_RE = re.compile(r"\((\d+), (\d+)\)")
 
 #: The 3x3 board most tests report on. CAT runs ACROSS and COW runs DOWN from
-#: the same corner, so ONE grid exercises both orientations -- the axis a
+#: the same corner, so one grid exercises both orientations, the axis a
 #: single-orientation fixture leaves unpinned.
 DEFAULT_ROWS = ("CAT", "O..", "WET")
 
@@ -111,14 +111,14 @@ def make_outcome(
     bank: cw_bank.Bank | None = None,
     config: cw_config.FillConfig | None = None,
 ) -> cw_search.SearchOutcome:
-    """A SearchOutcome whose verdict is DERIVED from `rows`, never hand-written.
+    """A SearchOutcome whose verdict is derived from `rows`, never hand-written.
 
     `missed` and `conforming` come from `cw_accept.missed_constraints`, the
     same function the real search uses, so a fixture can never assert against a
-    sentence the producer does not actually emit -- nor claim a grid misses a
+    sentence the producer does not actually emit, nor claim a grid misses a
     constraint it plainly meets.
 
-    `placed` defaults to EMPTY and is never kept in step with `rows`: the report
+    `placed` defaults to empty and is never kept in step with `rows`: the report
     must read the grid, so a record that agreed with it would hide the bug.
     """
     resolved_bank = make_bank() if bank is None else bank
@@ -154,7 +154,7 @@ def lines(text: str, prefix: str) -> list[str]:
 def block_after(text: str, header: str, count: int) -> list[str]:
     """The `count` lines immediately following the line equal to `header`.
 
-    The only honest way to assert an ORDER: a test that collects its expected
+    The only honest way to assert an order: a test that collects its expected
     lines by prefix and concatenates them reconstructs the order it then
     asserts, and passes just as happily when the writer emits them reversed.
     """

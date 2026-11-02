@@ -2,12 +2,12 @@
 
 What this suite establishes is the exit-code contract every subcommand keeps,
 applied to `shade`: exit 0 when the run succeeded, exit 1 when it happened and
-found nothing, exit 2 when it could not happen -- and the files that did or did
+found nothing, exit 2 when it could not happen, and the files that did or did
 not appear beside each. The algorithm itself is `tests/test_shade.py`'s and is
 not re-tested here.
 
 The two refusals worth naming are the ones a reader will not predict.
-`--words` and `--word` are the two MODES, so supplying neither or both is a
+`--words` and `--word` are the two modes, so supplying neither or both is a
 contradictory configuration rather than a defaulting question, and `--out`
 asks for a picture of one word, so it is refused in the ranked-search mode
 rather than accepted and ignored.
@@ -26,8 +26,8 @@ import cw_svg
 from tests import cli_fixtures, svg_fixtures
 
 #: A grid that spells CAT one letter per row and DOG along its last row, so one
-#: fixture reaches both ends of the tool's opinion. Its own answers -- CAT and
-#: DOG across, AA and TG down -- make the `--exclude-grid-answers` cases real.
+#: fixture reaches both ends of the tool's opinion. Its own answers (CAT and
+#: DOG across, AA and TG down) make the `--exclude-grid-answers` cases real.
 GRID_ROWS = ["CAT..", ".A...", "..T..", "DOG.."]
 
 #: The cells CAT must be shaded in: one per row, no two touching.

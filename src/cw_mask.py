@@ -1,29 +1,29 @@
 """cw_mask: the cells a grid may never letter, drawn as a plain-text picture.
 
-A mask is how a grid takes a SHAPE. The operator draws the silhouette they want
--- a heart, a diamond, the outline of a letter -- one line per grid row, and
+A mask is how a grid takes a shape. The operator draws the silhouette they want
+(a heart, a diamond, the outline of a letter), one line per grid row, and
 every cell they mark is one no letter may ever occupy. What is left over fills
 as any grid does: the fill stays freeform inside the mask, so every run of two
-or more is still an answer the bank supplied. A mask only ever FORBIDS; it
+or more is still an answer the bank supplied. A mask only ever forbids; it
 never obliges a cell to be filled, which is what separates it from a block
 pattern.
 
 The picture's alphabet is two characters and a comment:
 
-- `FREE` (".") -- the grid may do as it likes here.
-- `MASKED` ("X") -- never a letter.
+- `FREE` ("."): the grid may do as it likes here.
+- `MASKED` ("X"): never a letter.
 - a line whose first character is `#` is an annotation and not a row, so an
   operator can title the shape and label its parts.
 
-`.` reads as "free" here and as a BLOCKED cell in an emitted grid
+`.` reads as "free" here and as a blocked cell in an emitted grid
 (`cw_grid.BLOCK`), which is the one inversion in the file and is deliberate: a
 picture is read as ink on paper, where the marked cells are the shape and the
 unmarked ones are the paper. A JSON mirror of `grid_source.json` was rejected
-for the same reason -- a shape is unreadable through quotes, and `.` already
-means something else there -- and `#` was rejected as the marked character
+for the same reason (a shape is unreadable through quotes, and `.` already
+means something else there), and `#` was rejected as the marked character
 because it is this project's comment prefix in every line reader it has.
 
-Every refusal is exit 2 and names the line of the FILE at fault, comments
+Every refusal is exit 2 and names the line of the file at fault, comments
 counted, because that is the number the operator's editor shows. The picture is
 held to being rectangular, non-empty, no more than `cw_grid.MAX_SIDE` cells
 either way, and not wholly masked; the last of those is refused because a mask
@@ -55,7 +55,7 @@ FREE = "."
 #: A cell that may never hold a letter.
 MASKED = "X"
 
-#: A line whose FIRST character is this is an annotation rather than a row.
+#: A line whose first character is this is an annotation rather than a row.
 #: Only the first character, and never a trailing one, for the reason
 #: `cw_excluded_terms._COMMENT_PREFIX` gives: a trailing-comment rule would
 #: silently truncate a row.
@@ -65,12 +65,12 @@ _COMMENT_PREFIX = "#"
 #: `cw_place._fits_line`, which accepts a cell only when it is `cw_grid.BLOCK`
 #: or the letter wanted there. So any character that is neither of those
 #: rejects a placement with no new logic, and this is the one that reads as
-#: struck out. It must NOT be `MASKED`: "X" is a letter a bank may legitimately
+#: struck out. It must not be `MASKED`: "X" is a letter a bank may legitimately
 #: want, and a stamp a placement could match would forbid nothing.
 STAMP = "#"
 
 #: The size `FillConfig.mask_size` carries when no mask was given. No real
-#: mask can spell it -- a picture with no rows is refused -- which is what lets
+#: mask can spell it (a picture with no rows is refused), which is what lets
 #: one field answer both "was a mask given" and "how big was the picture".
 #: Named here, where the refusal that guarantees it lives, so the config's check
 #: and the CLI's construction cannot come to disagree about what "no mask"
@@ -92,14 +92,14 @@ class Mask:
     """One read picture: the grid it describes, and the cells it forbids.
 
     `rows` and `cols` are the picture's own size, which `cells` alone cannot
-    tell -- a mask forbidding nothing is a legal picture, and an empty set says
-    nothing about how big it was. The size is the FINAL grid's, growth
+    tell: a mask forbidding nothing is a legal picture, and an empty set says
+    nothing about how big it was. The size is the final grid's, growth
     included: a mask sizes the grid a fill ends on, never the source it starts
     from.
 
     `cells` is for membership only. It is frozen, and the search consults it at
     every node, so nothing downstream may iterate it on a path that reaches
-    emitted output -- a set's iteration order is `PYTHONHASHSEED`-dependent and
+    emitted output: a set's iteration order is `PYTHONHASHSEED`-dependent and
     this tool's output is byte-identical across runs.
     """
 
@@ -123,11 +123,11 @@ def _read_picture(path: Path) -> str:
 
 
 def _picture_rows(name: str, lines: Iterable[str]) -> tuple[tuple[int, str], ...]:
-    """Each row of the picture with its 1-based FILE line number, comments dropped.
+    """Each row of the picture with its 1-based file line number, comments dropped.
 
     Trailing whitespace is trimmed, so an invisible trailing space and a
     carriage return left by another host's line endings cannot change a row's
-    width. Leading whitespace is NOT trimmed: it would shift the row, so it is
+    width. Leading whitespace is not trimmed: it would shift the row, so it is
     left to be reported as the unknown character it is.
 
     A blank line is refused wherever it appears, rather than only between two
@@ -177,7 +177,7 @@ def _cells(
 
     The width is checked before the characters, so a ragged picture is reported
     as that rather than as whichever stray character the short row happens to
-    end near -- the width is the fault, and fixing it is what the operator
+    end near: the width is the fault, and fixing it is what the operator
     must do first.
     """
     found: set[tuple[int, int]] = set()
@@ -196,7 +196,7 @@ def _cells(
 def parse_mask(text: str, name: str) -> Mask:
     """The picture `text` draws, or raise MaskError naming `name` and the line.
 
-    `name` is what a refusal calls the input -- the file's path, as the
+    `name` is what a refusal calls the input: the file's path, as the
     operator wrote it on the command line. Separate from `load_mask` so the
     parse is exercised without a file, which is what lets the property suite
     feed it arbitrary text.
@@ -240,18 +240,18 @@ def stamped_rows(
 ) -> tuple[str, ...]:
     """`rows` with every masked cell spelled `STAMP`, for a derived line view.
 
-    The one place a masked cell is a CHARACTER rather than a coordinate.
+    The one place a masked cell is a character rather than a coordinate.
     `cw_place.crossing_candidates` judges a placement against a row or column
     string through `cw_place._fits_line`, which accepts a cell only when it is
-    `cw_grid.BLOCK` or the letter wanted there -- so a stamped cell rejects the
+    `cw_grid.BLOCK` or the letter wanted there, so a stamped cell rejects the
     placement with no change to that predicate. The view is derived and thrown
     away; nothing stamped may reach `cw_grid.runs_from_rows`, which would read
     the stamp as a filled cell and invent an entry out of it.
 
     An unmasked call returns the rows themselves. `crossing_candidates` asks
     this of nearly every node of a search, so a run without `--mask` must pay
-    nothing for the flag's existence -- which is what `walk_equivalence` is
-    pointed at to confirm.
+    nothing for the flag's existence, which a separate walk-comparison harness,
+    not shipped here, confirms.
 
     A coordinate outside `rows` is ignored rather than refused: the
     size-agreement check makes one unreachable from a command line, and this is
@@ -280,9 +280,9 @@ def size_disagreement(mask_size: tuple[int, int], grid: tuple[int, int]) -> str 
     fill's, the grid a fill ends on, which `gaps` never has, and a parameter for
     each clause would leave only the comparison shared.
 
-    The grid a picture must match is the FINAL one, growth included: a mask
+    The grid a picture must match is the final one, growth included: a mask
     shapes what a fill ends on, so a picture sized to a `--source` would strand
-    the shape in the top-left. Exactly, never merely large enough -- a smaller
+    the shape in the top-left. Exactly, never merely large enough: a smaller
     picture leaves cells no part of the drawing decides, and a larger one draws
     cells the grid does not have. Both sizes are named, because which of them is
     wrong is the operator's to decide.
@@ -305,9 +305,9 @@ def forbidden_letter(
     without passing a placement seam: `cw_board.pinned_board` writes each one
     straight on with `set_letter`, which asks nothing. So a letter the operator
     handed over and a picture that forbids it can only be caught before the
-    board is built -- the alternative is silently discarding their own grid.
+    board is built: the alternative is silently discarding their own grid.
 
-    `rows` must be the source as PLACED on the grid, which is the frame the
+    `rows` must be the source as placed on the grid, which is the frame the
     mask's coordinates are in.
     """
     for row, line in enumerate(rows):
@@ -323,9 +323,9 @@ def forbidden_letter(
 def _supplied(given: int | None, from_mask: int, own: int) -> int | None:
     """`given` where the operator wrote it, else the mask's dimension.
 
-    The mask declines to supply a dimension SMALLER than `own`, the
+    The mask declines to supply a dimension smaller than `own`, the
     `--source` grid's own. Supplied, `cw_source.resolve_size` would refuse it
-    naming `--rows` or `--cols` -- flags the operator never wrote, since the
+    naming `--rows` or `--cols`, flags the operator never wrote, since the
     value came from the picture. Left absent, the source's own size stands and
     the size-agreement check refuses instead, naming both sizes. Both refuse;
     only one of them names something the operator can act on.
@@ -346,7 +346,7 @@ def requested_size(
     one.
 
     Whether the size the mask asked for is the size the grid ended up at is a
-    separate question, and `cw_config.validate_fill_config` answers it -- a
+    separate question, and `cw_config.validate_fill_config` answers it: a
     picture must match the final grid exactly, and that check sees the grown
     size this function cannot.
     """

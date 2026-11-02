@@ -1,6 +1,6 @@
 """The distinct-run rule as a property: the search's construction guarantee.
 
-Stated over generated banks, seeds and grid sizes rather than over examples --
+Stated over generated banks, seeds and grid sizes rather than over examples:
 for any bank and any seed, every maximal run
 of two or more filled cells in the emitted grid is a distinct bank answer, and
 no filled cell lies outside such a run. The shape and acceptance invariants
@@ -58,12 +58,12 @@ from property_strategies import frozen_clock as _frozen_clock  # noqa: E402 - sa
 from property_strategies import scan_runs as _scan_runs  # noqa: E402 - same
 
 
-# Hypothesis settings come from a REGISTERED profile, loaded at import
+# Hypothesis settings come from a registered profile, loaded at import
 # and before any class body, never an `@settings` decorator. A `@given` test
-# snapshots its settings when it is DECORATED, so the load has to have happened
+# snapshots its settings when it is decorated, so the load has to have happened
 # by the time the class body below executes.
 #
-# Its own profile NAME, not one any other property module registers:
+# Its own profile name, not one any other property module registers:
 # `load_profile` sets a single global default, so two modules sharing one name
 # would leave the last import deciding what both had already snapshotted. A
 # distinct name per module makes each module's settings independent of the order
@@ -91,7 +91,7 @@ class TestGridInvariantProperties(unittest.TestCase):
 
     # The pinned seed goes through this one too. `test_search_determinism`'s
     # budget property returns early unless the tight run conforms, so nothing
-    # there would notice the day the pin stopped producing a searchable grid --
+    # there would notice the day the pin stopped producing a searchable grid:
     # it would simply stop testing, silently. This is the same non-vacuity pin
     # the module already applies to the drawn space, applied to the seed.
     @given(_fill_requests())
@@ -120,7 +120,7 @@ class TestGridInvariantProperties(unittest.TestCase):
 
     # Pinned because the draw reaches this clause far more rarely than the
     # membership half sitting beside it in the same assertion. The rates, and
-    # what makes them a property of one REVISION of this test rather than of
+    # what makes them a property of one revision of this test rather than of
     # the test, are recorded once where the seed itself lives:
     # `property_strategies.DUPLICATE_RUN_REQUEST`.
     @given(_fill_requests())
@@ -145,7 +145,7 @@ class TestGridInvariantProperties(unittest.TestCase):
     @example(_ORPHAN_CELL_REQUEST)
     def test_no_filled_cell_lies_outside_an_entry(self, request: _Request) -> None:
         # The rule's third invariant, which `cw_place.grid_violations` is
-        # documented as being SILENT about: a lone letter touching nothing forms
+        # documented as being silent about: a lone letter touching nothing forms
         # no run, so the subject's own check passes it. Only a scan that
         # compares covered cells against filled ones can see it.
         bank, config = request
@@ -170,7 +170,7 @@ class TestGridInvariantProperties(unittest.TestCase):
     ) -> None:
         # The three acceptance constraints, re-derived from the grid here
         # rather than read back out of `outcome.missed`: `missed` is what the
-        # search decides conformance WITH, so trusting it would let a dropped
+        # search decides conformance with, so trusting it would let a dropped
         # check report a clean grid and be believed.
         bank, config = request
         outcome = cw_search.search(bank, config, clock=_frozen_clock)

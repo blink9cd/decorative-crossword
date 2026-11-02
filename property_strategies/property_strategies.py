@@ -2,7 +2,7 @@
 
 Nothing here asserts anything about the subject: the property suites in `tests/`
 hold the assertions, and this module holds what they are asserted over. The
-`scan_runs` below is the load-bearing piece -- it re-derives the distinct-run
+`scan_runs` below is the load-bearing piece: it re-derives the distinct-run
 rule's notion of a maximal run with a regex and its own coordinate arithmetic,
 rather than calling `cw_grid.runs_from_rows`, because a property that asserted
 the subject's own reading of the rule could not fail when that reading is the
@@ -12,7 +12,7 @@ values with one home, not the scanning logic under test.
 **Why its own folder rather than `tests/`.** The suites import it by bare
 name, and a bare-name import of a module inside `tests/` makes `mypy` report
 the same file under two module names, because `tests/` is a package; a folder
-that is NOT a package gives it one. Loose at the project root it would share
+that is not a package gives it one. Loose at the project root it would share
 the entry point's folder, and this project gives each module that has
 companions a folder of its own. This one has a companion: its sibling
 `test_property_strategies.py` is its unit test, and it tests `scan_runs`
@@ -47,17 +47,17 @@ Request = tuple[cw_bank.Bank, cw_config.FillConfig]
 
 # --- What the generated requests are made of ---------------------------------
 
-#: A deliberately small alphabet. Four letters make crossings -- and therefore
-#: the accidental perpendicular pairs the rule forbids -- far likelier than
+#: A deliberately small alphabet. Four letters make crossings (and therefore
+#: the accidental perpendicular pairs the rule forbids) far likelier than
 #: twenty-six would, which is the pressure these properties exist to apply.
 LETTERS = "ABCD"
 
-#: Grid side bounds, drawn INDEPENDENTLY for rows and cols so NON-SQUARE grids
-#: are in range -- the shape this project's defects have repeatedly hidden in.
+#: Grid side bounds, drawn independently for rows and cols so non-square grids
+#: are in range: the shape this project's defects have repeatedly hidden in.
 MIN_SIDE = 5
 MAX_SIDE = 7
 
-#: One generated answer, never longer than the SHORTEST grid a request can ask
+#: One generated answer, never longer than the shortest grid a request can ask
 #: for. Derived from `MIN_SIDE` rather than repeated as a number, because the
 #: relation is what matters: an answer that fits every drawn grid is what keeps
 #: pre-flight from refusing on length and leaving a property asserting nothing.
@@ -83,9 +83,9 @@ MAX_BLOCKED_CHOICES = (100.0, 85.0, 70.0)
 #: so a positive floor would be satisfied by construction and explore nothing.
 MIN_BLOCKED = 0.0
 
-#: Node budgets. The smallest is the SMALLEST that can work: `_budget_spent`
+#: Node budgets. The smallest is the smallest that can work: `_budget_spent`
 #: cuts the node that reaches the cap before it does anything, so a budget of N
-#: leaves N-1 productive nodes, and three leaves exactly two -- the empty root
+#: leaves N-1 productive nodes, and three leaves exactly two: the empty root
 #: and the first placement under it. That is deliberate. A budget merely larger
 #: than a typical search never cuts and so tests nothing: at forty nodes the cut
 #: fired on two examples in four hundred, where three fires on most of them, and
@@ -105,7 +105,7 @@ UNREACHABLE_TIME_BUDGET = 3600.0
 PERCENT = 100
 
 #: One maximal filled stretch, found by the regex below rather than by
-#: `cw_grid._runs_in_line`'s accumulator -- see the module docstring.
+#: `cw_grid._runs_in_line`'s accumulator. See the module docstring.
 _FILLED_STRETCH = re.compile(
     f"[^{re.escape(cw_grid.BLOCK)}]{{{cw_grid.MIN_RUN},}}",
 )
@@ -180,7 +180,7 @@ def filled_cells(rows: tuple[str, ...]) -> set[tuple[int, int]]:
 
 #: The look-aheads a drawn request may carry. Zero is the first conforming grid;
 #: the others make the walk keep going past it, so the properties also hold for
-#: a grid CHOSEN among several rather than only for the first one found.
+#: a grid chosen among several rather than only for the first one found.
 LOOK_AHEADS = (0, 3, 40)
 
 #: Where a drawn pin goes: across the top-left corner. It is legal for every
@@ -196,17 +196,17 @@ ORIGIN_ACROSS = cw_feature.Anchor(0, 0, cw_grid.ACROSS)
 def fill_requests(draw: st.DrawFn) -> Request:
     """A bank and a fill configuration that pre-flight will not refuse.
 
-    What this CAN draw, stated because a property is only as good as its input
+    What this can draw, stated because a property is only as good as its input
     space: `MIN_ANSWERS`-`MAX_ANSWERS` unique answers of
     `cw_grid.MIN_RUN`-`MIN_SIDE` letters over `LETTERS`; **non-square grids**,
     rows and cols drawn independently over `MIN_SIDE`-`MAX_SIDE`; **multi-theme
-    banks** -- one to `len(THEME_KEYS)` declared themes, answers spread across
+    banks**: one to `len(THEME_KEYS)` declared themes, answers spread across
     them, and some answers unthemed; any seed, negative included; no featured
     answer, one bare one, or one pinned across the top-left corner; every
     ceiling in `MAX_BLOCKED_CHOICES`; and every budget in `STEP_BUDGETS`, the
     smallest of which cuts the walk short.
 
-    What it deliberately CANNOT draw, first and above all, is a request
+    What it deliberately cannot draw, first and above all, is a request
     pre-flight refuses: that comes back with an empty grid, on which every
     invariant below holds for free, so a strategy drawing them would leave these
     properties asserting nothing.
@@ -215,12 +215,12 @@ def fill_requests(draw: st.DrawFn) -> Request:
     from it: a per-theme floor above one would make most requests unsatisfiable
     for banks this small; an answer longer than the grid would be refused on
     length; and entries carry no clue text, because nothing the search reads
-    touches one. A positive `--min-blocked` is excluded for the OPPOSITE reason,
-    and is not a pre-flight matter at all -- see `MIN_BLOCKED`.
+    touches one. A positive `--min-blocked` is excluded for the opposite reason,
+    and is not a pre-flight matter at all. See `MIN_BLOCKED`.
 
     Two limits are named so they are not mistaken for coverage. **Most drawn
     grids hold one entry**: over 400 draws, 104 held two or more runs, and all
-    126 draws at the smallest step budget held exactly one -- and a one-entry
+    126 draws at the smallest step budget held exactly one, and a one-entry
     grid can exercise neither the rule's distinctness clause nor an
     accidental perpendicular pair. And **the tool's own default acceptance
     profile is entirely outside this space**: `cw_config.DEFAULTS` asks for a
@@ -245,7 +245,7 @@ def fill_requests(draw: st.DrawFn) -> Request:
     )
     # sorted(), not the set itself: a Bank's theme map is walked by the search
     # (`_short_themes`), and a dict built by iterating a set takes its key order
-    # from the hash seed -- so a fixture built that way would hand two processes
+    # from the hash seed, so a fixture built that way would hand two processes
     # two different banks, undercutting what `test_search_determinism` asserts.
     declared = {
         key: cw_bank.ThemeInfo(label=key.upper(), summary=f"All about {key}")
@@ -264,17 +264,17 @@ def fill_requests(draw: st.DrawFn) -> Request:
         seed=draw(st.integers()),
         min_blocked=MIN_BLOCKED,
         max_blocked=draw(st.sampled_from(MAX_BLOCKED_CHOICES)),
-        # The lower bound is 1 for NON-VACUITY, not for reachability -- 0 is a
+        # The lower bound is 1 for non-vacuity, not for reachability: 0 is a
         # legal floor, and trivially reachable. `MIN_BLOCKED` is 0.0 and
-        # `MAX_BLOCKED_CHOICES` includes 100.0, and an EMPTY grid is 100%
+        # `MAX_BLOCKED_CHOICES` includes 100.0, and an empty grid is 100%
         # blocked, which is inside [0, 100].
         # So for a drawn request with `max_blocked=100.0` and no feature, an
         # unmet theme floor is the only thing left that stops the empty root
-        # conforming at step 1 -- and that needs `min_themes >= 1`. Measured on
+        # conforming at step 1, and that needs `min_themes >= 1`. Measured on
         # a 5x6 two-answer request at that ceiling: min_themes=0 returns 0 runs
         # at step 1; min_themes=1 returns 1 run at step 2. At the lower bound
-        # every property here -- distinct runs, no orphan cell, a conforming
-        # grid meets every constraint -- would hold on an empty grid for free.
+        # every property here (distinct runs, no orphan cell, a conforming
+        # grid meets every constraint) would hold on an empty grid for free.
         # `test_every_generated_request_is_accepted_and_searchable` is what
         # would fail if this bound moved: it asserts `scan_runs` is non-empty.
         min_themes=draw(st.integers(min_value=1, max_value=len(declared))),
@@ -301,17 +301,17 @@ def fill_requests(draw: st.DrawFn) -> Request:
 
 #: The regression seed for the budget-independence claim, pinned as
 #: an `@example` rather than left to the draw. Every field is one this strategy
-#: could itself have drawn -- and every field the strategy owns a named source
-#: for is DERIVED from it rather than restated, so that claim cannot go quietly
+#: could itself have drawn, and every field the strategy owns a named source
+#: for is derived from it rather than restated, so that claim cannot go quietly
 #: false when a bound moves. `test_property_strategies` checks the rest.
 #:
-#: It exists because a plausible mutation LOOKS
+#: It exists because a plausible mutation looks
 #: budget-independent and is not: truncating each node's ranked candidate list
-#: to a prefix. At a prefix of one the walk is the leftmost spine, which IS an
+#: to a prefix. At a prefix of one the walk is the leftmost spine, which is an
 #: initial segment of the wider walk's preorder, so both budgets reach the same
 #: first conforming node; above one that argument fails, because a subtree the
 #: narrow walk exhausts fruitlessly can yield, under the wider walk, a
-#: conforming state EARLIER in preorder than the narrow walk's winner. Reached
+#: conforming state earlier in preorder than the narrow walk's winner. Reached
 #: by the draw only near three thousand examples; pinned, it costs one.
 BUDGET_SENSITIVE_REQUEST = (
     cw_bank.Bank(
@@ -350,8 +350,8 @@ BUDGET_SENSITIVE_REQUEST = (
 )
 
 
-#: The regression seed for the distinct-run rule's DISTINCTNESS clause -- "no answer may
-#: appear twice in the grid" -- which the draw alone reaches too rarely to rely
+#: The regression seed for the distinct-run rule's distinctness clause ("no answer may
+#: appear twice in the grid"), which the draw alone reaches too rarely to rely
 #: on. Measured over 3,000 draws: a grid carrying a duplicate run comes up in
 #: 1.8% of them, against 12.5% for a run that is not a bank answer at all. So
 #: the membership half of the rule is reached by the draw many times over in
@@ -394,13 +394,13 @@ DUPLICATE_RUN_REQUEST = (
     ),
 )
 
-#: The regression seed for the distinct-run rule's THIRD invariant -- no filled cell may
-#: lie outside an entry. `cw_place.grid_violations` is documented as SILENT
+#: The regression seed for the distinct-run rule's third invariant: no filled cell may
+#: lie outside an entry. `cw_place.grid_violations` is documented as silent
 #: about that shape (`cw_place.py`, its own docstring): a lone letter touching
 #: nothing forms no run, so the subject's own check passes it, and only a scan
 #: comparing covered cells against filled ones sees it. Unpinned, the property
 #: holding that scan caught the fault only when the draw happened to produce
-#: one -- a property of one REVISION of the test and not of the test, which is
+#: one: a property of one revision of the test and not of the test, which is
 #: the lesson the seed above records, reaching here too.
 #:
 #: Measured against a single-fault mutant of `cw_place.apply_placement` that
@@ -408,7 +408,7 @@ DUPLICATE_RUN_REQUEST = (
 #: a crossing entry's letters and strands one: over this test as it stands plus
 #: 40 revisions of it differing only by one inert body statement, the mutant
 #: survived the whole module 2 of those 41 times unpinned, and 0 of 41 with this
-#: seed. The perturbation has to be a STATEMENT: measured on this very test,
+#: seed. The perturbation has to be a statement: measured on this very test,
 #: adding an inert comment to its body leaves its generated draws identical,
 #: while an inert statement replaces every one of them.
 ORPHAN_CELL_REQUEST = (

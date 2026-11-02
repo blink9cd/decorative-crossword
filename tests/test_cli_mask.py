@@ -1,4 +1,4 @@
-"""Grouped suite: `--mask` at the process boundary -- exit codes, sizes, files.
+"""Grouped suite: `--mask` at the process boundary: exit codes, sizes, files.
 
 What only a real run can settle about a shape file: that a picture the parser
 refuses reaches the operator as exit 2 rather than a traceback, that a picture

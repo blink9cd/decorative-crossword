@@ -6,8 +6,8 @@ whole report and writes everything under its head: the gaps listed tier by
 tier, the absorbing ones only when asked for, the answer pairs `cw_pairs`
 rendered and the word-list lines that were skipped. It also selects the cells
 `--out` marks; the handler in `cw_gaps_command` renders them and writes that
-file. The head itself -- the grid, its density, the tier split and the
-`--max-blocked` advice, with the arithmetic behind them -- is
+file. The head itself (the grid, its density, the tier split and the
+`--max-blocked` advice, with the arithmetic behind them) is
 `cw_gaps_summary`'s.
 
 One rule runs through both modules, borrowed from `cw_shade_report` rather than
@@ -18,17 +18,17 @@ believed.
 A second rule is this module's own, and it is why the subcommand is worth
 having at all: **a wall of coordinates is not a decision.** Every blocked cell
 is technically a candidate, so listing them per cell reproduces the problem
-`shade` already solved once -- 224 candidates nobody could act on. The output
-is therefore grouped by the PATTERN a gap demands, because the operator's unit
+`shade` already solved once: 224 candidates nobody could act on. The output
+is therefore grouped by the pattern a gap demands, because the operator's unit
 of work is the word they have to think of, not the square it lands in: four
 cells all wanting a two-letter answer beginning with C are one idea, not four.
 
 Separate from `cw_shade_report` rather than added to it: that module is about a
-search for a hidden WORD -- clustering, rows spanned, one shaded cell per
-letter -- and none of its blocks or its vocabulary apply here.
+search for a hidden word (clustering, rows spanned, one shaded cell per
+letter), and none of its blocks or its vocabulary apply here.
 
-Every ordering here comes from an ordered source -- the ranked resolution
-tuple, or an explicit slice of it -- because two runs must produce
+Every ordering here comes from an ordered source (the ranked resolution
+tuple, or an explicit slice of it) because two runs must produce
 byte-identical output.
 """
 
@@ -60,7 +60,7 @@ from cw_gaps_summary import (
 _REASON = " - "
 
 #: How many letters one ready gap lists before it says how many more there are.
-#: Three because the line is an INVITATION to choose rather than an inventory:
+#: Three because the line is an invitation to choose rather than an inventory:
 #: the operator needs enough options to recognize one they like, and a gap that
 #: ten letters would fit is not ten decisions.
 _MAX_FILLS_SHOWN = 3
@@ -106,9 +106,9 @@ def _ready_lines(listed: Sequence[cw_gaps.Resolution]) -> list[str]:
 def _group_key(resolution: cw_gaps.Resolution) -> tuple[str, ...]:
     """What makes two gaps one line: the patterns they demand.
 
-    Direction is deliberately NOT part of the key. `A?` across and `A?` down
-    are the same request of the operator -- think of a two-letter answer
-    beginning with A -- and splitting them would double a list whose whole
+    Direction is deliberately not part of the key. `A?` across and `A?` down
+    are the same request of the operator (think of a two-letter answer
+    beginning with A), and splitting them would double a list whose whole
     purpose is to be short.
     """
     return tuple(demand.pattern for demand in resolution.candidate.demands)
@@ -130,7 +130,7 @@ def _grouped(
     """One tier's resolutions, gathered by demanded pattern, in rank order.
 
     A plain dict, which preserves insertion order, so the groups come out in
-    the order their cheapest member was ranked -- never in a set's order, which
+    the order their cheapest member was ranked, never in a set's order, which
     must never reach output.
     """
     groups: dict[tuple[str, ...], list[cw_gaps.Resolution]] = {}
@@ -247,7 +247,7 @@ def marked_cells(
     """The cells `--out` marks: exactly the gaps this report lists, in rank order.
 
     Derived from the same `_shown` the report renders from, so the picture and
-    the text cannot disagree about which gaps this run is talking about -- a
+    the text cannot disagree about which gaps this run is talking about: a
     render marking a gap the report capped away would be worse than either
     being wrong alone.
     """
@@ -276,8 +276,8 @@ def render_report(
 
     An orchestrator only: each block is built by its own helper above, blocks
     are separated by a blank line so one can be found by its heading, and an
-    empty block drops out rather than leaving a heading with nothing under it
-    -- the same shape `cw_report.render_report` and `cw_shade_report` have.
+    empty block drops out rather than leaving a heading with nothing under it,
+    the same shape `cw_report.render_report` and `cw_shade_report` have.
     `pairs` is the answer-pairs block `cw_pairs` rendered for this grid, and is
     empty when the run offered nothing to join into. `mask_file` is the `--mask`
     picture's path as the operator wrote it, or None without the flag; the cells

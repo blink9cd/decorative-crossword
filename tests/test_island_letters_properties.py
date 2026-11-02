@@ -3,8 +3,8 @@
 `cw_island.parse_island_letters` reads a flag's value as the operator typed it,
 case-folded. `test_loader_properties.py` holds it to returning or refusing and
 nothing else; this holds it to accepting exactly the valid text, and to the
-letters re-derived here. The draw is any text at all --
-surrogates included, which is how a command line's undecodable bytes arrive --
+letters re-derived here. The draw is any text at all
+(surrogates included, which is how a command line's undecodable bytes arrive),
 weighted toward the five island letters in both cases.
 
 The property, re-derived here: text reads as letters or as a `ConfigError`

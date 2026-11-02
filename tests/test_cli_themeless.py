@@ -1,7 +1,7 @@
 """End-to-end: a bank that declares no themes, run at a theme floor of zero.
 
 A bank's `themes` map is required but may be empty, and each entry's `theme`
-is optional -- so a wholly unthemed bank is legal input, and it fills at
+is optional, so a wholly unthemed bank is legal input, and it fills at
 `--min-themes 0`. No positive floor is reachable without a themed answer, so
 pre-flight refuses such a run at a floor of one before a node is searched. The
 tests here pin both halves: the refusal at a floor of one, and the grid at a
@@ -24,8 +24,8 @@ from tests import cli_fixtures
 #: of the suite.
 _SIDE = "5"
 
-#: The density ceiling these runs ask for. Chosen so the SEED placement alone
-#: does not conform -- one five-letter answer leaves a 5x5 grid 80% blocked --
+#: The density ceiling these runs ask for. Chosen so the seed placement alone
+#: does not conform (one five-letter answer leaves a 5x5 grid 80% blocked),
 #: so a grid that comes back inside this window is one the search had to cross
 #: a second answer into. Loose enough to be reached from two of them, so the
 #: run still finishes in milliseconds.
@@ -58,7 +58,7 @@ class TestThemelessBank(cli_fixtures.QuietCase):
     def test_a_zero_floor_fills_a_grid_from_a_themeless_bank(self) -> None:
         # The load-bearing case: exit 0 on a bank with no themes. The grid is
         # read back rather than inferred from the exit code, which an empty
-        # rectangle -- what the refusal path writes -- would not distinguish.
+        # rectangle (what the refusal path writes) would not distinguish.
         with tempfile.TemporaryDirectory() as folder:
             space = self._workspace(folder)
             self.assertEqual(decorative_crossword.main(_themeless_fill(space, "0")), 0)

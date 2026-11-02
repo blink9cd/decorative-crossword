@@ -1,14 +1,14 @@
 """cw_paths: decides which output paths a run may write to.
 
-Every subcommand that writes a file -- `fill`'s `--out` and `--preview`, and the
-`--out` render of `preview`, `shade` and `gaps` -- hands its output flags and its
+Every subcommand that writes a file (`fill`'s `--out` and `--preview`, and the
+`--out` render of `preview`, `shade` and `gaps`) hands its output flags and its
 input flags to `refuse_unusable_outputs` before it searches anything, and before
 it reads any input but the `--mask` picture `gaps` loads first. A refusal there
 is exit 2, for two kinds of fault:
 
 - **An output no file can be written at**: a directory, or a path whose
   directory does not exist. Left to the write, either would fail only once the
-  rest of the run was spent -- after `fill`'s search, after `gaps` printed its
+  rest of the run was spent: after `fill`'s search, after `gaps` printed its
   report, and after `fill` had written its grid beside a `--preview` that could
   not be written.
 - **An output naming a file the run touches**: an input it reads, or the file
@@ -57,7 +57,7 @@ def same_file(path: Path, other: Path) -> bool:
 def _location_fault(flag: str, path: Path) -> str | None:
     """Why no file can be written at `path`, or None when one can.
 
-    `is_dir` on the parent rather than `exists`: a parent that is a FILE is no
+    `is_dir` on the parent rather than `exists`: a parent that is a file is no
     directory either, and the sentence stays true of it.
     """
     if path.is_dir():

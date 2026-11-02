@@ -3,7 +3,7 @@
 Its own module rather than a block in `cw_commands` beside `fill`, which
 searches for a grid and writes it: `gaps` reads a `--source` grid, changes
 nothing in it and reports on it. It reads a bank differently too: for its
-answers alone, as a VOCABULARY merged with any `--words` list, where `fill`
+answers alone, as a vocabulary merged with any `--words` list, where `fill`
 reads its themes and clues as well.
 
 The refusal contract, the `UsageError` type and the single call to the renderer
@@ -36,13 +36,13 @@ def _config_from(
     """Assemble the typed `gaps` configuration from a parsed command line.
 
     `--bank`, `--words`, `--phrases` and `--out` are absent by design: each is a
-    question about PRESENCE rather than a value, and `cw_config.GapsConfig` says
-    why. `mask` is the read `--mask` picture, or None; its CELLS are a value, so
+    question about presence rather than a value, and `cw_config.GapsConfig` says
+    why. `mask` is the read `--mask` picture, or None; its cells are a value, so
     they do belong here.
     """
     return cw_config.GapsConfig(
         top=args.top,
-        include_absorbing=args.include_absorbing,
+        include_absorbing=bool(args.include_absorbing),
         cell=args.cell,
         masked=frozenset() if mask is None else mask.cells,
     )
@@ -59,11 +59,11 @@ def _require_mask_agrees(mask: cw_mask.Mask, rows: Sequence[str]) -> None:
     The letter half is the same operator-authored contradiction
     `cw_config._validate_masked_source_letters` refuses under `fill`, and `gaps`
     owes it for a second reason of its own. `cw_gaps.analyze_grid` classifies
-    only BLOCKED cells, so a masked cell holding a letter is never counted as
-    masked -- leaving the report claiming a cell "may never hold a letter" beside
+    only blocked cells, so a masked cell holding a letter is never counted as
+    masked, leaving the report claiming a cell "may never hold a letter" beside
     a masked count that does not include it, two figures for one thing.
 
-    `UsageError` rather than `cw_config.ConfigError`, and asked HERE rather than
+    `UsageError` rather than `cw_config.ConfigError`, and asked here rather than
     in `validate_gaps_config`: this is a flag naming something the given input
     does not contain, which is what that type is for, and it cannot be decided
     until the source file has been read. `fill` asks the same question in its
@@ -103,17 +103,17 @@ def _vocabulary(
 ) -> tuple[frozenset[str], tuple[tuple[str, str], ...]]:
     """Every answer this run may draw on, and the list lines it could not use.
 
-    Two sources that UNION rather than two modes that exclude each other, which
+    Two sources that union rather than two modes that exclude each other, which
     is the opposite of `shade`'s `--words` / `--word` and is right for the
     opposite reason: those two ask for different products, while a bank and a
     filler list are two halves of one vocabulary, often kept in separate files.
 
     A `--words` file holding nothing usable is refused rather than absorbed.
     The alternative is a report whose headline says no vocabulary was supplied,
-    to an operator who supplied one -- a flag accepted and silently inert, and
+    to an operator who supplied one: a flag accepted and silently inert, and
     a sentence that is simply false.
 
-    The answers are gathered in a set and handed back frozen for MEMBERSHIP
+    The answers are gathered in a set and handed back frozen for membership
     only; nothing iterates them, so their `PYTHONHASHSEED`-dependent order
     cannot reach the output, which is fixed across runs.
     """
@@ -141,7 +141,7 @@ def _pair_lines(
 
     A join counts against the bank and `--phrases` only. `--words` is filler for
     a gap rather than a word two entries were meant to spell, so a run offering
-    only that has nothing to join into -- and "none join" there would describe a
+    only that has nothing to join into, and "none join" there would describe a
     check that had no vocabulary to run against.
     """
     if args.bank is None and not args.phrases:
@@ -152,7 +152,7 @@ def _pair_lines(
 def _refuse_unusable_output(args: argparse.Namespace) -> None:
     """Raise ConfigError if `--out` is no place to write, or names a file this run reads.
 
-    Every file `gaps` reads is handed over -- each `--bank` file and each
+    Every file `gaps` reads is handed over: each `--bank` file and each
     `--words` and `--phrases` list, not only the first of each.
     """
     cw_paths.refuse_unusable_outputs(
@@ -176,7 +176,7 @@ def _run(args: argparse.Namespace) -> int:
     whether a bank file is given twice, then the vocabulary and the phrase
     lists, then the grid, and last whether the picture agrees with it.
 
-    The report is printed BEFORE the render is written, for the same reason
+    The report is printed before the render is written, for the same reason
     `fill` writes its grid before its preview: the report
     is the product and the picture is an inspection aid, so a filesystem
     failure between them leaves the recoverable artifact.
@@ -215,7 +215,7 @@ def _run(args: argparse.Namespace) -> int:
                 None,
                 None,
                 gaps=cw_gaps_report.marked_cells(search, config),
-                empty_blocks=args.empty_blocks,
+                empty_blocks=bool(args.empty_blocks),
             ),
         )
     return 0 if cw_gaps_summary.listable(search, config) else 1

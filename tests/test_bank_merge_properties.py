@@ -12,8 +12,8 @@ defect that matters most. A merge that silently kept the first of two
 different records never raises, so "every raise is a BankError" passes it; a
 merge that refused every repeat is never wrong about what it returns, so "every
 returned bank is consistent" passes that. Here a set of well-formed banks is
-accepted exactly when it is consistent -- no answer recorded two ways, no theme
-declared two ways, no entry naming a theme no bank declares -- and what comes
+accepted exactly when it is consistent (no answer recorded two ways, no theme
+declared two ways, no entry naming a theme no bank declares), and what comes
 back holds each record once, in the order the banks were given.
 
 The oracle restates the rule rather than calling the subject, so the
@@ -21,7 +21,7 @@ hand-worked cases in `tests/test_bank_merge.py` stay the rule's authority.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
 `load_tests` hook, or by a fuzzing campaign, which imports this file by
-location -- so, as `tests/test_properties.py` explains, the bootstrap below
+location, so, as `tests/test_properties.py` explains, the bootstrap below
 names both the project root and `src/`.
 """
 

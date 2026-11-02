@@ -1,8 +1,8 @@
 """Grouped suite: property test for how a refusal quotes a value, `cw_text.shown`.
 
-Whatever the value -- text holding any character, surrogates included, a
+Whatever the value (text holding any character, surrogates included, a
 whole number, a float that is NaN or infinite, or lists and objects of them
-nested a few deep -- its quote is never longer than the cap plus a short
+nested a few deep), its quote is never longer than the cap plus a short
 suffix naming the full length. And a value whose repr fits the cap is quoted
 exactly as `repr` writes it, which is what keeps every refusal about a short
 value word for word what it was before quotes were capped.

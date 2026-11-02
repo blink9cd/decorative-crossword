@@ -2,7 +2,7 @@
 
 The verdict on a grid (`window_miss`) and the counts a ceiling or a floor allows
 (`most_blocked`, `fewest_blocked`) are statements of one rule, and the report
-and the island laying read the counts about grids acceptance judges -- so
+and the island laying read the counts about grids acceptance judges, so
 `TestTheCountAgreesWithTheVerdict` holds them to one answer over every
 one-decimal bound, on the grid sizes where binary floating point splits them.
 The advice figures are rounded in the direction that clears a miss.
@@ -20,7 +20,7 @@ from tests.search_fixtures import config as _config
 
 #: Grid sizes, in usable cells, where float arithmetic misjudges a one-decimal
 #: bound: 11 of 20 at 55%, 7 of 25 at 28%, 23 of 80, 28 and 29 of 100, 37 of
-#: 125, and 69 of 375 at 18.4% -- plus 625, a 25 x 25 grid's.
+#: 125, and 69 of 375 at 18.4%, plus 625, a 25 x 25 grid's.
 _TOTALS = (20, 25, 80, 100, 125, 375, 625)
 
 
@@ -148,7 +148,7 @@ class TestWindowFigures(unittest.TestCase):
 
     def test_a_bound_is_widened_with_the_share(self) -> None:
         # 7 of 24 is 29.1666...%, over a 29.16 ceiling, and at one decimal the
-        # CEILING rounds up to 29.2 with it: widening the share alone would
+        # ceiling rounds up to 29.2 with it: widening the share alone would
         # print 29.17 against 29.2, which reads as inside.
         config = _config(rows=1, cols=24, max_blocked=29.16)
         self.assertEqual(

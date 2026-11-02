@@ -11,7 +11,7 @@ exists to show is read back out of its grid from the commands pinned here: the
 `--source` samples' by `tests/test_samples_source.py`, most of the others' by
 `tests/test_samples_content.py`, and the rest below.
 
-`_CASES` below is the second copy of each invocation -- `samples/README.md`
+`_CASES` below is the second copy of each invocation: `samples/README.md`
 carries the first, written for a human to paste. That duplication is
 deliberate and is the cheapest form the rule can take: the README is prose
 nothing executes, and a test that read the commands *out* of the README
@@ -34,8 +34,8 @@ from tests import cli_fixtures, samples_fixtures
 #: The budget every sample is pinned with, and the reason it is not the CLI's
 #: default. `--time-budget 0` drops the wall clock; the node cap replaces it.
 #: Without the pair, a sample's only stopping condition is elapsed real time,
-#: which makes the byte comparisons below a measure of how busy the machine is
-#: -- `wide` and `large_square` finish in about four seconds against a 30s
+#: which makes the byte comparisons below a measure of how busy the machine is:
+#: `wide` and `large_square` finish in about four seconds against a 30s
 #: default, so under roughly 7x load the clock wins and the tool returns a
 #: different, non-conforming grid. The cap is set well above what any case
 #: needs (the largest spends about ten thousand nodes) because it is there to
@@ -47,7 +47,7 @@ _PINNED_BUDGET = ["--time-budget", "0", "--max-steps", "50000"]
 
 #: The pins `name_grid` gives, each one `--feature` value. Named once so the
 #: command below and the test reading the committed grid cannot drift onto two
-#: different positions -- the position IS what that sample demonstrates.
+#: different positions: the position is what that sample demonstrates.
 _NAME_GRID_PINS = ("JANE@0,0,across", "DOE@1,4,down")
 
 #: The line `name_grid`'s phrase list must draw from its report: the two pins, joined.
@@ -69,13 +69,13 @@ _TWO_BANKS_NAMES = ("JANE", "DOE")
 _TWO_BANKS_SECOND = samples_fixtures.SAMPLES / "two_banks" / "names.json"
 
 #: What `phrase_grid` features: two answers its bank writes as more than one
-#: word, given AS WRITTEN, so the command itself shows a flag reaching an
+#: word, given as written, so the command itself shows a flag reaching an
 #: answer through its space and its hyphen.
 _PHRASE_GRID_FEATURES = ("HELLO THERE", "ATTA-BOY")
 
 #: The pin `heart_mask` gives. Its column is the one column of the heart that
 #: is free the whole way down, so a seven-letter answer pinned there is what
-#: draws the point -- the shape's own feature, not decoration.
+#: draws the point: the shape's own feature, not decoration.
 _HEART_MASK_FEATURE = "PROMISE@1,5,down"
 
 #: The exact invocation behind each committed sample, minus the three path
@@ -261,7 +261,7 @@ _CASES: dict[str, list[str]] = {
         _HEART_MASK_FEATURE,
         # The one fill sample that draws its blocks as holes, because it is the
         # one whose point is the silhouette: with them inked the shape is a
-        # rectangle with a heart inside it rather than a heart. The flag is NOT
+        # rectangle with a heart inside it rather than a heart. The flag is not
         # implied by --mask, which is why it is written out here.
         "--empty-blocks",
         *_PINNED_BUDGET,
@@ -308,7 +308,7 @@ class TestSamplesRegenerate(cli_fixtures.QuietCase):
         self.assertEqual(
             decorative_crossword.main(argv),
             0,
-            f"samples/{name} no longer conforms -- the tool's report is above",
+            f"samples/{name} no longer conforms: the tool's report is above",
         )
         return out, svg
 
@@ -323,7 +323,7 @@ class TestSamplesRegenerate(cli_fixtures.QuietCase):
                 self.assertEqual(
                     produced.read_bytes(),
                     (samples_fixtures.SAMPLES / name / committed).read_bytes(),
-                    f"samples/{name}/{committed} has drifted -- regenerate it "
+                    f"samples/{name}/{committed} has drifted: regenerate it "
                     "with the command in samples/README.md",
                 )
 
@@ -465,7 +465,7 @@ class TestSampleShape(unittest.TestCase):
         self.assertEqual(len(achieved), len(_CASES))
 
     def test_the_large_sample_actually_places_the_featured_answer(self) -> None:
-        """--feature is a hard constraint, so the answer must be IN the grid.
+        """--feature is a hard constraint, so the answer must be in the grid.
 
         Read off the grid's own runs, which is where the operator will look
         for it, rather than trusting the report the run printed.

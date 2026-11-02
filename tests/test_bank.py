@@ -26,24 +26,24 @@ _VALID = {
 _ORDER_CHILD_TIMEOUT = 60
 
 #: Hash seeds the ordering test runs under. `PYTHONHASHSEED` decides a
-#: `frozenset`'s iteration order, so an unsorted walk gives a DIFFERENT answer
-#: per seed -- which is why it runs in child processes: an in-process test
+#: `frozenset`'s iteration order, so an unsorted walk gives a different answer
+#: per seed, which is why it runs in child processes: an in-process test
 #: would kill an unsorted mutant on most seeds and let it live on the
-#: rest. Both values below were MEASURED, not guessed: under seed 0 the raw
+#: rest. Both values below were measured, not guessed: under seed 0 the raw
 #: set order puts "zeta" first (so an unsorted walk is observable, and the
 #: mutant dies here every time), and under seed 5 it puts "alpha" first (so
 #: the test cannot be passing merely because every seed it tries is the easy
 #: one).
 _ORDER_SEEDS = ("0", "5")
 
-#: Screens one entry two terms both match, and writes the reason -- and the RAW
-#: iteration order the child's own frozenset had -- where the parent can read
+#: Screens one entry two terms both match, and writes the reason (and the raw
+#: iteration order the child's own frozenset had), where the parent can read
 #: them. Two lines rather than JSON so the parent needs no narrowing cast for a
 #: payload it wrote itself. No capture_output, matching tests/test_search.py's own
 #: child: a timeout on a capturing call kills only the direct child and then
 #: blocks re-reading pipes a grandchild still holds.
-# Raw, so the `newline="\n"` below reaches the CHILD as an escape rather than
-# being turned into a real newline by this module's own parser -- which makes
+# Raw, so the `newline="\n"` below reaches the child as an escape rather than
+# being turned into a real newline by this module's own parser, which makes
 # the child source a syntax error and every seed an unexplained exit 1.
 _ORDER_CHILD_PROGRAM = r"""
 import pathlib
@@ -72,7 +72,7 @@ def _screen_under_seed(hash_seed: str) -> tuple[str, str]:
     running in, so the only way to hold an order-independence claim to account
     is to run it under more than one.
 
-    The raw order comes back as well as the reason because the SEEDS
+    The raw order comes back as well as the reason because the seeds
     themselves are what the caller has to check: two seeds that both happen to
     walk the set in sorted order would leave an unsorted mutant alive with the
     test green.
@@ -167,7 +167,7 @@ class TestParseBank(unittest.TestCase):
     def test_rejects_an_entries_value_that_is_not_a_list(self) -> None:
         # A string is iterable, so "entries": "BLOOM" would still fail (each
         # character reaching _parse_entry and raising there) even with the
-        # isinstance guard deleted -- passing for the wrong reason. An int is
+        # isinstance guard deleted, passing for the wrong reason. An int is
         # not iterable at all: without the
         # guard, `for raw_entry in raw_entries` itself raises TypeError, a
         # crash straight through this project's untrusted-input boundary.
@@ -179,19 +179,19 @@ class TestParseBank(unittest.TestCase):
             cw_bank.parse_bank({"themes": ["coffee"], "entries": [{"answer": "BLOOM"}]})
 
     def test_rejects_a_bank_with_no_themes_key(self) -> None:
-        # themes is required even when it would be empty -- "may be empty" is
+        # themes is required even when it would be empty: "may be empty" is
         # not "may be absent". Every other test in
         # this file supplies the key, so without this one, loosening
-        # payload.get("themes") into payload.get("themes", {}) -- silently
-        # making a required key optional -- passes the whole suite.
+        # payload.get("themes") into payload.get("themes", {}) (silently
+        # making a required key optional) passes the whole suite.
         with self.assertRaises(cw_bank.BankError):
             cw_bank.parse_bank({"entries": [{"answer": "BLOOM"}]})
 
     def test_rejects_a_non_string_theme_key(self) -> None:
         # Reachable only through a payload handed over as a Python object, never
-        # one read from a file -- a real JSON object can never have a non-string
+        # one read from a file: a real JSON object can never have a non-string
         # key. Reachable all the same, and checked apart from its record, so it
-        # needs its own test -- and a sound record, because a non-object one is
+        # needs its own test, and a sound record, because a non-object one is
         # refused by the record-shape check even with the key's check deleted,
         # leaving only the message to tell that refusal from this one.
         themes = {1: {"label": "One", "summary": "The first"}}
@@ -212,7 +212,7 @@ class TestParseBank(unittest.TestCase):
     def test_rejects_a_non_string_theme_on_an_entry(self) -> None:
         # A list is unhashable, so an entry theme of this shape would raise
         # TypeError out of "theme not in themes" if the isinstance check were
-        # ever dropped from that guard's first half -- a crash, not a
+        # ever dropped from that guard's first half: a crash, not a
         # BankError. This is the short-circuit itself under test, not merely
         # a type mismatch.
         with self.assertRaises(cw_bank.BankError):
@@ -249,8 +249,8 @@ class TestLoadBank(unittest.TestCase):
                 cw_bank.load_bank(Path(folder) / "absent.json")
 
     def test_reports_a_directory_where_a_file_is_expected(self) -> None:
-        # A directory is refused with an OSError that is NOT a
-        # FileNotFoundError -- without this test, narrowing load_bank's
+        # A directory is refused with an OSError that is not a
+        # FileNotFoundError: without this test, narrowing load_bank's
         # `except OSError` down to `except FileNotFoundError` still passes
         # every other test in this file.
         with tempfile.TemporaryDirectory() as folder:
@@ -259,7 +259,7 @@ class TestLoadBank(unittest.TestCase):
 
     def test_reports_a_file_that_is_not_valid_utf_8(self) -> None:
         # The reverse of the directory case above: UnicodeDecodeError is a
-        # ValueError and NOT an OSError, so an `except OSError` seam lets it
+        # ValueError and not an OSError, so an `except OSError` seam lets it
         # escape as a bare traceback rather than a BankError.
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "bank.json"
@@ -269,10 +269,10 @@ class TestLoadBank(unittest.TestCase):
 
 
 class TestClueAndThemeScreen(unittest.TestCase):
-    """The clue-safety screen runs at the PARSE boundary, not at emit time.
+    """The clue-safety screen runs at the parse boundary, not at emit time.
 
     A bank whose clue or theme key would break the consumer's inline data block
-    is a schema violation, and a schema violation belongs on the exit-2 line --
+    is a schema violation, and a schema violation belongs on the exit-2 line,
     before the search, not after thirty seconds of one. The rule itself stays
     single-sourced in `cw_config.forbidden_clue_fragment`; this suite is about
     the boundary it is applied at.
@@ -342,7 +342,7 @@ class TestLoadExcludedTerms(unittest.TestCase):
             )
 
     def test_a_hash_after_text_is_part_of_the_term(self) -> None:
-        # Only a line whose FIRST non-blank character is `#` is a comment; a
+        # Only a line whose first non-blank character is `#` is a comment; a
         # trailing-comment rule would silently truncate a term containing one.
         with tempfile.TemporaryDirectory() as folder:
             path = self._written(folder, "alpha # not a comment\n")
@@ -419,7 +419,7 @@ class TestScreenExcluded(unittest.TestCase):
         self.assertEqual([answer for answer, _ in dropped], ["BLOOM"])
 
     def test_a_term_carrying_a_regex_metacharacter_is_matched_literally(self) -> None:
-        # "b.oom" must NOT match BLOOM: a term is a word, not a pattern, and an
+        # "b.oom" must not match BLOOM: a term is a word, not a pattern, and an
         # unescaped one would silently over-screen the operator's bank.
         _, dropped = cw_excluded_terms.screen_excluded(
             self._bank(), frozenset({"b.oom"})
@@ -435,12 +435,12 @@ class TestScreenExcluded(unittest.TestCase):
     def test_an_empty_term_bars_nothing(self) -> None:
         # `load_excluded_terms` never yields one, but the function is public.
         #
-        # The clue here ENDS IN A PERIOD deliberately. An empty term compiles
+        # The clue here ends in a period deliberately. An empty term compiles
         # to a pair of bare lookarounds, and against an all-word-character
-        # string those cannot match anywhere -- so a clue like "Hourglass and
+        # string those cannot match anywhere, so a clue like "Hourglass and
         # a filter" makes this test pass with the empty-term guard deleted. A
         # trailing non-word character gives the empty pattern a position it
-        # DOES match, which is what puts the guard under test.
+        # does match, which is what puts the guard under test.
         bank = cw_bank.parse_bank(
             {"themes": {}, "entries": [{"answer": "BLOOM", "clue": "A filter."}]}
         )
@@ -455,7 +455,7 @@ class TestScreenExcluded(unittest.TestCase):
         self.assertEqual(dropped, ())
 
     def test_the_surviving_bank_keeps_every_declared_theme(self) -> None:
-        # Screening removes ENTRIES, not declarations: a theme whose only entry
+        # Screening removes entries, not declarations: a theme whose only entry
         # was dropped must still resolve for anything that reads a label.
         screened, _ = cw_excluded_terms.screen_excluded(
             self._bank(), frozenset({"bloom"})
@@ -489,10 +489,10 @@ class TestScreenExcluded(unittest.TestCase):
                 raw_orders.append(raw_order)
                 self.assertIn("alpha", reason)
                 self.assertNotIn("zeta", reason)
-        # The seeds above must be DISCRIMINATING, and that is asserted here
+        # The seeds above must be discriminating, and that is asserted here
         # rather than trusted. Two seeds that both put "alpha" first let the
-        # unsorted mutant survive with everything green -- and PYTHONHASHSEED
-        # fixes siphash's KEY, not its ALGORITHM, which CPython has changed
+        # unsorted mutant survive with everything green, and PYTHONHASHSEED
+        # fixes siphash's key, not its algorithm, which CPython has changed
         # before (siphash24 to siphash13 in 3.11), so a future interpreter can
         # make that happen without anyone touching this file. Asserting the raw
         # orders disagree turns that into a failure at the seam it happens at.

@@ -1,20 +1,20 @@
 """The render: one filled grid drawn as a self-contained SVG, the tool's product.
 
 A filled grid is unreadable as JSON, so the tool draws one, and the picture
-exists to answer three questions at a glance -- does this read as a crossword,
+exists to answer three questions at a glance: does this read as a crossword,
 is the density right, and are the themes spread or bunched.
 
 Three properties of the output are load-bearing rather than cosmetic.
 
 *Self-contained.* No font, image, stylesheet or script is referenced. A
 `<text>` element names a generic font family and nothing is fetched, so the
-file opens from a `file://` path on a machine with no network -- which keeps
+file opens from a `file://` path on a machine with no network, which keeps
 the grid's content off any hosted service and is also what makes a preview
 convenient.
 
 *Escaped.* Theme labels are operator-supplied and will eventually carry an
 ampersand or an angle bracket. An unescaped one produces a malformed document
-that renders as a blank page with no error at all -- a failure that "the file
+that renders as a blank page with no error at all: a failure that "the file
 was written" cannot see. Every caller-supplied string reaches the document
 through `cw_svg_style.text_node`, escaped, as element text.
 
@@ -28,11 +28,11 @@ its own. `shade --word` hands in a hidden word's cells, which no `--feature`
 can express, as `HiddenShading`; `gaps --out` marks blocked cells in a layer
 over their fill; `fill --source` hands in the letters it started from, drawn
 bold in a layer of their own. `empty_blocks` is the one optional field every
-caller sets, because it asks about the DRAWING rather than about what its
-caller found. What the render is allowed to LOOK like -- classes, palette,
-markers, geometry, element primitives -- lives in `cw_svg_style`, and what it
-SAYS about itself -- the caption's two tiers -- lives in `cw_svg_caption`,
-whose own suite is `tests/test_svg_caption.py`. What a request IS, and
+caller sets, because it asks about the drawing rather than about what its
+caller found. What the render is allowed to look like (classes, palette,
+markers, geometry, element primitives) lives in `cw_svg_style`, and what it
+says about itself (the caption's two tiers) lives in `cw_svg_caption`,
+whose own suite is `tests/test_svg_caption.py`. What a request is, and
 everything derived from it before drawing, lives in `cw_svg_plan`. This module
 keeps the layers and the assembly.
 """
@@ -110,7 +110,7 @@ _VIEWBOX_ORIGIN = 0.0
 def _cell_class(plan: cw_svg_plan.Plan, position: tuple[int, int], char: str) -> str:
     """Which background one cell gets: block, shading, theme tint, or plain.
 
-    Feature shading outranks the tint because the shading IS the cell fill.
+    Feature shading outranks the tint because the shading is the cell fill.
     Nothing is lost by the override: the theme survives as the marker the next
     layer draws over it, so a cell that is both featured and themed keeps both
     readings.
@@ -207,8 +207,8 @@ def _fixed_letter_layer(plan: cw_svg_plan.Plan) -> str:
 def _legend_layers(plan: cw_svg_plan.Plan) -> list[str]:
     """The legend's three layers: swatches, markers, labels.
 
-    One row per declared theme, mapping its tint AND its marker to its display
-    label -- both, because tint alone does not survive a monochrome print or a
+    One row per declared theme, mapping its tint and its marker to its display
+    label: both, because tint alone does not survive a monochrome print or a
     color-vision difference. The marker comes from the
     theme's own builder, so the legend cannot advertise a shape the grid does
     not draw.
@@ -275,7 +275,7 @@ def render_svg(request: RenderRequest) -> str:
     scales to whatever opens the file, while a fixed width would pin the render
     to one display size.
 
-    Raises ValueError, from `cw_grid.runs_from_rows`, if `rows` is ragged --
+    Raises ValueError, from `cw_grid.runs_from_rows`, if `rows` is ragged:
     run derivation cannot transpose a grid whose rows differ in length.
     Validating the source is the CLI's job, so this does not repeat it.
     """
@@ -289,8 +289,8 @@ def render_svg(request: RenderRequest) -> str:
             empty_blocks=request.empty_blocks,
         ),
         # The page, drawn before anything else so everything else is drawn on
-        # it. It covers the viewBox exactly, which is what lets a reader -- and
-        # a test -- identify it by geometry rather than by trusting its class.
+        # it. It covers the viewBox exactly, which is what lets a reader, and
+        # a test, identify it by geometry rather than by trusting its class.
         cw_svg_style.rect(
             _VIEWBOX_ORIGIN,
             _VIEWBOX_ORIGIN,

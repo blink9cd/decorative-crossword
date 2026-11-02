@@ -2,8 +2,8 @@
 
 `cw_mask.parse_mask` reads a file an operator drew by hand, so it carries the
 `# fuzz-target` marker, paired with `test_fuzz_parse_mask` below. A picture is
-structured input with three independent ways to be malformed -- a width, a
-character, an emptiness -- which is exactly the shape 100% branch coverage says
+structured input with three independent ways to be malformed (a width, a
+character, an emptiness), which is exactly the shape 100% branch coverage says
 nothing about: a few hand-picked pictures can walk every branch and still leave
 the parser faulting on the next one.
 
@@ -55,9 +55,9 @@ settings.load_profile("crossword_mask_properties")
 #: What a refusal calls the input. Any string does; the parser only quotes it.
 _NAME = "shape.txt"
 
-#: Text weighted toward the characters the parser is about -- both marks, the
+#: Text weighted toward the characters the parser is about (both marks, the
 #: comment prefix, both line ends, a LINE SEPARATOR that ends no line, and the
-#: whitespace that is trimmed at one end of a row and refused at the other --
+#: whitespace that is trimmed at one end of a row and refused at the other),
 #: because arbitrary Unicode is almost never a well-formed picture, and the
 #: accepted branch is the interesting one.
 _NEAR_PICTURE = st.text(

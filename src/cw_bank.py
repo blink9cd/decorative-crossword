@@ -4,7 +4,7 @@ This is the project's untrusted-input boundary: `parse_bank` is what stands
 between an operator's hand-edited JSON file and every downstream module, none
 of which re-validates the shape of a `Bank` it receives.
 Everything reachable from `parse_bank` must therefore fail with `BankError`
-rather than crash, no matter how malformed the payload is -- see
+rather than crash, no matter how malformed the payload is. See
 `tests/test_properties.py` for the property test that holds it to that.
 """
 
@@ -29,7 +29,7 @@ from cw_grid import MIN_RUN
 MIN_RATING = 1
 MAX_RATING = 5
 
-#: What an UNRATED answer counts as: the middle of the scale. A bank that rates
+#: What an unrated answer counts as: the middle of the scale. A bank that rates
 #: nothing therefore ties every grid on the rating level, so ratings choose
 #: nothing for it.
 NEUTRAL_RATING = (MIN_RATING + MAX_RATING) // 2
@@ -50,10 +50,10 @@ class ThemeInfo:
     A record rather than two maps keyed by slug, because two parallel maps can
     disagree and a record cannot.
 
-    The summary is REQUIRED because it is what the consumer's readout leads
+    The summary is required because it is what the consumer's readout leads
     with, and it is enforced here, at the untrusted-input boundary, rather
     than left to the consumer: a theme declared with nothing to say renders an
-    empty readout on the page, and nothing downstream can notice -- the
+    empty readout on the page, and nothing downstream can notice: the
     document is well-formed, the renderer throws nothing, and the grid draws.
     """
 
@@ -65,9 +65,9 @@ class ThemeInfo:
 class BankEntry:
     """One word-bank record: an answer, and its optional theme, clue, rating and spelling.
 
-    `answer` is the GRID form, letters only, and is what every comparison in
+    `answer` is the grid form, letters only, and is what every comparison in
     this project reads. `spelling` is how the bank wrote it when that says
-    more -- `HELLO THERE` for `HELLOTHERE` -- and None when the letters are
+    more (`HELLO THERE` for `HELLOTHERE`) and None when the letters are
     all there is.
 
     `rating` and `spelling` have defaults, None, because a bank assembled in
@@ -140,11 +140,11 @@ def _parse_theme_field(record: Mapping[str, object], key: str, field: str) -> st
 def _parse_themes(payload: Mapping[str, object]) -> dict[str, ThemeInfo]:
     """Validate payload['themes'] into a key-to-ThemeInfo dict.
 
-    Required even when empty -- "may be empty" is not the same as "may be
-    absent" -- so a missing key fails here just like a themes value of the
+    Required even when empty ("may be empty" is not the same as "may be
+    absent"), so a missing key fails here just like a themes value of the
     wrong type.
 
-    A bare label string is REJECTED rather than read as a label with no
+    A bare label string is rejected rather than read as a label with no
     summary. This is the project's untrusted-input boundary, and accepting
     that shape would push a theme with nothing to say all the way to the
     published page.
@@ -163,11 +163,11 @@ def _parse_themes(payload: Mapping[str, object]) -> dict[str, ThemeInfo]:
                 f"theme {cw_text.shown(key)} must be an object with 'label' and "
                 f"'summary', got {cw_text.shown(record)}"
             )
-        # The KEY is screened as well as the record's strings, and it is the
+        # The key is screened as well as the record's strings, and it is the
         # half nothing else in this project constrains: `_parse_answer`
         # restricts an answer to `cw_answer.SPELLING_RULE`, but a theme key
         # arrives from the operator's file unrestricted and the emitter writes
-        # it twice -- as a key of `themes` and as each record's "theme" value.
+        # it twice: as a key of `themes` and as each record's "theme" value.
         _screened(key, "a theme key")
         themes[key] = ThemeInfo(
             label=_parse_theme_field(record, key, "label"),
@@ -208,10 +208,10 @@ def _parse_theme(
     `theme: 5` as "undeclared", which sends an operator who typed a number
     instead of a key looking for a missing declaration that was never the
     problem. The isinstance check still has to
-    run FIRST, though, and not merely for a clearer message: an unhashable
+    run first, though, and not merely for a clearer message: an unhashable
     theme value (a list or dict submitted where a string belongs) would
-    otherwise make `theme not in themes` raise TypeError -- a crash, not a
-    BankError -- which is exactly the failure mode the property test in
+    otherwise make `theme not in themes` raise TypeError (a crash, not a
+    BankError), which is exactly the failure mode the property test in
     tests/test_properties.py exists to catch.
     """
     theme = raw_entry.get("theme")
@@ -233,7 +233,7 @@ def _parse_theme(
 def _screened(text: str, description: str) -> str:
     """Return `text`, or raise BankError naming what makes it unsafe to emit.
 
-    The clue-safety screen, applied at the PARSE boundary so a clue carrying a
+    The clue-safety screen, applied at the parse boundary so a clue carrying a
     `</script` is refused on the exit-2 line, before a search that may spend the
     whole time budget. The rule itself is not restated here: it is
     `cw_config.forbidden_clue_fragment`, the project's single statement of what
@@ -272,7 +272,7 @@ def _parse_rating(raw_entry: Mapping[str, object], answer: str) -> int | None:
     only thing a rating can do to a run. `bool` is refused by name, ahead of the
     integer check, because it is a subclass of `int`: `isinstance(True, int)`
     holds, and a JSON `true` would otherwise read as a rating of 1. A float is
-    refused even when whole -- JSON keeps `3` and `3.0` apart, and `3.0`
+    refused even when whole: JSON keeps `3` and `3.0` apart, and `3.0`
     suggests a finer scale than this field has.
     """
     rating = raw_entry.get("rating")
@@ -294,7 +294,7 @@ def _parse_entry(raw_entry: object, themes: Mapping[str, ThemeInfo]) -> BankEntr
     """Validate one bank record into a BankEntry.
 
     Pure with respect to duplicate detection on purpose: whether an answer
-    repeats depends on every OTHER entry too, which is state this function has
+    repeats depends on every other entry too, which is state this function has
     no business holding, so `parse_bank` checks it once per entry after this
     returns.
     """
@@ -363,7 +363,7 @@ def parse_bank(
 
     # frozen=True on Bank only stops rebinding the `themes` attribute; the
     # dict it would otherwise hold is still mutable in place. Wrapping it in
-    # a MappingProxyType makes the freeze real -- a view, not a copy, so it
+    # a MappingProxyType makes the freeze real: a view, not a copy, so it
     # still satisfies the declared `Mapping[str, ThemeInfo]` field type and
     # costs nothing extra to build.
     return Bank(themes=MappingProxyType(themes), entries=tuple(entries))
@@ -398,7 +398,7 @@ def read_bank_payload(path: Path) -> object:
     type to catch, whether the file was unreadable, mis-encoded or unparsable.
 
     `UnicodeDecodeError` has to be named separately because it is a
-    `ValueError`, NOT an `OSError` -- the mirror image of the reason
+    `ValueError`, not an `OSError`: the mirror image of the reason
     `cw_emit.write_atomically` names `UnicodeError` beside `OSError` on the way
     out. Without it a bank saved from an editor in a legacy code page escapes
     the CLI's refusal set entirely and surfaces as a traceback and exit 1,

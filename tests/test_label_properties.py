@@ -8,8 +8,8 @@ stated there. Whatever label `parse_document` accepts renders into an SVG an
 XML parser reads back with the label intact, and whatever it does not accept
 it refuses as an `EmitError`, never as a crash.
 
-The draw is weighted toward the characters at stake -- the controls, the
-surrogates, U+FFFE/U+FFFF, the XML metacharacters and the neighbors of each --
+The draw is weighted toward the characters at stake (the controls, the
+surrogates, U+FFFE/U+FFFF, the XML metacharacters and the neighbors of each),
 because arbitrary text rarely lands on one, and it includes the surrogates,
 which a plain text strategy never draws.
 

@@ -3,8 +3,8 @@
 What only a real run can settle: that a bank answer written `HELLO THERE` is
 laid in the grid as `HELLOTHERE`, that its clue reaches `grid_source.json` with
 its enumeration, that the report names the written form, and that every flag
-naming an answer -- `--feature`, `--prefer`, `--excluded-terms`, `--phrases`
-and `preview --feature` -- reaches it through its punctuation. Each refusal is
+naming an answer (`--feature`, `--prefer`, `--excluded-terms`, `--phrases`
+and `preview --feature`) reaches it through its punctuation. Each refusal is
 exit 2 and leaves no grid behind.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s

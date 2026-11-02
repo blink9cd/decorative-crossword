@@ -3,8 +3,8 @@
 `fill --source grid_source.json` starts the search from a grid the operator
 already has: every letter and entry of it stays where it is, and the fill grows
 into its blocked cells. These cases drive `main` end to end, because what each
-proves is a process boundary -- an exit code, the files that did or did not
-appear, and the words on stdout or stderr -- and each source check is decided
+proves is a process boundary (an exit code, the files that did or did not
+appear, and the words on stdout or stderr), and each source check is decided
 at its own call site in `cw_commands._prepare_fill`.
 
 Every refusal case asserts the diagnostic's own words, not the exit code alone.

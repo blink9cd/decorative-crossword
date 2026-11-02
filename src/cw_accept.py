@@ -5,18 +5,18 @@ They are: blocked percentage inside the requested window, at least
 entries, and every featured answer present. The search
 needs each of them in two forms:
 
-- `preflight` judges them against the BANK, before a single node is searched.
+- `preflight` judges them against the bank, before a single node is searched.
   A request no amount of searching could satisfy is refused immediately
   rather than after thirty seconds of proving it.
-- `missed_constraints` judges them against a GRID, at every node, and names
+- `missed_constraints` judges them against a grid, at every node, and names
   each one the grid currently fails.
 
 Under `--source` the grid form alone gains one more: a stray lone letter, which
 only a source can bring, so no bank-side form of it exists.
 
 Given `--max-two-letter`, the grid form gains another: no more two-letter entries
-than the cap. It has no bank-side form either -- whether a bank can make a grid
-under a COUNT of short entries is a question only the search itself answers.
+than the cap. It has no bank-side form either: whether a bank can make a grid
+under a count of short entries is a question only the search itself answers.
 
 Both forms live here rather than beside the walk so that the constraints
 are stated once. Splitting them across modules by *when* they run would put the
@@ -46,11 +46,11 @@ import cw_text
 def longest_line(config: cw_config.FillConfig) -> int:
     """The longest answer the grid could hold in either direction.
 
-    PUBLIC because the report (`cw_report`) has to annotate an unplaced answer
-    as "too long for a RxC grid" using the SAME rule this module refuses a
+    Public because the report (`cw_report`) has to annotate an unplaced answer
+    as "too long for a RxC grid" using the same rule this module refuses a
     featured answer by. Two copies of "how long a grid can hold" would let the
     pre-flight refusal and the report's annotation disagree about the same
-    answer -- the operator would be told two different things about one word.
+    answer: the operator would be told two different things about one word.
     """
     return max(config.rows, config.cols)
 
@@ -82,8 +82,8 @@ def feature_missing_from_bank(
 ) -> str | None:
     """Why a `--feature` names something the bank does not contain, or None.
 
-    PUBLIC, and deliberately so, because this one failure belongs on the
-    **exit-2** line -- with the other configuration errors -- while every other
+    Public, and deliberately so, because this one failure belongs on the
+    **exit-2** line (with the other configuration errors) while every other
     reason `preflight` returns is exit 1. The CLI calls this directly to make
     that decision, so there is one implementation of the
     check and no string-matching on reason text. `preflight` calls it too, so
@@ -92,7 +92,7 @@ def feature_missing_from_bank(
     Every absent answer, in the order given, in one reason: told only the
     first, an operator fixes it and is refused again for the second.
 
-    Membership only -- the set below is never iterated, so its hash-seeded
+    Membership only: the set below is never iterated, so its hash-seeded
     order cannot reach the returned reason.
     """
     held = {entry.answer for entry in bank.entries}
@@ -111,9 +111,9 @@ def _feature_length_reason(
 ) -> str | None:
     """Why a bare featured answer is too long for the grid, or None.
 
-    Bare features only. A pinned one's fit is a question about its CELLS, which
+    Bare features only. A pinned one's fit is a question about its cells, which
     `cw_feature.validate_features` has already answered at exit 2, naming the
-    pin as `ANSWER@ROW,COL,DIR` -- a second, vaguer sentence here would only
+    pin as `ANSWER@ROW,COL,DIR`. A second, vaguer sentence here would only
     restate it.
     """
     longest = longest_line(config)
@@ -214,13 +214,13 @@ def _empty_bank_reason(bank: cw_bank.Bank, _config: cw_config.FillConfig) -> str
     """Why there is nothing left to place, or None.
 
     `cw_bank.parse_bank` refuses an empty `entries` list at exit 2, so this is
-    unreachable from a file -- but `screen_excluded` can empty a bank that
+    unreachable from a file, but `screen_excluded` can empty a bank that
     parsed fine, and it is documented never to fail the run. Without this
     check that state reaches the operator as `_no_answer_fits_reason`'s
     sentence, which is vacuously true over no answers and points them at the
     grid size when the cause is their term list.
 
-    The sentence stays NEUTRAL about the cause: the pre-flight checks see the
+    The sentence stays neutral about the cause: the pre-flight checks see the
     screened bank and not the screen, and the report's own "Dropped by
     --excluded-terms" block is where the count and the names honestly live.
     """
@@ -234,7 +234,7 @@ def _no_answer_fits_reason(
 ) -> str | None:
     """Why no answer in the bank could be placed at all, or None.
 
-    An EMPTY bank is not this reason and must not be reported as one: `any`
+    An empty bank is not this reason and must not be reported as one: `any`
     over no entries is vacuously false, so the sentence below would assert that
     every one of zero answers is longer than the grid. `_empty_bank_reason`
     above states that case, and this one declines it.
@@ -271,7 +271,7 @@ def preflight(bank: cw_bank.Bank, config: cw_config.FillConfig) -> tuple[str, ..
     Empty means proceed. A refusal here is still exit 1, not 2: the request is
     well-formed, it just cannot be met by this bank at this size.
 
-    EVERY reason, not the first: an operator told one of two faults would fix
+    Every reason, not the first: an operator told one of two faults would fix
     it, re-run, and be told the second. The checks are therefore independent
     predicates rather than a chain.
 
@@ -283,8 +283,8 @@ def preflight(bank: cw_bank.Bank, config: cw_config.FillConfig) -> tuple[str, ..
 
     One caveat for the CLI: a featured answer that is not in the bank belongs
     on the exit-2 line, with the other configuration errors, because it is a
-    flag naming something that does not exist rather than a hard search. Do NOT
-    map every reason here to exit 1 -- call `feature_missing_from_bank` for
+    flag naming something that does not exist rather than a hard search. Do not
+    map every reason here to exit 1: call `feature_missing_from_bank` for
     that decision, which is the same function this one calls, so the two cannot
     disagree.
     """
@@ -339,18 +339,18 @@ def theme_floor_status(
 ) -> tuple[int, bool]:
     """How many themes reach the per-theme floor, and whether that meets the floor.
 
-    The two halves come back together because they come from ONE walk of
+    The two halves come back together because they come from one walk of
     `theme_counts`: the verdict is derived from the very count its callers go
     on to print, so asking for both at once costs exactly what asking for the
-    verdict alone did. Every caller that needs both -- `missed_constraints`
-    below, `cw_report`'s theme block and `cw_report_remedy`'s knob lines --
+    verdict alone did. Every caller that needs both (`missed_constraints`
+    below, `cw_report`'s theme block and `cw_report_remedy`'s knob lines)
     reads them here.
 
-    PUBLIC for the same reason `longest_line` is, and with a sharper failure
+    Public for the same reason `longest_line` is, and with a sharper failure
     mode: the report prints a "floor met" / "floor NOT met" verdict directly
     above the missed-constraint list this module produces. A second copy of the
-    comparison would let the two disagree IN THE SAME OUTPUT -- "floor met"
-    standing over an echoed "0 of 1 themes reach the 1-entry floor" -- which is
+    comparison would let the two disagree in the same output ("floor met"
+    standing over an echoed "0 of 1 themes reach the 1-entry floor"), which is
     worse than either sentence being wrong alone. So the comparison exists
     here, once, and nowhere else in the project.
     """
@@ -365,7 +365,7 @@ def theme_floor_met(
 
     The verdict-only spelling of `theme_floor_status`'s single walk, so a
     caller wanting the boolean alone reaches for this instead of writing the
-    `>= config.min_themes` comparison itself -- which would be the second
+    `>= config.min_themes` comparison itself, which would be the second
     statement of the rule `theme_floor_status` exists to prevent.
     """
     return theme_floor_status(rows, bank, config)[1]
@@ -377,12 +377,12 @@ def missed_constraints(
     """Every acceptance rule `rows` currently fails; empty means conforming.
 
     Acceptance and its diagnosis are one function on purpose, because a
-    failure must NAME the missed constraint: a separate predicate
+    failure must name the missed constraint: a separate predicate
     would be a second statement of the same rules, free to drift from the
     sentences the operator is shown.
 
     Features are looked for in the grid rather than in the search's placement
-    history, because the grid is what the operator gets -- an answer that
+    history, because the grid is what the operator gets: an answer that
     arrived as a free crossing is just as present as one deliberately placed.
     A pinned feature counts only as its own exact run (`cw_board.pinned_runs`). The same
     answer somewhere else is not the pin, and a pin extended into a longer
@@ -403,7 +403,7 @@ def missed_constraints(
         )
     # One call, not two: the verdict and the count come out of the same walk of
     # `theme_counts` (which rebuilds `bank.by_answer()` each time), and this
-    # function runs at every search node -- see the module docstring.
+    # function runs at every search node (see the module docstring).
     #
     # Computing the count separately, only on a miss, would add a second walk
     # at most checks, because most checks miss: on samples/large_square's
@@ -438,7 +438,7 @@ def two_letter_overrun(rows: Sequence[str], config: cw_config.FillConfig) -> int
     """How many two-letter entries `rows` carries when that is over the cap; 0 otherwise.
 
     The count is returned only on a miss, so one value answers both questions a
-    caller asks -- is the cap missed, and by how much -- and the comparison lives
+    caller asks (is the cap missed, and by how much) and the comparison lives
     here once: `missed_constraints` and `cw_report_remedy` both read it rather
     than each spelling `count > cap`. A miss is never 0, since a cap is at least 0.
 

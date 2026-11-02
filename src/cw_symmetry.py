@@ -6,11 +6,11 @@ It is a ranking level and never a filter: Crossword Compiler and Ingrid enforce
 symmetry as a hard constraint over block templates, and on a bank of tens of
 words that would starve the search.
 
-The measure is the PATTERN, never the letters. Two partner cells match when both
+The measure is the pattern, never the letters. Two partner cells match when both
 hold a letter or both are blocked; two partner letters almost never agree, so
 comparing them would count little but matched blocks, which is not a look anyone
 sees. Each pair of partner cells counts once, and a cell that is its own partner
--- the center under rotation, a middle column or row under a mirror -- is no
+(the center under rotation, a middle column or row under a mirror) is no
 pair at all, so "N of M" holds no match that came free. Counting cells instead
 would rank grids exactly as counting pairs does, and only inflate the figure.
 

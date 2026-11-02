@@ -1,11 +1,11 @@
 r"""Grouped suite: what reading a grid file returns, held to an oracle, whatever its bytes hold.
 
-`load_document` is the one reader of a grid file -- `preview`, `shade`, `gaps`
-and `fill --source` all come through it -- and a grid file is one this tool
+`load_document` is the one reader of a grid file (`preview`, `shade`, `gaps`
+and `fill --source` all come through it), and a grid file is one this tool
 may never have written. `test_loader_properties.py` holds it to returning or
-refusing and nothing else; this holds what it RETURNS to a coherent grid
-re-derived here -- every row as long as the first, every cell a letter A-Z or a
-block -- and to the rows the standard library alone reads from the same bytes.
+refusing and nothing else; this holds what it returns to a coherent grid
+re-derived here (every row as long as the first, every cell a letter A-Z or a
+block), and to the rows the standard library alone reads from the same bytes.
 The draw is the whole file: bytes that are not UTF-8, a byte-order mark,
 JSON's `NaN` and `Infinity`, a `\udXXX` escape that reads back as a lone
 surrogate, a key written twice, and documents of drawn rows, often enough

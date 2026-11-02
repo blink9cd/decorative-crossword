@@ -14,7 +14,7 @@ data block a page embeds the grid file in. It is looked for in the case-folded
 text, because an HTML parser matches an end tag's name without regard to ASCII
 case.
 
-Text the report only echoes -- a skipped word-list line -- is escaped instead,
+Text the report only echoes (a skipped word-list line) is escaped instead,
 and so is a bank label where the report prints it. The set escaped there is the
 refusal set plus the bidi controls. A bidi control is legal in a label: in the
 SVG it reaches no further than the line of text that holds it: the label alone
@@ -87,8 +87,8 @@ _BIDI = (
     "\U00002069",
 )
 
-#: The characters either side of each bidi range -- a zero-width joiner and a
-#: paragraph separator among them -- and an accented letter. `visible` escapes
+#: The characters either side of each bidi range (a zero-width joiner and a
+#: paragraph separator among them), and an accented letter. `visible` escapes
 #: none of them.
 _NOT_ESCAPED = (
     "\U0000061b",
@@ -258,8 +258,8 @@ class TestVisibleText(unittest.TestCase):
                 self.assertIn(f"A{char}B", _visible_skipped(f"A{char}B"))
 
     def test_keeps_the_zero_width_space_and_non_joiner(self) -> None:
-        # Each is text a label may need -- the space marks where a word may
-        # break, the non-joiner keeps two letters apart -- and neither is a
+        # Each is text a label may need (the space marks where a word may
+        # break, the non-joiner keeps two letters apart), and neither is a
         # control a terminal obeys: kept by the rule and printed as written.
         for char in ("\U0000200b", "\U0000200c"):
             with self.subTest(char=ascii(char)):

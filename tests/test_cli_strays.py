@@ -1,10 +1,10 @@
 """Grouped suite: the read subcommands warn about a stray lone letter.
 
 `preview`, `shade` and `gaps` take a `--source` grid this tool may never have
-produced, so a hand edit can leave a letter in no entry. An ISLAND -- a letter
-from `cw_island.ISLAND_LETTERS` with a letter of an entry at a corner -- is such
+produced, so a hand edit can leave a letter in no entry. An island (a letter
+from `cw_island.ISLAND_LETTERS` with a letter of an entry at a corner) is such
 a letter on purpose and draws nothing; any other lone letter is a stray. A
-stray gets a WARNING on stderr and nothing else changes: each subcommand still
+stray gets a warning on stderr and nothing else changes: each subcommand still
 draws, places or reports, and exits as it would have.
 
 One case per subcommand, because each handler reads its grid at its own call

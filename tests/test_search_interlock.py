@@ -2,14 +2,14 @@
 through a run that is not an answer yet.
 
 The fixture (`tests/interlock_fixtures.py`) is a dense, hand-shaped 5x5. From the state
-a one-word-at-a-time walk gets stuck in, every remaining answer placed ALONE breaks the
+a one-word-at-a-time walk gets stuck in, every remaining answer placed alone breaks the
 one rule, and the smallest legal step is two answers placed together. So a walk that
 insists every grid it passes through already obeys the rule stops short, however large
 its budget.
 
 This suite pins both halves of letting the walk pass through such a run: the walk
-reaches the grid, and every grid a search RETURNS -- conforming or best-effort, however
-the walk ends -- still obeys the rule in full.
+reaches the grid, and every grid a search returns (conforming or best-effort, however
+the walk ends) still obeys the rule in full.
 
 It also pins what that latitude must not cost. A step that breaks the rule opens a
 detour, and on a bank whose runs nearly all have some answer that could complete them,

@@ -1,4 +1,4 @@
-"""Grouped suite: `gaps` at the process boundary -- exit codes and files.
+"""Grouped suite: `gaps` at the process boundary: exit codes and files.
 
 What these cases test is not the analysis, which `test_gaps.py` owns, but the
 three things only a real run can settle: which exit code the operator's script
@@ -8,8 +8,8 @@ temporary folder.
 
 The exit codes follow `shade`'s, deliberately rather than by coincidence:
 `0` this grid has a gap worth reporting, `1` the analysis ran and it has none,
-`2` the run could not happen. `TestExitOne` is the one worth reading -- a grid
-whose every gap would absorb a curated answer has been ANALYZED successfully
+`2` the run could not happen. `TestExitOne` is the one worth reading: a grid
+whose every gap would absorb a curated answer has been analyzed successfully
 and still has nothing to offer, and reporting that as `2` would say something
 false about the operator's file.
 
@@ -28,7 +28,7 @@ import decorative_crossword
 from tests import cli_fixtures
 
 #: CAT and DOG lie two rows apart, so three of the four cells between them each
-#: demand a three-letter run crossing both -- `C?D`, `A?O`, `T?G` -- the fourth
+#: demand a three-letter run crossing both (`C?D`, `A?O`, `T?G`), the fourth
 #: would join no entry, and the two cells at the line ends would weld an answer
 #: instead. One grid, every tier but "needing two new answers".
 GRID_ROWS = ["CAT.", "....", "DOG."]
@@ -41,7 +41,7 @@ BANK: dict[str, object] = {
 }
 
 #: Every gap on this grid welds an existing answer, so the run succeeds and has
-#: nothing to list -- the exit-1 case.
+#: nothing to list: the exit-1 case.
 ONLY_ABSORBING_ROWS = ["AB.CD"]
 
 
@@ -158,8 +158,8 @@ class TestVocabularySources(cli_fixtures.QuietCase):
             space = GapsSpace(folder)
             words = space.words("ato", "cat-nap")
             decorative_crossword.main(space.argv("--words", str(words)))
-            # Reported UPPERCASED, because `load_word_list` folds case before
-            # it judges a line -- the same form `shade` reports a skip in.
+            # Reported uppercased, because `load_word_list` folds case before
+            # it judges a line, the same form `shade` reports a skip in.
             self.assertIn("CAT-NAP", self.printed)
 
 
@@ -258,7 +258,7 @@ class TestRender(cli_fixtures.QuietCase):
             # No fetched resource of any kind. The SVG namespace is a URI in
             # the document either way, so "no http" would fail on the one
             # string that has to be there; what matters is that nothing is
-            # REFERENCED.
+            # referenced.
             self.assertNotIn("href", drawn)
             self.assertNotIn("<image", drawn)
 
@@ -287,7 +287,7 @@ class TestMask(cli_fixtures.QuietCase):
         )
 
     def test_a_picture_the_grid_does_not_match_is_exit_two(self) -> None:
-        # The size is the SOURCE grid's here, not a flag's: `gaps` is given a
+        # The size is the source grid's here, not a flag's: `gaps` is given a
         # grid rather than asked to make one, so the refusal names both shapes.
         with tempfile.TemporaryDirectory() as folder:
             space = GapsSpace(folder)
@@ -304,8 +304,8 @@ class TestMask(cli_fixtures.QuietCase):
         # The same operator-authored contradiction `fill` refuses, and `gaps`
         # has to refuse it for a second reason of its own: accepted, the letter
         # would make the report say "1 of 12 cells may never hold a letter"
-        # about a cell holding C, and the masked count -- counted off the
-        # analysis, which only ever classifies BLOCKED cells -- would not
+        # about a cell holding C, and the masked count (counted off the
+        # analysis, which only ever classifies blocked cells) would not
         # include it.
         with tempfile.TemporaryDirectory() as folder:
             space = GapsSpace(folder)

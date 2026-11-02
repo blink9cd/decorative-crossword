@@ -1,10 +1,10 @@
-"""cw_pairs: pairs of entries that join into another word -- reported, never scored.
+"""cw_pairs: pairs of entries that join into another word: reported, never scored.
 
 Two entries can be better together than apart: `WEB` meeting `SITE` reads *web
 site*, and `ATTA` above `BOY` reads *atta boy*. No measure of a single word sees
-either, so nothing here tries to score them. What a tool can do is NAME them --
-every pair of entries whose two texts, joined, spell a word the operator already
-vouched for, a bank answer or a line of a `--phrases` list -- and leave the
+either, so nothing here tries to score them. What a tool can do is name them
+(every pair of entries whose two texts, joined, spell a word the operator already
+vouched for, a bank answer or a line of a `--phrases` list) and leave the
 judgment to the person reading the report.
 
 Three rulings shape it, each measured against those two pairs rather than chosen
@@ -21,22 +21,22 @@ in the abstract:
   files hold. No dictionary is consulted: an uncurated word source is what
   admits junk, and this tool's bank exists to keep it out.
 
-It is a REPORT by construction: what it returns is pairs and text, never a
+It is a report by construction: what it returns is pairs and text, never a
 number, so there is nothing a search could rank a grid by.
 
 The same joins are read once more against the opposite kind of list: the terms
 `--excluded-terms` bars. That screen reads each bank entry alone, so two clean
 entries can still spell a barred term together; `barred_lines` names every such
-join as a WARNING, and a `--phrases` line that is itself a term is skipped, so
+join as a warning, and a `--phrases` line that is itself a term is skipped, so
 the report never offers a barred word as wordplay. A join matches only when it
-IS a term once the term's spaces close up -- the screen's whole-word rule as it
-reads an answer, because a join is shaped like one -- so a term buried inside a
+is a term once the term's spaces close up (the screen's whole-word rule as it
+reads an answer, because a join is shaped like one), so a term buried inside a
 longer join warns nothing, the over-reach whole-word matching exists to
 prevent. It warns and never refuses: what to do about a join is the operator's
 call, and a refusal would take the grid away before they could see it.
 
-Output order is `cw_grid.runs_from_rows` order -- each entry against every entry
-after it, its own join first -- so two runs print byte-identical blocks. Every
+Output order is `cw_grid.runs_from_rows` order (each entry against every entry
+after it, its own join first), so two runs print byte-identical blocks. Every
 vocabulary is a frozenset used for membership only and never iterated.
 """
 
@@ -102,7 +102,7 @@ class Pair:
 def closed_up_terms(terms: Iterable[str]) -> frozenset[str]:
     """`terms` the way a join is compared with them: closed up, uppercased.
 
-    A phrase closes up to meet a join -- `web site` meets `WEB` and `SITE` -- so
+    A phrase closes up to meet a join (`web site` meets `WEB` and `SITE`), so
     a barred term has to close up the same way, by the same rule
     (`cw_answer.grid_form`), or a term written with a space or a hyphen could
     never match the join it names.
@@ -115,7 +115,7 @@ def screen_phrases(
 ) -> tuple[tuple[str, ...], tuple[tuple[str, str], ...]]:
     """`listed` split into the lines kept and the barred ones, each with its reason.
 
-    A line is barred when it IS a term, the rule a join is held to, so a phrase
+    A line is barred when it is a term, the rule a join is held to, so a phrase
     that merely holds a barred word is kept. Both halves keep `listed`'s order.
     """
     kept = tuple(line for line in listed if line not in barred)
@@ -151,8 +151,8 @@ def _pairs_among(
 def find_pairs(rows: Sequence[str], vocabulary: frozenset[str]) -> tuple[Pair, ...]:
     """Every pair of entries in `rows` that joins, either way round, into `vocabulary`.
 
-    The entries are the grid's own runs, so a lone letter -- an island, or a
-    stray in a hand-edited grid -- belongs to no entry and never pairs.
+    The entries are the grid's own runs, so a lone letter (an island, or a
+    stray in a hand-edited grid) belongs to no entry and never pairs.
     """
     return _pairs_among(cw_grid.runs_from_rows(rows), vocabulary)
 

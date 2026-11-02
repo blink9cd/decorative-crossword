@@ -6,14 +6,14 @@ refusal must reach stderr with that byte escaped. It does because the tool
 escapes every refusal line before printing it, its own and the argument
 parser's alike, and a lone surrogate is among the characters escaped; stderr's
 own escaping of a character it cannot encode is only the backstop behind that.
-With neither, the write would raise instead, a traceback and exit 1 -- which
+With neither, the write would raise instead, a traceback and exit 1, which
 this tool also means as "no conforming grid", so a typo would read as a verdict.
 
 The child is the real entry point, run as a script and writing to a real
 stderr: a redirect to `io.StringIO` stores the surrogate without encoding it,
 so no in-process test can see this at all. That stderr is a file rather than a
 pipe, so the timeout binds (test_cli_input.py says why). The argv byte works on
-macOS too: APFS restricts file NAMES, not arguments.
+macOS too: APFS restricts file names, not arguments.
 
 Run through test_decorative_crossword.py's `load_tests` hook.
 """

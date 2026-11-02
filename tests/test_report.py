@@ -1,15 +1,15 @@
 """Tests for cw_report's content blocks: what the report says was placed.
 
-The remedy block -- the missed constraints and the knob for each -- is the
+The remedy block (the missed constraints and the knob for each) is the
 other half of the report and lives in test_report_remedy.py; both suites
 share tests/report_fixtures.py.
 
-Assertions here are deliberately LINE-SCOPED (`_line`) or exact-fragment
+Assertions here are deliberately line-scoped (`_line`) or exact-fragment
 rather than `assertIn(..., whole_report)`. A report is one long string, so a
 membership test can be satisfied by an echoed answer, a theme label, or a
-neighboring section -- an assertion that passes for a reason it was not
+neighboring section: an assertion that passes for a reason it was not
 written to check. `_line` pins the one line under test and fails loudly when
-the prefix matches none or several; `_block_after` is what pins an ORDER,
+the prefix matches none or several; `_block_after` is what pins an order,
 since a test that gathers its expected lines by prefix reconstructs the very
 order it means to assert.
 """
@@ -42,8 +42,8 @@ class TestPlacedCount(unittest.TestCase):
     def test_counts_the_grid_rather_than_the_placement_record(self) -> None:
         # The grid's own runs are the authoritative entry set (cw_search's own
         # docstring): one placement can create more than one entry, and an
-        # entry can arrive for free. The record below holds ONE placement while
-        # the grid holds three answers -- COW and WET arrived as crossings --
+        # entry can arrive for free. The record below holds one placement while
+        # the grid holds three answers (COW and WET arrived as crossings),
         # so an implementation counting `outcome.placed` prints "1 of 5".
         outcome = _outcome(placed=(cw_place.Placement("CAT", 0, 0, cw_grid.ACROSS),))
         text = cw_report.render_report(outcome, _bank(), _config(), [])
@@ -63,7 +63,7 @@ class TestGridLine(unittest.TestCase):
 
     def test_states_a_non_square_grid_rows_before_cols(self) -> None:
         # --rows and --cols are independent options, so a non-square grid is
-        # ordinary input -- and a square fixture cannot tell "RxC" from "CxR".
+        # ordinary input, and a square fixture cannot tell "RxC" from "CxR".
         # Every other grid in these suites is square, which is exactly why this
         # one exists.
         config = _config(rows=2, cols=4, max_blocked=60.0, min_themes=0)
@@ -82,7 +82,7 @@ class TestGridLine(unittest.TestCase):
 
     def test_names_the_basis_it_measured_under_a_mask(self) -> None:
         # Masked cells leave both numerator and denominator, so the percentage
-        # is over a smaller grid than the size beside it -- and a figure whose
+        # is over a smaller grid than the size beside it, and a figure whose
         # basis a reader cannot see is a figure they will misread.
         # One of the 3x3's two blocked cells outside the entries is masked, so
         # the basis is 8 cells and one of them is blocked.
@@ -119,7 +119,7 @@ class TestFeature(unittest.TestCase):
     def test_reports_an_across_featured_answer_span_and_cells(self) -> None:
         # CAT runs ACROSS from the same corner COW runs DOWN from. Without this
         # case every feature fixture is a DOWN one, and an orientation hardcoded
-        # to "down" renders correctly in all of them -- while orientation is
+        # to "down" renders correctly in all of them, while orientation is
         # one of the three elements the line is required to carry.
         config = _config(feature="CAT")
         text = cw_report.render_report(_outcome(config=config), _bank(), config, [])
@@ -135,10 +135,10 @@ class TestFeature(unittest.TestCase):
     def test_reads_the_cells_back_out_of_the_grid_not_the_placement_record(
         self,
     ) -> None:
-        # The reported coordinates are the cells the answer ACTUALLY occupies,
+        # The reported coordinates are the cells the answer actually occupies,
         # checked by reading them back out of `rows`. The
         # placement record below deliberately disagrees with the grid, so an
-        # implementation that trusted it would report (2, 2)/(2, 3)/(2, 4) --
+        # implementation that trusted it would report (2, 2)/(2, 3)/(2, 4):
         # positions that do not spell COW, two of them off a 3x3 grid entirely.
         config = _config(feature="COW")
         outcome = _outcome(
@@ -166,7 +166,7 @@ class TestFeature(unittest.TestCase):
 
     def test_reports_every_featured_answer_in_the_order_given(self) -> None:
         # Two pins crossing at the corner, given DOWN first. Each gets its own
-        # line pair, in flag order rather than grid scan order -- which would
+        # line pair, in flag order rather than grid scan order, which would
         # put the ACROSS entry first and hide an implementation that sorted.
         config = _config(
             features=(
@@ -220,7 +220,7 @@ class TestThemes(unittest.TestCase):
         self.assertEqual(_line(text, "  Pets:"), "  Pets: 2 placed, floor 3 - short")
 
     def test_counts_declared_themes_not_the_theme_floor(self) -> None:
-        # The denominator is how many themes the BANK declares (2), which is a
+        # The denominator is how many themes the bank declares (2), which is a
         # different number from --min-themes (1). A fixture where they coincide
         # cannot tell the two apart, and the report would then claim a bank
         # declaring two themes had declared one.
@@ -333,7 +333,7 @@ class TestLengthShortage(unittest.TestCase):
         )
 
     def test_orders_lengths_shortest_first(self) -> None:
-        # Length 11 sorted as a STRING would come first; the order below is what
+        # Length 11 sorted as a string would come first; the order below is what
         # proves the sort is numeric, and it is deterministic.
         text = cw_report.render_report(_outcome(), _bank(), _config(), [])
         self.assertEqual(
@@ -348,7 +348,7 @@ class TestShortfall(unittest.TestCase):
     def test_states_the_cells_and_answers_the_density_still_needs(self) -> None:
         # 5x5 = 25 cells; a 45.0% ceiling allows 11 blocked, so 14 must be
         # filled and only 3 are. 11 more cells, at up to 5 letters an answer,
-        # is 3 more answers -- arithmetic with a non-trivial value in every
+        # is 3 more answers: arithmetic with a non-trivial value in every
         # term, so a wrong divisor or a dropped term cannot pass unnoticed.
         config = _config(rows=5, cols=5, min_themes=0)
         rows = ("CAT..", ".....", ".....", ".....", ".....")
@@ -362,9 +362,9 @@ class TestShortfall(unittest.TestCase):
         )
 
     def test_measures_against_the_longest_line_not_the_width(self) -> None:
-        # ARITHMETIC on a non-square grid, not a label: an 8x3 grid holds
+        # Arithmetic on a non-square grid, not a label: an 8x3 grid holds
         # 8-letter downs, so quoting the width would advise the operator to add
-        # 3-letter answers -- and would say 4 of them rather than 2. 24 cells,
+        # 3-letter answers, and would say 4 of them rather than 2. 24 cells,
         # a 45.0% ceiling allowing 10 blocked, 3 filled: 11 more cells, at up to
         # 8 letters an answer, is 2 answers.
         config = _config(rows=8, cols=3, min_themes=0)
@@ -423,7 +423,7 @@ class TestIslands(unittest.TestCase):
         text = cw_report.render_report(_outcome(config=config), _bank(), config, [], ())
         self.assertEqual(
             _line(text, "Islands"),
-            "Islands: none -- no blocked cell touches a letter only at a corner.",
+            "Islands: none, since no blocked cell touches a letter only at a corner.",
         )
 
     def test_names_an_island_the_floor_declined_under_those_laid(self) -> None:
@@ -457,7 +457,7 @@ class TestIslands(unittest.TestCase):
         )
         self.assertEqual(
             _line(text, "Islands"),
-            "Islands: none laid -- each would take the grid under the requested "
+            "Islands: none laid, since each would take the grid under the requested "
             "10.0% floor: (0, 0).",
         )
 

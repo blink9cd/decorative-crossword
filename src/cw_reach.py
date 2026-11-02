@@ -1,14 +1,14 @@
 """cw_reach: whether a search step may leave a run the one rule will later accept.
 
-The one rule -- every maximal run of two or more filled cells is a distinct bank
-answer -- is a promise about the grids this tool accepts and writes. Holding every
+The one rule (every maximal run of two or more filled cells is a distinct bank
+answer) is a promise about the grids this tool accepts and writes. Holding every
 step of the walk to it as well made interlocked grids unreachable: where answers
-share cells densely enough, every remaining answer placed ALONE breaks the rule and
+share cells densely enough, every remaining answer placed alone breaks the rule and
 only two placed together obey it, and a walk that lays one answer at a time never
 takes that step, however large its budget.
 
 So a step may leave a run that breaks the rule, provided an unused answer could
-still be laid over it (`completable`). That is a PRUNING test and nothing more. It
+still be laid over it (`completable`). That is a pruning test and nothing more. It
 ignores what completing a run would do to the lines crossing it and whether two
 partial runs want the same answer, and for a repeated answer it considers only the
 copy `cw_place.rule_breaks` reports. So a step it lets through may lead nowhere,
@@ -23,7 +23,7 @@ fixed budget of broken boards before it goes back. On a bank rich in short
 answers nearly every run passes `completable`, and without them one detour took
 every node the walk had.
 
-A `--source` grid may START on such a run: a half-written word no answer spells
+A `--source` grid may start on such a run: a half-written word no answer spells
 yet, which the fill must complete (`partial_runs`). The same test decides whether
 one is worth starting from, and it stays a pruning test there too: a source run
 it passes may still never be completed.
@@ -31,7 +31,7 @@ it passes may still never be completed.
 Pins get no such latitude. A pin extended into a longer run can never become
 itself again, so `pins_hold` is checked strictly at every step.
 
-Both questions are asked on every node, so what they READ is kept to what they
+Both questions are asked on every node, so what they read is kept to what they
 need. A broken board's candidates are built from the break's own line
 (`placements_over`), and a step check asks about a broken run only the answers
 holding its letters (`holders_by_fragment`). Each gives exactly what the full read
@@ -75,7 +75,7 @@ def _lays_over(line: str, first: int, answer: str) -> bool:
     """Whether `answer` placed from `first` along `line` would stand as its own run.
 
     It must lie inside the line, agree with every letter already in its span,
-    and have a block or the edge just past both ends -- a filled neighbor would
+    and have a block or the edge just past both ends: a filled neighbor would
     join the two into one longer run that `answer` does not spell.
     """
     end = first + len(answer)
@@ -94,7 +94,7 @@ def _lays_over(line: str, first: int, answer: str) -> bool:
 def completable(rows: Sequence[str], run: cw_grid.Run, answers: Sequence[str]) -> bool:
     """Whether some answer in `answers` could still be laid over `run`.
 
-    Only a LONGER answer counts: a run that already spells an answer and still
+    Only a longer answer counts: a run that already spells an answer and still
     breaks the rule is a repeat, which only extending it could change.
     """
     line, start = _line(rows, run)
@@ -122,7 +122,7 @@ def placements_over(
     """Every fitting placement of `answers` that lies over all of one of `runs`.
 
     Exactly the placements `cw_place.crossing_candidates` offers that `covers` one
-    of `runs`, but BUILT from each run's own line rather than filtered out of every
+    of `runs`, but built from each run's own line rather than filtered out of every
     crossing on the board. A placement covering a run lies along its line (see
     `covers`), and one agreeing with its letters holds the run's text at the offset
     it starts from, so `_offsets` names every one; `cw_place.fits` then judges it
@@ -155,23 +155,23 @@ def placements_over(
 def holders_by_fragment(
     answers: Sequence[str], *, longest: int
 ) -> Mapping[str, tuple[str, ...]]:
-    """Every fragment of two or more letters, mapped to the LONGER answers holding it.
+    """Every fragment of two or more letters, mapped to the longer answers holding it.
 
     Built once per search, so a step check asks about a broken run only the answers
     that could ever lie over it. `completable` counts an answer only when it is
     longer than the run and holds the run's letters, and those are exactly the
-    answers listed under the run's text -- so asking them alone gives its verdict,
+    answers listed under the run's text, so asking them alone gives its verdict,
     without scanning every unused answer on every tried step (on a 1,817-answer
     bank, 85% of an 11x11 fill once candidate building was cheap). An answer is
     never listed under itself, and once under a fragment it holds twice.
 
-    Only answers of at most `longest` letters -- the grid's longest line -- are
+    Only answers of at most `longest` letters (the grid's longest line) are
     indexed. A longer one can never be laid, so `completable` would never count
     it, and indexing it costs every substring it has: about L**3 / 6 characters,
     built before the first node, where no budget is read.
 
     Keys and holders keep the order given; nothing reads an order from them anyway,
-    since `step_allowed` only asks whether ANY holder lies over the run.
+    since `step_allowed` only asks whether any holder lies over the run.
     """
     table: dict[str, list[str]] = {}
     placeable = (answer for answer in answers if len(answer) <= longest)
@@ -197,9 +197,9 @@ def unused_answers(rows: Sequence[str], bank: cw_bank.Bank) -> tuple[str, ...]:
     of what the search placed, so an answer the grid gained for free is
     excluded too.
 
-    It does NOT rule out `cw_place.crossing_candidates`' documented
+    It does not rule out `cw_place.crossing_candidates`' documented
     zero-progress candidate, and must not be read as though it did: an answer
-    whose letters all sit inside a LONGER run -- CAT inside CATS -- is not
+    whose letters all sit inside a longer run (CAT inside CATS) is not
     itself a run, so it survives this filter, and re-laying it over those cells
     would fill nothing. `cw_order.ordered_candidates` is what drops that one.
     """
@@ -214,8 +214,8 @@ def partial_runs(
 
     On a `--source` grid these are the half-written words. `cw_source` has
     already refused any such run no unused answer could complete, so every one
-    left is a run the fill must finish. `allowed` is the search bank -- the
-    bank's answers and every entry kept from the source -- so a kept entry is
+    left is a run the fill must finish. `allowed` is the search bank (the
+    bank's answers and every entry kept from the source), so a kept entry is
     never partial, however a longer answer could extend it.
     """
     return tuple(run for run in cw_grid.runs_from_rows(rows) if run.text not in allowed)
@@ -259,7 +259,7 @@ def pins_hold(runs: Sequence[cw_grid.Run], pinned: tuple[cw_grid.Run, ...]) -> b
 
     `runs` is every run of the board (`cw_grid.runs_from_rows`), so the check is
     whole-grid, like the rule: a placement can leave every pinned cell untouched
-    and still end a pin, by filling the cell just past it -- JANE becomes JANET.
+    and still end a pin, by filling the cell just past it: JANE becomes JANET.
     Holding the cells is not holding the entry.
     """
     return all(run in runs for run in pinned)
@@ -276,13 +276,13 @@ def step_allowed(
     Every pin must hold, and every run that breaks the rule must be one an
     unused answer could still complete. `holders` is `holders_by_fragment` over
     the search bank: each break is asked of the answers listed under its text
-    that are not already an entry on this board -- the unused ones that could
+    that are not already an entry on this board: the unused ones that could
     ever lie over it, and so the same verdict as asking every unused answer.
     Neither the index nor the board's entries are read when the step breaks
     nothing, which is most steps.
 
-    The board's runs are derived once and read by all three questions -- pins,
-    breaks, entries -- since this is the walk's most frequent question: an 11x11
+    The board's runs are derived once and read by all three questions (pins,
+    breaks, entries), since this is the walk's most frequent question: an 11x11
     look-ahead window asks it about 455,000 times, and deriving the runs again
     for each question was nearly half its cost.
     """

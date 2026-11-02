@@ -1,9 +1,9 @@
 """cw_report: the placement report and its shortage diagnosis.
 
-This is the tool's human-facing PRODUCT, not an error channel: the same report
+This is the tool's human-facing product, not an error channel: the same report
 goes to stdout on exit 0 and on exit 1, because what an operator needs after a
 miss is the number to change, not a restatement that the run failed. Density
-is the reason the closing lines exist at all -- it is a demand on the BANK
+is the reason the closing lines exist at all: it is a demand on the bank
 rather than on search effort, so a report ending in "no grid found"
 would send the reader back to `--help` for a knob that cannot help them.
 
@@ -20,8 +20,8 @@ One sourcing rule runs through every block here, and it is deliberate:
 The closing block, which turns a miss into the knob to change, is built in
 `cw_report_remedy`, and the rule its verdict is sourced by is stated there.
 
-Every ordering here comes from an ordered source -- `bank.entries`,
-`bank.themes`, or an explicit `sorted` -- because two runs must produce
+Every ordering here comes from an ordered source (`bank.entries`,
+`bank.themes`, or an explicit `sorted`) because two runs must produce
 byte-identical output, and a set's iteration order is
 `PYTHONHASHSEED`-dependent. No set here can reach output: each serves only
 `in` and `len`, or goes straight into `sorted`, which replaces the hash order
@@ -75,7 +75,7 @@ def _cell_counts(
 
 
 def _placed_answers(rows: Sequence[str], bank: cw_bank.Bank) -> frozenset[str]:
-    """Every bank answer standing in the grid, as a membership SET.
+    """Every bank answer standing in the grid, as a membership set.
 
     From the grid's runs rather than from the search's placement history, for
     the reason `cw_search.SearchOutcome` states: an entry can arrive as a free
@@ -95,7 +95,7 @@ def _placed_line(rows: Sequence[str], bank: cw_bank.Bank) -> str:
     """The headline count: placed N of M bank entries.
 
     `len` of the set is the entry count because `cw_bank.parse_bank` rejects a
-    repeated answer before a Bank exists -- the same guarantee `Bank.by_answer`
+    repeated answer before a Bank exists, the same guarantee `Bank.by_answer`
     already builds on.
     """
     return (
@@ -113,7 +113,7 @@ def _mask_lines(mask_file: str | None, config: cw_config.FillConfig) -> list[str
     the grid line names; only the PATH has to be carried here, since a config
     holds values rather than the files they came from.
 
-    The denominator is the whole grid rather than the usable part -- this line
+    The denominator is the whole grid rather than the usable part: this line
     is how a reader learns how many cells left the grid, so measuring it over
     what remains would state the subtraction in terms of its own result.
 
@@ -134,7 +134,7 @@ def _mask_lines(mask_file: str | None, config: cw_config.FillConfig) -> list[str
 def _files_lines(files: Sequence[tuple[str, int]]) -> list[str]:
     """Each `--bank` file, in the order merged, with its entry count; nothing for one.
 
-    Under the headline because the headline counts the MERGED bank, each answer
+    Under the headline because the headline counts the merged bank, each answer
     once, and this line is how a reader squares that count with their own files.
     One bank prints nothing: there is no merge to square. Each name is escaped
     as `_mask_lines` escapes its path, and for the same reason.
@@ -151,8 +151,8 @@ def _files_lines(files: Sequence[tuple[str, int]]) -> list[str]:
 def _grid_line(rows: Sequence[str], config: cw_config.FillConfig) -> str:
     """Size, fill, achieved density, and the range that was requested.
 
-    The size is the REQUESTED one (`config`) while the cell counts and the
-    percentage are the PRODUCED ones (`rows`). Deliberately both: the size is
+    The size is the requested one (`config`) while the cell counts and the
+    percentage are the produced ones (`rows`). Deliberately both: the size is
     what the operator asked for and what every "too long for a RxC grid"
     annotation below names, while the density verdict has to describe the grid
     that actually came back.
@@ -173,10 +173,10 @@ def _grid_line(rows: Sequence[str], config: cw_config.FillConfig) -> str:
 def _one_feature_lines(rows: Sequence[str], answer: str) -> list[str]:
     """One featured answer's orientation, span, and shaded cells.
 
-    `cw_grid.find_answer` is the required READ-BACK: the coordinates printed
+    `cw_grid.find_answer` is the required read-back: the coordinates printed
     are the ones the answer actually occupies in `rows`,
     so a report cannot agree with a wrong placement record. Coordinates are
-    0-based `(row, column)` indexing `rows[r][c]`, and the line says so --
+    0-based `(row, column)` indexing `rows[r][c]`, and the line says so:
     an unstated convention here is the classic off-by-one.
     """
     run = cw_grid.find_answer(rows, answer)
@@ -227,7 +227,7 @@ def _theme_lines(
         verdict = "met" if count >= floor else "short"
         label = cw_text.visible(info.label)
         lines.append(f"{_INDENT}{label}: {count} placed, floor {floor} - {verdict}")
-    # The OVERALL verdict comes from cw_accept, not from a second
+    # The overall verdict comes from cw_accept, not from a second
     # `met >= min_themes` here: this line prints directly above the echoed
     # missed-constraint list, so two copies of the comparison could contradict
     # each other inside one report. Named `floor_met` rather than reusing
@@ -259,8 +259,8 @@ def _unplaced_lines(
     """The answers the grid does not hold, annotated where the reason is knowable."""
     if not bank.entries:
         # "every bank entry is in the grid" is vacuously true of no entries and
-        # reads as success. A bank can arrive here empty -- `screen_excluded`
-        # never fails a run -- so the sentence has to say which of the two it is.
+        # reads as success. A bank can arrive here empty (`screen_excluded`
+        # never fails a run), so the sentence has to say which of the two it is.
         return ["Unplaced answers: none - the bank holds no answers."]
     placed = _placed_answers(rows, bank)
     missing = [entry.answer for entry in bank.entries if entry.answer not in placed]
@@ -328,11 +328,11 @@ def _shortfall_cells(rows: Sequence[str], config: cw_config.FillConfig) -> int:
 def _shortfall_line(rows: Sequence[str], config: cw_config.FillConfig) -> str:
     """The closing shortfall line: cells needed, and answers that would supply them.
 
-    The gap is closed by LONGER answers, not by more search time, so the figure
+    The gap is closed by longer answers, not by more search time, so the figure
     quoted is against the longest answer the grid can hold.
     The division is safe without a guard: `validate_fill_config` rejects a
     non-positive dimension, so `longest_line` is at least 1 wherever this
-    branch runs -- a zero-divisor guard here would be a branch no test could
+    branch runs: a zero-divisor guard here would be a branch no test could
     reach.
     """
     needed = _shortfall_cells(rows, config)
@@ -398,12 +398,12 @@ def render_report(
     `dropped` is the `(answer, reason)` pairs `--excluded-terms` removed before
     the bank reached the search; empty when the flag was not used. It is taken
     as a parameter rather than recomputed here because `bank` is already the
-    SCREENED bank -- which is exactly why its removals have to be reported
+    screened bank, which is exactly why its removals have to be reported
     separately, or the headline count silently contradicts the operator's own
     input file. `islands` are the lone letters `fill` laid on the written grid,
-    and `declined` those `--min-blocked` left unlaid. `outcome` is the grid AS
-    WRITTEN, islands included, so every figure here -- the density line and the
-    shortfall with it -- describes the file on disk and its preview. `ranked` is
+    and `declined` those `--min-blocked` left unlaid. `outcome` is the grid as
+    written, islands included, so every figure here (the density line and the
+    shortfall with it) describes the file on disk and its preview. `ranked` is
     the search's own outcome, for the choice block alone: that block states what
     the grid was ranked on, and islands are laid after the ranking. None means
     the two are one grid. `phrases` are the `--phrases` lists the answer-pairs
@@ -414,8 +414,8 @@ def render_report(
     `kept` is the entries `--source` kept outside the bank, which `bank` already
     holds at its end (`cw_source.StartSource`); empty without a source. The
     headline, unplaced and word-length blocks describe the --bank file, so they
-    count without them. Every block that judges the grid -- the choice, pairs,
-    theme and remedy blocks -- counts the full `bank`, the one the grid was
+    count without them. Every block that judges the grid (the choice, pairs,
+    theme and remedy blocks) counts the full `bank`, the one the grid was
     searched and scored on. The source block comes straight after the warning,
     so what the fill started from is read before anything the fill added.
 

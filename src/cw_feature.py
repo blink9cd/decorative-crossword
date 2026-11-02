@@ -1,11 +1,11 @@
-"""cw_feature: the `--feature` flag -- its grammar, its typed model, and its pin checks.
+"""cw_feature: the `--feature` flag: its grammar, its typed model, and its pin checks.
 
 `fill --feature` repeats, and each value is `ANSWER` or `ANSWER@ROW,COL,DIR`: an
 answer the grid must hold, optionally pinned with its first letter at a 0-based
-cell. Everything about that one flag that can be decided WITHOUT a bank lives
-here -- reading a value, and refusing pins that contradict the grid, each
+cell. Everything about that one flag that can be decided without a bank lives
+here (reading a value, and refusing pins that contradict the grid, each
 other, or the `--source` grid they are laid on, including a pin another pin or
-a source letter would swallow -- and every refusal is a `cw_config.ConfigError`,
+a source letter would swallow), and every refusal is a `cw_config.ConfigError`,
 on the exit-2 line with the other contradictory configurations. One source
 check is handed the source's partial runs rather than a bank:
 `validate_source_runs`, which lets a pin lying along a partial run complete it.
@@ -54,7 +54,7 @@ _Pin = tuple[str, "Anchor"]
 class Anchor:
     """Where a pinned feature's first letter sits, and which way it runs.
 
-    0-based `(row, col)` from the top-left cell -- the convention the report
+    0-based `(row, col)` from the top-left cell, the convention the report
     prints and `grid_source.json`'s `rows` array indexes.
     """
 
@@ -83,7 +83,7 @@ def _parse_index(name: str, part: str, text: str) -> int:
     Not bare `int()`, which also takes a sign, surrounding whitespace, an
     underscore and non-ASCII digits. A pin is a cell index typed by hand, and a
     grammar that quietly accepted ` 1` or `+1` is one whose refusals nobody
-    could predict -- so a negative row is refused here, as a malformed value,
+    could predict, so a negative row is refused here, as a malformed value,
     rather than reaching the bounds check as a cell above the grid.
     """
     if not (part.isascii() and part.isdigit()):
@@ -96,7 +96,7 @@ def _parse_index(name: str, part: str, text: str) -> int:
     except ValueError as exc:
         # The screen above leaves int() one way to refuse: more digits than the
         # interpreter's integer-string limit. No grid has that many rows, so
-        # it is a malformed value like any other -- named by its length, since
+        # it is a malformed value like any other, named by its length, since
         # echoing thousands of digits back would bury the message.
         raise cw_config.ConfigError(
             f"--feature: {name} has {len(part)} digits, far past any grid's size"
@@ -112,8 +112,8 @@ def parse_feature(text: str) -> Feature:
     (`cw_answer.grid_form`) so `ATTA-BOY` names the grid's `ATTABOY`; case is
     left alone, for the reason `grid_form` gives. Whether it names a bank
     answer is the bank check's question, asked later at exit 2. Whether an
-    anchor FITS the grid, or agrees with another, is `validate_features`'
-    question -- this sees one value and no grid.
+    anchor fits the grid, or agrees with another, is `validate_features`'
+    question: this sees one value and no grid.
     """
     written, mark, spec = text.partition(ANCHOR_MARK)
     answer = cw_answer.grid_form(written)
@@ -177,7 +177,7 @@ def _pinned_letters(pin: _Pin) -> tuple[tuple[tuple[int, int], str], ...]:
 def _caps(pin: _Pin) -> tuple[tuple[int, int], tuple[int, int]]:
     """The cell just before a pin's first letter, and just after its last.
 
-    The step is the second cell of a two-cell run laid at the origin -- the
+    The step is the second cell of a two-cell run laid at the origin, the
     idiom `cw_place` derives its own step table by, so `cw_grid.Run` stays the
     one definition of which way ACROSS and DOWN advance.
     """
@@ -230,7 +230,7 @@ def _validate_clear_of_mask(
     `cw_board.pinned_board` writes it through `cw_place.apply_placement`, which
     is given a grid and no mask. Refused here, before any board is built.
 
-    An island in a masked cell is NOT refused, only ineligible
+    An island in a masked cell is not refused, only ineligible
     (`cw_island.fill_islands`). The difference is authorship: a pin is what the
     operator wrote, and a grid missing it is not the grid they asked for, while
     an island is a choice the tool makes for itself and can simply decline.
@@ -271,7 +271,7 @@ def _validate_apart(pins: tuple[_Pin, ...]) -> None:
 
     A pin is an entry only while its run is maximal. A pinned cell just before
     its first letter or just after its last joins the line into one longer
-    run, and the pin spells part of something else -- `AB` inside `ABC`, or
+    run, and the pin spells part of something else: `AB` inside `ABC`, or
     `CHALK` running into a `CRANE` pinned down from the next cell. With only
     pins on the board that is the whole condition, so no board is built to
     decide it. The map below is looked up by cell and never iterated, and names
@@ -390,8 +390,8 @@ def validate_source_runs(
     lengthens one is refused, naming the entry rather than the pin. A partial
     run is no entry, and a pin lying along all of it (`cw_reach.covers`, the
     test the walk's rank and the report share) names the answer completing it.
-    Any other lengthening -- a pin landing just past its end, across its line
-    -- is refused: the longer run is one no pin holds. Source runs are walked
+    Any other lengthening (a pin landing just past its end, across its line)
+    is refused: the longer run is one no pin holds. Source runs are walked
     in scan order, so the fault named is the first.
 
     `growable` is the entries `--absorb-entries` lets grow
@@ -440,9 +440,9 @@ def validate_features(config: cw_config.FillConfig) -> None:
     a pin that is no longer its exact run once laid on the source. Two
     questions need more. Whether a pin may lengthen a source run turns on
     which runs are partial, so that is `validate_source_runs`, still at exit
-    2. Whether the pinned board obeys the one rule needs the BANK -- two pins
+    2. Whether the pinned board obeys the one rule needs the bank (two pins
     in adjacent lines are legal exactly when every pair they create is an
-    answer -- so that is `cw_accept.preflight`'s question, at exit 1.
+    answer), so that is `cw_accept.preflight`'s question, at exit 1.
 
     The source checks run last, in that order, so each can lean on what the
     earlier ones settled: pins in bounds, distinct, agreeing with each other
@@ -450,7 +450,7 @@ def validate_features(config: cw_config.FillConfig) -> None:
     changes a letter is named for the letter, not for the longer run the
     changed letter happens to make.
 
-    Run it AFTER `cw_config.validate_fill_config`, as the CLI does: the bounds
+    Run it after `cw_config.validate_fill_config`, as the CLI does: the bounds
     check trusts that the grid's dimensions are already known to be positive,
     and on a zero-row grid it would report every pin as running off the edge
     rather than naming `--rows`.

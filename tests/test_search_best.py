@@ -1,6 +1,6 @@
 """Tests for cw_search choosing among conforming grids within --look-ahead nodes.
 
-Every case here is built so that it holds WHICHEVER grid the walk happens to reach
+Every case here is built so that it holds whichever grid the walk happens to reach
 first. The preference and theme cases run in both directions, so one direction has to
 override the grid found first; the letters case uses a ceiling loose enough that the
 pinned board itself conforms at the very first node.

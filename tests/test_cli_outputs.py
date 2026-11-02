@@ -4,14 +4,14 @@ Every subcommand that writes hands its output flags and its input flags to
 `cw_paths.refuse_unusable_outputs` before it reads a file. These cases drive
 `main` end to end, one per handler and one per input flag that handler hands
 over, so a handler that dropped the call, dropped a flag from it, or moved it
-past a read fails a case of its own. What the check decides -- spellings, hard
-links, case -- is `test_paths.py`'s, and the `--source` spellings under `fill`
+past a read fails a case of its own. What the check decides (spellings, hard
+links, case) is `test_paths.py`'s, and the `--source` spellings under `fill`
 stay in `test_cli_source.py`.
 
 Each refusal asserts that the protected file is byte-for-byte unchanged and
 that no report reached stdout: without the check, the overwriting runs here
 would replace their input at exit 0 or 1, and the directory runs would refuse
-only at the write, after everything else had run -- an exit 2 either way, so
+only at the write, after everything else had run: an exit 2 either way, so
 the exit code alone cannot tell the check from its absence.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
@@ -108,7 +108,7 @@ class TestFillOutputs(OutputsCase):
             self.assert_refused(argv, terms, "--out names the --excluded-terms file")
 
     def test_out_naming_any_phrases_list_is_refused(self) -> None:
-        # The SECOND list: a check handed only the first --phrases would pass
+        # The second list: a check handed only the first --phrases would pass
         # this command line and write over this one.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)

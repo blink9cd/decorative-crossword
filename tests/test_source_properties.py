@@ -5,8 +5,8 @@ including one this project never wrote, so it carries the `# fuzz-target`
 marker, paired with `test_fuzz_start_from` below.
 
 **A source that passes is a board the search may start from.** Every run of it
-that breaks the distinct-run rule under the vocabulary the check hands back --
-the bank's answers plus every kept entry -- must be a partial run the check
+that breaks the distinct-run rule under the vocabulary the check hands back
+(the bank's answers plus every kept entry) must be a partial run the check
 names, in scan order, and one an answer not on the board could still be laid
 over; and a kept entry must be one the bank lacked and the source declared.
 The walk's own step test rests on the first half, and the best-effort guard,
@@ -67,7 +67,7 @@ settings.register_profile(
 settings.load_profile("crossword_source_properties")
 
 #: Three letters: few enough that runs repeat and cross often, not so few that a
-#: repeat refuses most draws -- over two letters it refused 193 of 302 calls.
+#: repeat refuses most draws: over two letters it refused 193 of 302 calls.
 _LETTERS = "ABC"
 
 #: The letters plus the block, the cells a grid is drawn from.
@@ -108,8 +108,8 @@ def _requests(draw: st.DrawFn) -> Request:
     declared = draw(pick)
     # One draw in `_GROW_ONE_IN` grows one run: bank an answer one letter longer than
     # it, and neither hold nor declare the run itself, so it can only pass as a
-    # partial run. Every OTHER run the bank lacks is then declared, because a
-    # single undeclared run nothing extends refuses the whole source -- with
+    # partial run. Every other run the bank lacks is then declared, because a
+    # single undeclared run nothing extends refuses the whole source: with
     # random answers alone, 1 of 303 calls passed holding a partial run, and
     # growing a run without declaring the rest, 1 again. The rate was measured
     # at one in 1, 2 and 3: every draw growing a run passed with kept entries in
@@ -119,7 +119,7 @@ def _requests(draw: st.DrawFn) -> Request:
     grow = draw(st.sampled_from(texts)) if grows else None
     if grow is not None or draw(st.booleans()):
         # Otherwise half the draws declare every run the bank lacks, so a source
-        # that repeats nothing passes WITH kept entries. Two independent subsets
+        # that repeats nothing passes with kept entries. Two independent subsets
         # alone passed with a kept entry in 19 of 302 calls (over two letters),
         # starving the loop that checks what was kept.
         declared = declared | (set(texts) - held)

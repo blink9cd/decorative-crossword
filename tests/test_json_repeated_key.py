@@ -143,7 +143,7 @@ class TestDuplicateKeys(unittest.TestCase):
 
 
 class TestWhatCountsAsARepeat(unittest.TestCase):
-    """Only a key twice in ONE object is a repeat."""
+    """Only a key twice in one object is a repeat."""
 
     def test_one_key_in_each_of_two_objects_is_no_repeat(self) -> None:
         self.assertEqual(

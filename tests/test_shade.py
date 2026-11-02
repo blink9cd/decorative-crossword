@@ -1,19 +1,19 @@
 """Grouped suite: the hidden-word search and the cells it chooses to shade.
 
 Two halves, and the second is the one that matters. Finding *whether* a word
-can be spelled by shading cells is a subsequence test and is nearly free -- on
+can be spelled by shading cells is a subsequence test and is nearly free: on
 a real grid most short words match, so a suite that only checked "it finds a
 word" would stay green against a tool that chose the wrong cells every time.
-The cell CHOICE is the load-bearing half, and the obvious implementation of it
--- take the first occurrence of each letter -- is measurably wrong: it clusters
+The cell choice is the load-bearing half, and the obvious implementation of it
+(take the first occurrence of each letter) is measurably wrong: it clusters
 the picks inside one answer, and the shading reads as a corrupted entry rather
 than as a hidden word.
 
 So the cases below pin the distinction in both directions. `TestClustering`
-holds one word against two grids -- one that forces its letters into a single
-row and one that spreads them one per row -- and asserts the scores are far
+holds one word against two grids (one that forces its letters into a single
+row and one that spreads them one per row), and asserts the scores are far
 apart. `TestGreedyIsNotEnough` holds a grid where the greedy pick and the
-chosen pick differ, and asserts the CELLS, not just the score: a chooser
+chosen pick differ, and asserts the cells, not just the score: a chooser
 swapped for greedy fails there even if the scoring function survives intact.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
@@ -35,15 +35,15 @@ ONE_ROW = ("HIDDEN",)
 
 #: The same word's letters, one per row, no two in the same row. Every pair is
 #: two or more cells apart, so a chooser that walks them in order pays nothing.
-#: Deliberately NOT a diagonal all the way down: the last letter sits back at
+#: Deliberately not a diagonal all the way down: the last letter sits back at
 #: column 0, so a chooser that only ever stepped down-and-right would still
 #: have to reach it.
 SCATTERED = ("H.....", ".I....", "..D...", "...D..", "....E.", "N.....")
 
-#: C has one home; A and T each have two -- one in row 0 beside C, one further
+#: C has one home; A and T each have two: one in row 0 beside C, one further
 #: down and away. Greedy takes the row-0 pair and lands on three consecutive
 #: cells of one entry; the shortest path takes the far pair and pays nothing.
-#: The two disagree on the CELLS, not only on the score.
+#: The two disagree on the cells, not only on the score.
 GREEDY_TRAP = ("CAT..", ".A...", "..T..")
 
 #: What greedy would pick on GREEDY_TRAP, and what the chooser must not.
@@ -77,7 +77,7 @@ class TestClusteringPenalty(unittest.TestCase):
     def test_same_row_adjacent_column_is_the_heaviest_step(self) -> None:
         """Adjacent in a row is what makes shading read as a corrupted entry.
 
-        It is also orthogonally touching, so it pays that term too -- the two
+        It is also orthogonally touching, so it pays that term too: the two
         are separate observations about one step, and the heaviest penalty in
         the table is the sum rather than a fourth named number.
         """
@@ -118,8 +118,8 @@ class TestPlaceWord(unittest.TestCase):
     def test_an_empty_word_is_not_placed(self) -> None:
         """It spells nothing, so a placement of no cells would be a lie.
 
-        Nothing in the CLI can reach this -- the word list skips a blank line
-        and `--word` is length-checked -- but `place_word` is public, and
+        Nothing in the CLI can reach this (the word list skips a blank line
+        and `--word` is length-checked), but `place_word` is public, and
         without the guard the empty case is an IndexError rather than an
         answer.
         """
@@ -147,7 +147,7 @@ class TestPlaceWord(unittest.TestCase):
         self.assertEqual(placement.rows_spanned, len(SCATTERED))
 
     def test_a_single_letter_word_pays_nothing(self) -> None:
-        """No step, so no penalty -- the sum over an empty set of steps."""
+        """No step, so no penalty: the sum over an empty set of steps."""
         placement = cw_shade.place_word(ONE_ROW, "H")
         assert placement is not None
         self.assertEqual(placement.clustering, 0)
@@ -189,9 +189,9 @@ class TestClustering(unittest.TestCase):
 class TestGreedyIsNotEnough(unittest.TestCase):
     """The chooser is a shortest path, and taking the first fit is not it.
 
-    Greedy is what a later reader reaches for -- it is shorter and it looks
-    obviously correct -- so the cases here fail against it rather than merely
-    scoring it worse. They assert the CELLS, which is what a caller pastes.
+    Greedy is what a later reader reaches for (it is shorter and it looks
+    obviously correct), so the cases here fail against it rather than merely
+    scoring it worse. They assert the cells, which is what a caller pastes.
     """
 
     def test_the_chosen_cells_are_not_the_greedy_ones(self) -> None:
@@ -203,8 +203,8 @@ class TestGreedyIsNotEnough(unittest.TestCase):
     def test_the_greedy_pick_really_is_available_and_really_is_worse(self) -> None:
         """Without this the case above could pass on a grid greedy never sees.
 
-        It establishes that the greedy cells spell the word too -- so the
-        chooser had a genuine choice -- and that they cost strictly more.
+        It establishes that the greedy cells spell the word too (so the
+        chooser had a genuine choice), and that they cost strictly more.
         """
         spelled = "".join(
             GREEDY_TRAP[row][col] for row, col in GREEDY_TRAP_GREEDY_CELLS
@@ -249,7 +249,7 @@ class TestSearchHiddenWords(unittest.TestCase):
     def test_ranks_the_least_clustered_word_first(self) -> None:
         """The primary ranking term, on a grid where it decides every pair.
 
-        Measured on these rows, the three words score 3, 19 and 54 -- three
+        Measured on these rows, the three words score 3, 19 and 54: three
         distinct values, so this case exercises the clustering term and nothing
         else. The two tie-break terms are unreachable here and are held by the
         two cases below, on a grid built to tie.
@@ -271,7 +271,7 @@ class TestSearchHiddenWords(unittest.TestCase):
         """The length tie-break, against an input order that contradicts it.
 
         Both words score 0, so clustering cannot order them, and `sorted` is
-        stable -- so a ranking that had lost its length term would hand back the
+        stable, so a ranking that had lost its length term would hand back the
         order they were supplied in. They are supplied shortest first for
         exactly that reason: the assertion below can only pass if the term ran.
         """
@@ -284,9 +284,9 @@ class TestSearchHiddenWords(unittest.TestCase):
     def test_two_equally_clustered_words_of_a_length_rank_alphabetically(self) -> None:
         """The last-resort tie-break, supplied in reverse-alphabetical order.
 
-        Same clustering AND same length, so neither earlier term can separate
-        this pair -- only the alphabetical term can, and it has to reverse the
-        input order to do it. That is what makes the ranking TOTAL, and
+        Same clustering and same length, so neither earlier term can separate
+        this pair: only the alphabetical term can, and it has to reverse the
+        input order to do it. That is what makes the ranking total, and
         therefore reproducible across runs.
         """
         result = cw_shade.search_hidden_words(

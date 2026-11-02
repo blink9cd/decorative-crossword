@@ -1,7 +1,7 @@
 """Grouped suite: a property test for `--feature`'s value grammar.
 
-`cw_feature.parse_feature` turns one command-line string -- `ANSWER`, or
-`ANSWER@ROW,COL,DIR` -- into the typed pin the search starts from, and it is
+`cw_feature.parse_feature` turns one command-line string (`ANSWER`, or
+`ANSWER@ROW,COL,DIR`) into the typed pin the search starts from, and it is
 the only place that string is read. The example tests in `test_feature.py` pin
 each malformed shape somebody thought to write down; they say nothing about the
 strings nobody did. This property does: whatever text arrives, the parser
@@ -13,8 +13,8 @@ A file of its own because each `# fuzz-target` parser's `test_fuzz_<name>`
 property lives in a sibling `*_properties.py` module, and `test_properties.py`
 is scoped to `cw_bank`'s boundary.
 
-Entry point assumptions: the same callers `test_properties.py` documents --
-the aggregator's loader, and a fuzzing campaign importing by location -- so
+Entry point assumptions: the same callers `test_properties.py` documents
+(the aggregator's loader, and a fuzzing campaign importing by location), so
 the same bootstrap, for the same reason.
 """
 
@@ -95,8 +95,8 @@ class TestParseFeatureProperties(unittest.TestCase):
 
         The try/except is the crash-freedom half: any exception other than
         ConfigError escapes it and fails the test. The assertions after it are
-        the half that catches a parser which ACCEPTS what it should not -- a
-        negative index, a direction the search cannot step along -- which
+        the half that catches a parser which accepts what it should not (a
+        negative index, a direction the search cannot step along), which
         "returns or raises" alone would wave through.
         """
         try:

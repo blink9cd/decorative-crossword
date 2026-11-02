@@ -1,12 +1,12 @@
 # Samples: grids, a hidden word and a gap report, all regenerable by hand
 
-Every `grid_source.json` and `.svg` in this folder is an **output the tool produced**, by the
+Every `grid_source.json` and `.svg` in this folder is an output the tool produced, by the
 command printed under its heading, from the inputs that command names. None was hand-edited, and
 none may be: `tests/test_samples.py` and `tests/test_samples_read.py` re-run every command into a
 temporary folder and compare the result byte for byte, so a sample that drifts from the tool
 fails the build rather than sitting here quietly lying about what the tool does.
 
-Run the commands **from this project's root**. Each writes its files into its own sample folder
+Run the commands from this project's root. Each writes its files into its own sample folder
 and prints a report to stdout.
 
 ## What each sample is for
@@ -23,9 +23,9 @@ a small source `--rows` and `--cols` grow into a larger grid, a small bank of na
 whose answers are written as more than one word, and a `--mask` picture that forbids a letter in
 half the grid so the fill comes out in the shape of a heart. No two
 share a size, and no two
-land on the same blocked percentage — and note that `heart_mask`'s percentage in the *report* is
+land on the same blocked percentage. Note that `heart_mask`'s percentage in the *report* is
 over the cells its picture leaves, while the percentage this set keeps apart is the whole grid's. The `shade`, `gaps` and `silhouette` samples each read
-`large_square`'s grid rather than carrying one of their own -- and only the `fill` samples owe
+`large_square`'s grid rather than carrying one of their own, and only the `fill` samples owe
 that shape-and-density rule, which is why a drawing option is shown by reading a grid rather than
 by searching for another one.
 
@@ -35,17 +35,17 @@ Because a sample is only worth pasting if you get the committed bytes back, and 
 defaults you would not. The default budget is a wall-clock limit with no node cap (`fill --help`
 prints both), so the search stops when *your machine* runs out of time rather than when it runs
 out of moves: `wide` and `large_square` each take about four seconds here, so a machine roughly
-seven times busier returns a different -- and non-conforming -- grid. `--time-budget 0` drops the
+seven times busier returns a different (and non-conforming) grid. `--time-budget 0` drops the
 clock, and `--max-steps` then supplies the bound (the tool refuses both at zero). What comes back
 is a function of the bank and the seed alone, on any machine, which is the whole promise of
 comparing your output with what is committed.
 
-The cap is far above what any case needs -- the largest spends about ten thousand nodes -- because
+The cap is far above what any case needs (the largest spends about ten thousand nodes) because
 it is there to stop a runaway, not to catch drift. Drift is caught by the comparison itself.
 These commands are duplicated in `tests/test_samples.py`. Nothing compares the two copies, so
 change one and change the other.
 
-### `small_square` — 7 x 7, every optional at its default
+### `small_square`: 7 x 7, every optional at its default
 
 The baseline: apart from the pinned budget above, the only options given are the ones that have
 no default. It is the one to read first, and the one to copy when writing a bank of your own.
@@ -57,7 +57,7 @@ python decorative_crossword.py fill --bank samples/small_square/bank.json --out 
 Expected exit code: **0**. Nine answers, nine entries, every one of them placed; the report's
 *Unplaced answers* line reads `none`. Achieved density is 40.8% blocked, inside the default window.
 
-### `wide` — 7 x 13, and a density that is not the default
+### `wide`: 7 x 13, and a density that is not the default
 
 The one that matters most. Two different dimensions and a non-default density in the same
 sample is what proves neither `--rows`/`--cols` is a single size parameter wearing two names, and
@@ -67,10 +67,10 @@ that `--min-blocked` / `--max-blocked` are really consulted.
 python decorative_crossword.py fill --bank samples/wide/bank.json --out samples/wide/grid_source.json --preview samples/wide/preview.svg --seed 23 --rows 7 --cols 13 --min-blocked 40 --max-blocked 60 --time-budget 0 --max-steps 50000
 ```
 
-Expected exit code: **0**. The grid is 7 rows by 13 columns and 52.7% blocked -- outside the
+Expected exit code: **0**. The grid is 7 rows by 13 columns and 52.7% blocked, outside the
 default window at both ends of the request, which is the point of giving the two bounds.
 
-### `large_square` — 13 x 13, with a featured answer
+### `large_square`: 13 x 13, with a featured answer
 
 `--feature LEARNING` makes one answer a hard constraint: the search seeds with it, and a run
 that cannot place it fails rather than quietly returning a grid without it. The render shades its
@@ -81,12 +81,12 @@ python decorative_crossword.py fill --bank samples/large_square/bank.json --out 
 ```
 
 Expected exit code: **0**. Its bank is deliberately richer than the grid needs, so this is the
-sample whose report exercises the *Unplaced answers* and *Shortage by word length* blocks -- the
+sample whose report exercises the *Unplaced answers* and *Shortage by word length* blocks: the
 two an operator reads when a run of their own comes back at exit 1.
 
 The 13-column width is deliberate: this sample proves the tool fills a grid exactly that wide.
 
-### `name_grid` — 7 x 9, two answers pinned at chosen cells
+### `name_grid`: 7 x 9, two answers pinned at chosen cells
 
 A decorative name grid: `JANE` across the top-left corner and `DOE` hanging down from a cell
 chosen for it, with the rest of the fill grown around them. Each `--feature ANSWER@ROW,COL,DIR`
@@ -108,7 +108,7 @@ Featured answer DOE: down, (1, 4) to (3, 4).
   Shaded cells, 0-based (row, column): (1, 4), (2, 4), (3, 4)
 ```
 
-Its phrase list, `phrases.txt`, holds one line -- `Jane Doe` -- and the report names the two pins
+Its phrase list, `phrases.txt`, holds one line, `Jane Doe`, and the report names the two pins
 as the pair it spells. The grid and the picture are the bytes a run without the list produces,
 because a pair is reported and never scored:
 
@@ -131,9 +131,9 @@ AN.A.OVEN
 
 Two things in it are the point of the sample. **Neither pin moved:** `DOE` starts at `(1, 4)`,
 diagonally below `JANE`'s last letter, and the search grew `NEST` down from `JANE`'s `N` and
-`ONION` across `DOE`'s `O` rather than shifting either name somewhere easier. And **the bank was
-written for the pins.** A name is usually short, and a short answer seldom wins a place on its
-own against a large bank — which is why it is pinned rather than merely added — but a pin only
+`ONION` across `DOE`'s `O` rather than shifting either name somewhere easier. And the bank was
+written for the pins. A name is usually short, and a short answer seldom wins a place on its
+own against a large bank (which is why it is pinned rather than merely added), but a pin only
 fixes where the name goes; a bank with plenty of words crossing its letters is what lets the
 fill grow around it. Built that way, a pinned search is one of the cheapest this tool runs,
 because every letter already on the board is somewhere the next word can cross.
@@ -145,7 +145,7 @@ default: the nodes past 450 reach a 37-letter grid at 41.3% blocked, which round
 whole percentage as `small_square`'s 40.8%, and no two samples here may share one. The pins held
 through every one of those grids, which is the other half of what a pin promises.
 
-### `best_grid` — 9 x 9, the best of many grids, with island letters
+### `best_grid`: 9 x 9, the best of many grids, with island letters
 
 The same bank and the same two pins as `name_grid`, on a larger grid, with the two flags that decide
 what `fill` keeps. `fill` keeps looking past its first conforming grid and keeps the best, and
@@ -178,8 +178,8 @@ TREE.D..A
 ```
 
 **The preference decided.** Run the same command without `--prefer JOE` and the first column reads
-`JAR` instead of `JOE`. The two grids tie on everything the tool measures — 47 letters each, and one
-themed entry each (`JAR` for the kitchen, `JOE` for people) — so without a preference the tie keeps
+`JAR` instead of `JOE`. The two grids tie on everything the tool measures: 47 letters each, and one
+themed entry each (`JAR` for the kitchen, `JOE` for people), so without a preference the tie keeps
 the grid the search happened to find first. With it, `JOE` hangs from the pinned `JANE`'s `J`
 beside `DOE`. Which of the two reads better is a judgment, and the flag is how you state it.
 `tests/test_samples_content.py` re-runs the command without the flag to prove the grid really changes.
@@ -190,7 +190,7 @@ do not already show. They belong to no entry, and are islands by rule: a lone le
 island set, `A`, `I`, `X`, `U` or `Y`, at the corner of an entry's letter. `preview`, `shade` and
 `gaps` read them the same way, so none of the three warns about a stray on this grid.
 
-### `rated_grid` — 6 x 8, one rating choosing between two tied grids
+### `rated_grid`: 6 x 8, one rating choosing between two tied grids
 
 The same bank and the same two pins as `name_grid`, on a smaller grid, with exactly one change to
 the bank: `NED` carries `"rating": 1`. Nothing else is rated, so every other answer counts as the
@@ -204,8 +204,8 @@ python decorative_crossword.py fill --bank samples/rated_grid/bank.json --out sa
 Expected exit code: **0**, and two lines of the report are the point of the sample:
 
 ```text
-Chosen as the best of 50 conforming grid(s) found within 500 node(s) of the first: most letters, then --prefer answers, then worst rating, then themed entries.
-Worst rating in the grid: 3 -- 12 unrated answer(s), which count as 3.
+Chosen as the best of 80 conforming grid(s) found within 500 node(s) of the first: most letters, then --prefer answers, then worst rating, then themed entries.
+Worst rating in the grid: 3 (12 unrated answer(s), which count as 3).
 ```
 
 ```text
@@ -225,14 +225,14 @@ LEAF..E.
 .N..SODA
 ```
 
-The two grids tie on everything else the tool measures — 31 filled cells each, no `--prefer`, and
-eleven themed entries each — so without the rating the tie keeps the grid the search found first.
+The two grids tie on everything else the tool measures: 31 filled cells each, no `--prefer`, and
+eleven themed entries each, so without the rating the tie keeps the grid the search found first.
 With it, that grid's worst entry is `NED` at `1` while the other grid's is `3`, and the other grid
 wins. The chosen grid holds no rated answer at all, which is why its report line counts twelve
 unrated answers rather than naming one: a rating can decide in favor of a grid it never appears in.
 `tests/test_samples_content.py` re-runs the command without the rating to prove the grid really changes.
 
-### `symmetric_grid` — 8 x 8, a symmetry preference choosing among tied grids
+### `symmetric_grid`: 8 x 8, a symmetry preference choosing among tied grids
 
 The same bank and the same two pins as `name_grid`, on an 8 x 8 grid, with
 `--prefer-symmetry rotational`: of the grids the search finds, it keeps the one whose pattern of
@@ -269,14 +269,14 @@ E...SEED
 DEAN.E.O
 ```
 
-The two grids tie on every other level — 39 filled cells each, no `--prefer`, no rated answer, and
-thirteen themed entries each — so without the flag the tie keeps the grid the search found first.
+The two grids tie on every other level: 39 filled cells each, no `--prefer`, no rated answer, and
+thirteen themed entries each, so without the flag the tie keeps the grid the search found first.
 With it, 19 of the 32 rotated cell pairs match against 13, and the corner opposite the pinned
 `JANE` fills to answer it. The search compares the same 182 grids either way: the flag changes
 which one is kept, never the walk that found them. `tests/test_samples_content.py` re-runs the
 command without the flag to prove the grid really changes.
 
-### `partial_grid` — 11 x 7, finishing a grid you already have
+### `partial_grid`: 11 x 7, finishing a grid you already have
 
 `--source` hands `fill` a grid to start from instead of an empty board;
 `python decorative_crossword.py fill --help` states the rules under `--source`. `source.json` is in
@@ -340,8 +340,8 @@ line describes the bank file. `tests/test_samples_source.py` checks that every s
 in the grid, that the stray is covered, that `MIS` is finished, and that `PUDDLE` carries the
 source's record.
 
-**The source's letters are bold in `preview.svg`.** The sixteen letters `source.json` held --
-`TEAPOT`, `MIS`, the `S` and `PUDDLE` -- are drawn bold, every letter the fill added is regular, and the
+**The source's letters are bold in `preview.svg`.** The sixteen letters `source.json` held
+(`TEAPOT`, `MIS`, the `S` and `PUDDLE`) are drawn bold, every letter the fill added is regular, and the
 caption's second line says what the weight means:
 
 ```text
@@ -351,7 +351,7 @@ Fixed from --source: 16 letter(s), in bold
 A `preview` of `grid_source.json` draws every letter regular, because the grid file does not
 record which letters were given.
 
-### `grown_grid` — 8 x 10, a small source grown into a larger grid
+### `grown_grid`: 8 x 10, a small source grown into a larger grid
 
 `--rows` and `--cols` beside `--source` grow the grid a source is placed on;
 `python decorative_crossword.py fill --help` states the rules under `--rows`, `--cols` and
@@ -405,11 +405,11 @@ to a different limit than its source. `--max-two-letter` states such a cap to `f
 `tests/test_samples_source.py` checks that every source letter sits unchanged and that the pin
 lies outside the source.
 
-### `two_banks` — 7 x 8, a names bank merged with a main bank
+### `two_banks`: 7 x 8, a names bank merged with a main bank
 
 `--bank` repeats; `python decorative_crossword.py fill --help` states how several banks merge.
 `bank.json` is `name_grid`'s bank without its two placeholder names, and `names.json` holds only
-those two, `JANE` and `DOE` — the shape of a bank every puzzle shares beside a small bank of one
+those two, `JANE` and `DOE`: the shape of a bank every puzzle shares beside a small bank of one
 grid's names. `names.json` declares no theme of its own: both its answers use `people`, which only
 `bank.json` declares.
 
@@ -443,7 +443,7 @@ does not hold; without `bank.json`, `names.json` names a theme nothing declares.
 before any search. `tests/test_samples_content.py` checks that both names are entries of the grid, and that
 each bank alone is refused.
 
-### `absorbed_grid` — 3 x 5, a source entry grown in place
+### `absorbed_grid`: 3 x 5, a source entry grown in place
 
 `--absorb-entries` beside `--source` lets a source entry the bank holds grow into a longer bank
 answer; `python decorative_crossword.py fill --help` states the rules under `--absorb-entries`.
@@ -494,7 +494,7 @@ Chosen as the best of 57 conforming grid(s) found within 500 node(s) of the firs
 `T` the fill added drawn regular. `tests/test_samples_source.py` checks that every source letter sits
 unchanged and that `JANE` lies inside a longer bank answer.
 
-### `phrase_grid` — 10 x 11, answers written as more than one word
+### `phrase_grid`: 10 x 11, answers written as more than one word
 
 A bank answer may be written the way it is said; `python decorative_crossword.py fill --help`
 states how such an answer is laid and clued. The bank is `name_grid`'s plus a `sayings` theme
@@ -542,9 +542,9 @@ command returns this grid at exit `1`, and the report names the ceiling as the k
 `tests/test_samples_content.py` checks that every saying is an entry of the grid and that each clue
 ends as above.
 
-### `heart_mask` — 8 x 11, a shape file forbidding a letter in 41 cells
+### `heart_mask`: 8 x 11, a shape file forbidding a letter in 41 cells
 
-The only sample whose grid is a **shape**. `shape.txt` is a picture of the grid, one line per row,
+The only sample whose grid is a shape. `shape.txt` is a picture of the grid, one line per row,
 and every `X` in it is a cell no letter may ever occupy:
 
 ```text
@@ -564,7 +564,7 @@ XXXXX.XXXXX
 python decorative_crossword.py fill --bank samples/heart_mask/bank.json --out samples/heart_mask/grid_source.json --preview samples/heart_mask/preview.svg --mask samples/heart_mask/shape.txt --seed 5 --min-blocked 20 --max-blocked 50 --min-entries-per-theme 2 --feature PROMISE@1,5,down --empty-blocks --time-budget 0 --max-steps 50000
 ```
 
-Expected exit code: **0**. Achieved density is 46.8% blocked — and that figure is over 47 cells
+Expected exit code: **0**. Achieved density is 46.8% blocked, and that figure is over 47 cells
 rather than 88, which is the part to read carefully:
 
 ```text
@@ -596,10 +596,10 @@ blocks as holes, because it is the one whose point is the outline: with them ink
 rectangle with a heart inside it rather than a heart. `--mask` deliberately does not turn it on, so
 adding a mask to a command line never silently repaints every block.
 
-### `hidden_word` — `shade` reading the grid `large_square` produced
+### `hidden_word`: `shade` reading the grid `large_square` produced
 
 The one that shows the third subcommand, and the first sample whose input is another sample's
-**output**: it reads `large_square/grid_source.json` rather than carrying a copy of that grid,
+output: it reads `large_square/grid_source.json` rather than carrying a copy of that grid,
 because the demonstration is the whole chain and a second copy would be a second thing to keep
 in step with the tool. **Run `large_square` above first.**
 
@@ -635,11 +635,11 @@ Skipped word-list lines (1):
   WELL-KNOWN - holds a character outside A-Z
 ```
 
-Four things in that output are the point of the sample. `LEARNING` — `large_square`'s own
-featured answer — is **excluded because the grid already answers it**, which is a repeat rather
+Four things in that output are the point of the sample. `LEARNING` (`large_square`'s own
+featured answer) is excluded because the grid already answers it, which is a repeat rather
 than a bonus; `antelope` shows the same thing plus the case fold; `well-known` shows an unusable
-line being **skipped and named** rather than failing a run; and the clustering column is the
-tool's opinion. `LANTERN` at **3** is the word to use. `MEANING` at **27** is the word not to,
+line being skipped and named rather than failing a run; and the clustering column is the
+tool's opinion. `LANTERN` at 3 is the word to use. `MEANING` at 27 is the word not to,
 and the second command shows why:
 
 ```bash
@@ -665,22 +665,22 @@ Hidden word MEANING: 7 cells across 6 row(s), clustering 27.
   Clustering 27: the shaded cells bunch - this will read as a corrupted answer, not a hidden word.
 ```
 
-Four of those seven cells run consecutively down column 6 -- they are the last four letters of
+Four of those seven cells run consecutively down column 6: they are the last four letters of
 `LEARNING`, this grid's own featured answer. Shading them would not read as a hidden message; it
 would read as a damaged entry. Nothing can fix that: it is the cheapest reading `MEANING` has on
 this grid, which is precisely what the number is telling you.
 
 `LANTERN` is where the *chooser* earns its keep, and it is worth seeing directly. Take the first
-occurrence of each of its letters -- the obvious approach -- and you get
-`(2, 6), (3, 12), (4, 7), (6, 7), (6, 8), (8, 2), (8, 6)`, which costs **19**: `(6, 7)` and
-`(6, 8)` sit side by side inside `ANTELOPE`. The shortest path above costs **3** and puts no two
+occurrence of each of its letters (the obvious approach) and you get
+`(2, 6), (3, 12), (4, 7), (6, 7), (6, 8), (8, 2), (8, 6)`, which costs 19: `(6, 7)` and
+`(6, 8)` sit side by side inside `ANTELOPE`. The shortest path above costs 3 and puts no two
 cells together. Same word, same grid, and the difference between a hidden message and a typo.
 
-### `gaps` — what `large_square`'s own bank cannot pay for
+### `gaps`: what `large_square`'s own bank cannot pay for
 
-The `gaps` sample, and the second whose input is another sample's **output**: it reads
+The `gaps` sample, and the second whose input is another sample's output: it reads
 `large_square/grid_source.json` against `large_square/bank.json`, so the question it answers is
-the one an operator actually has after a run comes back sparser than they wanted -- *which words
+the one an operator actually has after a run comes back sparser than they wanted: *which words
 would have helped?* **Run `large_square` above first.**
 
 ```bash
@@ -690,7 +690,7 @@ python decorative_crossword.py gaps --source samples/large_square/grid_source.js
 Expected exit code: **0**. The headline splits all 100 blocked cells into tiers that add up,
 and the answer is blunt: **`0 ready now`**. This fourteen-answer bank pays for none of the sixty
 gaps, which is the same shortage *Why `large_square` loosens the blocked ceiling* works out
-below -- stated as specific words rather than as a total.
+below, stated as specific words rather than as a total.
 
 What the list adds is *which* words. It is grouped by the pattern a gap demands, not by the cell,
 because the operator's unit of work is the word they have to think of:
@@ -702,8 +702,8 @@ Needs one new answer - by pattern:
   S? - 2 gaps: (1, 5), (2, 4)
 ```
 
-Three separate blocked cells all want the same thing -- a two-letter answer ending in C -- and
-that is one idea, not three. Ungrouped, this report would be sixty coordinates nobody could act
+Three separate blocked cells all want the same thing: a two-letter answer ending in C.
+That is one idea, not three. Ungrouped, this report would be sixty coordinates nobody could act
 on, which is the lesson `shade` already paid for at 224 candidates.
 
 Two things the report does that a bare list would not. It says what filling a gap would cost
@@ -718,19 +718,19 @@ answer in the bank may change nothing on its own: re-run with
 --max-blocked 58.6 as well.
 ```
 
-That last line is the part worth knowing. Adding an answer to the bank may do **nothing** by
-itself -- the search keeps the densest grid it finds only a short way past the first one inside
+That last line is the part worth knowing. Adding an answer to the bank may do nothing by
+itself: the search keeps the densest grid it finds only a short way past the first one inside
 its density window, and a grid you are reading gaps from is already in one. The ceiling is derived, not guessed: `fill` accepts at
 `blocked <= --max-blocked`, so the denser grid's own percentage, rounded up to a tenth, accepts
 that grid and rejects today's. Here the two figures agree; they differ only where rounding up
 moves the tenth.
 
-`gaps.svg` is the same grid with a ring on every gap the report listed -- the picture and the
+`gaps.svg` is the same grid with a ring on every gap the report listed: the picture and the
 text come from one function, so they cannot disagree about which cells are being discussed.
 
-### `silhouette` — the same grid with nothing drawn in its blocked cells
+### `silhouette`: the same grid with nothing drawn in its blocked cells
 
-The third sample that reads another sample's grid, and the one that shows a **drawing** option
+The third sample that reads another sample's grid, and the one that shows a drawing option
 rather than a search. It runs no search at all: `--empty-blocks` changes what a blocked cell
 paints, so demonstrating it through `fill` would have put a seed and a density in the way of the
 one thing being shown. **Run `large_square` above first.**
@@ -743,28 +743,28 @@ Expected exit code: **0**, with nothing on stdout and `shape.svg` written.
 
 Open `shape.svg` beside `large_square/preview.svg` and the pair is the whole feature: one grid,
 one `grid_source.json`, the same 59.2% blocked in both captions, and two pictures. The black
-field is gone and what is left reads as a free shape -- the kriss-kross look, where the outline
-is not drawn by anything. It is the edge the **lettered** cells already stroke, which is why a
+field is gone and what is left reads as a free shape: the kriss-kross look, where the outline
+is not drawn by anything. It is the edge the lettered cells already stroke, which is why a
 hole that touches the border simply shortens the silhouette there instead of leaving a gap in a
 frame.
 
 The caption still reports `59.2% blocked`, and that is deliberate rather than an oversight: the
-percentage describes the GRID, which the flag does not touch. Only the drawing changed.
+percentage describes the grid, which the flag does not touch. Only the drawing changed.
 
 ## Why `large_square` loosens the blocked ceiling
 
 `--max-blocked 60` is the one option here that is not just a size or a seed, and it is not
-decoration. Ask a 13 x 13 for the default window -- 30-45% blocked, as the report below prints
-it -- and you are asking for **93 or more filled cells**: more than half the grid. Now count
+decoration. Ask a 13 x 13 for the default window (30-45% blocked, as the report below prints
+it) and you are asking for 93 or more filled cells: more than half the grid. Now count
 what this bank could possibly supply:
 
-- Its answers hold **95 letters** between them.
-- Every placement after the first has to cross a letter already on the board, so **each one
-  after the first shares at least one cell** with what is there.
+- Its answers hold 95 letters between them.
+- Every placement after the first has to cross a letter already on the board, so each one
+  after the first shares at least one cell with what is there.
 - A connected grid drawn from all fourteen therefore covers at most `95 - 13 = 82` cells.
 
 Eighty-two is short of ninety-three, so the default window is out of reach for this bank
-**before any search argument is considered**. It is short of letters, not short of time, and no
+before any search argument is considered. It is short of letters, not short of time, and no
 budget buys the difference. The tool says as much rather than grinding:
 
 ```text
@@ -789,5 +789,5 @@ generator deliberately does not (numbering, clue coverage, barred terms).
 `tests/test_samples.py` and `tests/test_samples_read.py` hold the same commands, and compare
 what they produce with what is committed here. The duplication between those files and this one
 is deliberate: this README is prose nothing executes, so the commands are pinned once more
-where a machine can run them. **Change one and you must change the other** -- and regenerate the
+where a machine can run them. **Change one and you must change the other**, and regenerate the
 artifacts, since the tests compare bytes.

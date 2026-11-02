@@ -45,7 +45,7 @@ _PROJECT = Path(__file__).resolve().parent.parent
 #: The extra that declares, pinned, every third-party library outside the tool.
 _TEST_EXTRA = "test"
 
-#: The tool's entry point. A literal name because it IS the contract with the
+#: The tool's entry point. A literal name because it is the contract with the
 #: project, kept here only; the folder holding it may be named anything.
 _ENTRY_POINT = "decorative_crossword.py"
 
@@ -435,7 +435,7 @@ class TestTheProjectAsItStands(unittest.TestCase):
             found,
             _MIN_SOURCES,
             f"the scan parsed {found} module files under {_PROJECT.name}, expected "
-            f"at least {_MIN_SOURCES} -- it may be rooted in the wrong directory",
+            f"at least {_MIN_SOURCES}: it may be rooted in the wrong directory",
         )
 
     def test_every_third_party_import_is_pinned_in_the_test_extra(self) -> None:

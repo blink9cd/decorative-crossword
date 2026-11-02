@@ -7,12 +7,12 @@ contradictory pin produces, whether a refused run leaves a file behind, and
 whether the grid on disk holds every pin where it was asked for.
 
 Several cases give the flags in an order chosen so that a last-wins
-`--feature` -- argparse's default for a repeated flag -- would pass the wrong
+`--feature` (argparse's default for a repeated flag) would pass the wrong
 one: the answer that has to be checked comes first, where a last-wins flag
 drops it.
 
 The last classes pin the parser end of the same flags: an omitted one parses
-to None, and `--help` does not stamp that as `(default: None)` -- nor any
+to None, and `--help` does not stamp that as `(default: None)`, nor any
 default on a required option, on the oldest interpreter this project supports
 as on the newest.
 """
@@ -119,7 +119,7 @@ class TestAnchoredFeature(cli_fixtures.QuietCase):
     def test_pins_that_run_into_each_other_exit_two(self) -> None:
         # CHALK ends at (0, 4) and CRANE starts at (0, 5), so the top row reads
         # CHALKC: neither pin would be an entry, whatever the bank holds. The
-        # flags decide that alone, which puts it on the exit-2 line -- not on
+        # flags decide that alone, which puts it on the exit-2 line, not on
         # pre-flight's exit 1, where a bank lacking CHALKC would otherwise send
         # it with a sentence about the bank rather than about the pins.
         with tempfile.TemporaryDirectory() as folder:
@@ -134,7 +134,7 @@ class TestAnchoredFeature(cli_fixtures.QuietCase):
 
     def test_pins_that_break_the_one_rule_exit_one_naming_the_run(self) -> None:
         # Exit 1, not 2: both flags are well formed and agree cell for cell, and
-        # the fault is that THIS bank holds no AB. The report names the run, and
+        # the fault is that this bank holds no AB. The report names the run, and
         # the file written is the empty board rather than the illegal one.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
@@ -178,7 +178,7 @@ class TestNoneDefaultsInHelp(cli_fixtures.QuietCase):
 class _PreFixDefaultsFormatter(argparse.ArgumentDefaultsHelpFormatter):
     """Stands in for argparse before 3.13: a default on every action, required or not.
 
-    Only a suppressed default is skipped, as it was then too -- `--help`'s own is
+    Only a suppressed default is skipped, as it was then too: `--help`'s own is
     one, and argparse cannot interpolate a default it has suppressed.
     """
 

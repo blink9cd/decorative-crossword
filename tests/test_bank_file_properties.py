@@ -1,8 +1,8 @@
 r"""Grouped suite: what reading a bank file returns, held to an oracle, whatever its bytes hold.
 
 `test_loader_properties.py` holds `cw_bank.read_bank_payload` to returning or
-refusing and nothing else. This holds what it RETURNS: the value the standard
-library alone reads from the same bytes, nested no deeper than the ceiling --
+refusing and nothing else. This holds what it returns: the value the standard
+library alone reads from the same bytes, nested no deeper than the ceiling,
 so a reader that quietly changed a value on the way through would fail here,
 where never crashing says nothing about it. The draw is the whole file: bytes
 that are not UTF-8, a byte-order mark, JSON's `NaN` and `Infinity`, a

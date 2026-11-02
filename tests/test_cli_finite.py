@@ -4,8 +4,8 @@
 each passes every range check downstream while meaning nothing: no comparison
 with NaN is true, so a NaN bound is no bound at all, and a NaN or infinite
 time budget is a wall clock that never runs out. So every float-typed option
-refuses them while the command line is parsed -- exit 2, naming the option,
-before any file is read -- exactly as it refuses text that is no number.
+refuses them while the command line is parsed (exit 2, naming the option,
+before any file is read), exactly as it refuses text that is no number.
 
 Run through test_decorative_crossword.py's `load_tests` hook.
 """

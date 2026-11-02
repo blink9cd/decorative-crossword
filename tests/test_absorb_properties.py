@@ -8,10 +8,10 @@ cells: the entry was absorbed, never moved, re-lettered or dropped.
 **That growth really happens is measured, not assumed.** A first draw of random
 dense grids absorbed an entry in none of 150 examples, and in 5 to 7 of 150 over
 more letters and blocks: the cell past a run was nearly always a clashing letter,
-or the lines crossing it made the growth illegal. So most draws here are LAID OUT
-for growth -- across runs on alternating rows, so no letter added past one can
+or the lines crossing it made the growth illegal. So most draws here are laid out
+for growth (across runs on alternating rows, so no letter added past one can
 form a crossing run, some of them banked one letter longer and one sometimes split
-into two runs a bank answer welds -- and the rest stay random, for the shapes a
+into two runs a bank answer welds), and the rest stay random, for the shapes a
 layout never draws. The rates this bought are recorded beside `_requests`.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
@@ -166,7 +166,7 @@ def _laid_out(draw: st.DrawFn) -> Request:
 
 #: Measured with a counting wrapper around the search, over this module's 150
 #: examples: 45 absorbed at least one entry, 59 kept every entry, 43 were refused
-#: before the walk -- mostly a scattered grid spelling one run twice -- and 3 held
+#: before the walk (mostly a scattered grid spelling one run twice), and 3 held
 #: no entry. With `_word` accepting an answer already drawn, 23 absorbed and 57
 #: were refused. Re-measure after any edit to a draw: `derandomize=True` fixes
 #: the seed, not the examples, so even an equivalent rewrite of a draw call

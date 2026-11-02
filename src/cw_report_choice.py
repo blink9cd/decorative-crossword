@@ -1,10 +1,10 @@
-"""cw_report_choice: the `fill` report blocks about how the written grid was CHOSEN.
+"""cw_report_choice: the `fill` report blocks about how the written grid was chosen.
 
 Kept apart from `cw_report` on the one seam these blocks share: each describes
-what happened once the search had conforming grids in hand -- which one was kept
+what happened once the search had conforming grids in hand (which one was kept
 and by what order, which preferred answers it holds, how its worst entry is
 rated, how balanced it is under `--prefer-symmetry`, and which lone letters were
-laid on it afterward -- rather than how the grid measures against the bank and
+laid on it afterward) rather than how the grid measures against the bank and
 the request. That is also why each is empty for a best-effort miss, which was
 not chosen among anything and had nothing laid on it.
 
@@ -57,7 +57,7 @@ def _worst_rating_line(rows: Sequence[str], bank: cw_bank.Bank) -> str:
     The figure is `cw_select.worst_rating`'s, the one the choice was made on.
     Rated entries at the worst are named in bank order, the order every other
     list in the report follows. Unrated entries are counted rather than named,
-    and only when the worst IS the neutral rating they count as: below it they
+    and only when the worst is the neutral rating they count as: below it they
     are not the worst, and above it none can be in the grid.
     """
     worst = cw_select.worst_rating(rows, bank)
@@ -76,7 +76,7 @@ def _worst_rating_line(rows: Sequence[str], bank: cw_bank.Bank) -> str:
             parts.append(
                 f"{unrated} unrated answer(s), which count as {cw_bank.NEUTRAL_RATING}"
             )
-    return f"Worst rating in the grid: {worst} -- {', and '.join(parts)}."
+    return f"Worst rating in the grid: {worst} ({', and '.join(parts)})."
 
 
 def _symmetry_line(rows: Sequence[str], kind: str) -> str:
@@ -165,8 +165,10 @@ def island_lines(
     )
     if not islands:
         if declined:
-            return [f"Islands: none laid -- {why}"]
-        return ["Islands: none -- no blocked cell touches a letter only at a corner."]
+            return [f"Islands: none laid, since {why}"]
+        return [
+            "Islands: none, since no blocked cell touches a letter only at a corner."
+        ]
     laid = ", ".join(f"{letter} at ({row}, {col})" for row, col, letter in islands)
     lines = [
         f"Islands (lone letters in no entry, laid after the grid was chosen): {laid}."

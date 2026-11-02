@@ -1,8 +1,8 @@
 """Grouped suite: two entries that join into an `--excluded-terms` term.
 
 `--excluded-terms` screens each bank entry, so every entry `fill` places is
-clean -- and two clean entries can still spell a barred term together. These
-pin the calls that shape the check: a join is barred only when the WHOLE join
+clean, and two clean entries can still spell a barred term together. These
+pin the calls that shape the check: a join is barred only when the whole join
 is a term, either way round, once the term's spaces close up; a `--phrases`
 line that is a term is dropped and named rather than listed as wordplay; and
 the check is a warning in the report, never a refusal.

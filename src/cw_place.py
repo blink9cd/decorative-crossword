@@ -9,21 +9,21 @@ renders what it finds as sentences. There is no incremental variant here and
 there must not be one: judging the whole grid every time it is asked is
 *deliberate*, because an incremental version of that rule is easy to get subtly
 wrong in a way no test notices. It is O(cells) per question against a search
-that is bounded by an explicit budget anyway -- correct-by-inspection over
+that is bounded by an explicit budget anyway: correct-by-inspection over
 fast-and-clever.
 
 Because that check is whole-grid, the rest of this module deliberately does
-NOT judge legality. `fits` answers only "does this answer physically go here
+not judge legality. `fits` answers only "does this answer physically go here
 without contradicting a letter already on the board", and `crossing_candidates`
 enumerates without filtering beyond that. Everything else is decided after the
-tentative apply, by the one function that owns the rule -- in full when the
+tentative apply, by the one function that owns the rule: in full when the
 search accepts a grid, and through `cw_reach` at each step of the walk, where a
 break that an unused answer could still repair is let through.
 
 Determinism: `crossing_candidates` feeds the search's node
 order, and any run that exits 0 must emit a byte-identical grid. Nothing here
 may take an ordering from a `set`, a `dict` built from one, or the builtin
-`hash()` -- see cw_grid's module docstring for why. Both sets in this file
+`hash()`. See cw_grid's module docstring for why. Both sets in this file
 (`breaks_among`' distinctness tracker and `crossing_candidates`'s duplicate
 filter) are membership tests that are never iterated; each result's order comes
 from the list or tuple built beside them, and the letter index's lists keep the
@@ -41,10 +41,10 @@ import cw_grid
 import cw_mask
 import cw_text
 
-#: (row, col) delta per step for each direction, DERIVED from cw_grid rather
+#: (row, col) delta per step for each direction, derived from cw_grid rather
 #: than restated. `Run.cells` is this project's single definition of which way
 #: ACROSS and DOWN advance, so the second cell of a two-cell run laid at the
-#: origin IS that direction's step. Writing the table out literally here would
+#: origin is that direction's step. Writing the table out literally here would
 #: be a second copy of that definition, free to drift from cw_grid's the day
 #: either changes. MappingProxyType so the "single source" claim is real: a
 #: plain module-level dict is mutable through any importer's reference.
@@ -65,7 +65,7 @@ _ALREADY_PLACED = "repeats an answer already placed"
 class Placement:
     """One proposed entry: an answer, where it starts, and which way it runs.
 
-    A proposal, not a fact about the grid -- `fits` and `grid_violations` decide
+    A proposal, not a fact about the grid: `fits` and `grid_violations` decide
     whether it may exist. `direction` is `cw_grid.ACROSS` or `cw_grid.DOWN`; any
     other value raises KeyError at the first geometry lookup rather than being
     silently treated as one of them, matching cw_grid's own choice.
@@ -92,7 +92,7 @@ def _start_for_crossing(
     """Where an answer must start so its letter `offset` lands on (row, col).
 
     The inverse of `_span`: step *back* along the direction. The result may be
-    negative or past an edge -- that is `fits`' call to make, not this one's.
+    negative or past an edge: that is `fits`' call to make, not this one's.
     """
     d_row, d_col = _STEPS[direction]
     return (row - d_row * offset, col - d_col * offset)
@@ -105,12 +105,12 @@ def fits(
 ) -> bool:
     """Whether `placement` is inside `grid`, clear of `masked`, and contradicts no letter.
 
-    Bounds, the mask, and letter agreement only. It is NOT the legality check: whether the
+    Bounds, the mask, and letter agreement only. It is not the legality check: whether the
     resulting grid obeys the distinct-run rule is `grid_violations`' job, after the
     tentative apply. The bounds half is load-bearing rather than defensive:
     `cw_reach.placements_over` steps back from a run by the matched letters'
     offset, so it really does propose starts before row 0 or column 0.
-    Checking the range here is what turns those into a plain False -- without
+    Checking the range here is what turns those into a plain False: without
     it `Grid.letter` raises, and building would crash rather than filter.
     `crossing_candidates` makes the same judgment on the board's own lines
     (`_fits_line`), and `tests/test_reach_properties.py` holds the two to one
@@ -120,7 +120,7 @@ def fits(
     letter, and defaults to none, so a caller with no mask passes nothing. It
     is consulted here rather than written into the grid because
     `cw_grid.Grid` is strictly two-valued and the search mutates one of them:
-    a masked cell is a fact about the REQUEST, not about the board. Membership
+    a masked cell is a fact about the request, not about the board. Membership
     only, so no order of it can reach the search's node order.
     """
     for (row, col), letter in zip(_span(placement), placement.answer, strict=True):
@@ -137,7 +137,7 @@ def fits(
 def apply_placement(
     grid: cw_grid.Grid, placement: Placement
 ) -> tuple[tuple[int, int], ...]:
-    """Write `placement` into `grid`; return only the cells it NEWLY filled.
+    """Write `placement` into `grid`; return only the cells it newly filled.
 
     That return value is what makes `undo_placement` exact. A placement that
     crosses an existing entry reuses cells it must not later erase, so the
@@ -145,9 +145,9 @@ def apply_placement(
 
     Raises ValueError unless the placement fits. The guard is not redundant
     with the caller's own `fits` call: without it, a placement running off an
-    edge strands its prefix. The loop below READS each cell before writing it,
+    edge strands its prefix. The loop below reads each cell before writing it,
     so the failure comes out of `Grid.letter`'s index check, not out of
-    `set_letter` -- measured, with the guard disabled: `CHEMEX` laid across a
+    `set_letter`. Measured, with the guard disabled: `CHEMEX` laid across a
     3x3 raises `cell (0, 3) is outside a 3x3 grid` and leaves
     ('CHE', '...', '...') behind with no undo list ever returned, which is
     state the caller cannot recover because it cannot know how far it got. A
@@ -156,9 +156,9 @@ def apply_placement(
     around the clash and spell something that is not the answer.
 
     The guard covers those two faults and no others. It does not screen the
-    MASK: `fits` is asked here without one, deliberately, because the cells a
+    mask: `fits` is asked here without one, deliberately, because the cells a
     `--mask` forbids are a fact about the request and this function is given
-    only a grid. Every placement that reaches here has already been screened --
+    only a grid. Every placement that reaches here has already been screened:
     the search's come from `cw_order.ordered_candidates`, whose every generator
     consults `config.masked`, and a pin's is refused by
     `cw_feature.validate_features` before any board is built.
@@ -206,7 +206,7 @@ def grid_violations(rows: Sequence[str], allowed: AbstractSet[str]) -> tuple[str
     """Every way `rows` breaks the distinct-run rule, as reader-facing sentences.
 
     The rule: every maximal run of two or more filled cells must be a distinct
-    answer drawn from `allowed`. Two clauses, and both matter -- "in the bank"
+    answer drawn from `allowed`. Two clauses, and both matter: "in the bank"
     forbids the accidental letter pair that two words laid in adjacent parallel
     lines would create, and "distinct" forbids two entries sharing one answer,
     which downstream cannot give distinct clues.
@@ -220,17 +220,17 @@ def grid_violations(rows: Sequence[str], allowed: AbstractSet[str]) -> tuple[str
 
     Runs of one cell are not entries and are not reported,
     because `cw_grid.runs_from_rows` never yields them. The consequence is
-    worth stating plainly: this function is SILENT about an orphaned filled
+    worth stating plainly: this function is silent about an orphaned filled
     cell. A lone letter touching nothing forms no run, so `(('X.', '..'),
     set())` comes back clean. It assumes every filled cell it is shown came
-    from an answer of length >= `cw_grid.MIN_RUN` -- free for the search,
+    from an answer of length >= `cw_grid.MIN_RUN`, free for the search,
     where the rule holds because every placed answer is at least two cells
-    long, but NOT free for rows that arrived another way. A
+    long, but not free for rows that arrived another way. A
     caller checking a hand-edited `grid_source.json` or generated data must
     establish that itself; this function will not catch it.
 
-    Violations come back in `runs_from_rows`'s documented scan order -- every
-    ACROSS run row-major, then every DOWN run column-major -- so the report is
+    Violations come back in `runs_from_rows`'s documented scan order (every
+    ACROSS run row-major, then every DOWN run column-major), so the report is
     stable across processes.
     """
     return tuple(
@@ -251,7 +251,7 @@ def rule_breaks(
 
     Scan order, the meaning of `allowed`, and the silence about an orphaned
     cell are exactly as `grid_violations` documents them. For a repeated
-    answer it is the LATER copy in scan order that is reported.
+    answer it is the later copy in scan order that is reported.
     """
     return breaks_among(cw_grid.runs_from_rows(rows), allowed)
 
@@ -308,7 +308,7 @@ def _alignments(
 ) -> list[tuple[int, int, str]]:
     """Every start that puts one of `answer`'s `letter`s on (row, col), with its direction.
 
-    Both directions, one alignment per matching letter offset -- so an answer
+    Both directions, one alignment per matching letter offset, so an answer
     carrying the crossed letter twice offers two starting positions in each
     direction, not one. Starts rather than placements: nearly every alignment
     on a full board fails to fit, and it is cheaper never to build those.
@@ -348,7 +348,7 @@ def crossing_candidates(
 
     Crossing is by construction, not by a filter: each candidate is built from a
     filled cell it must cover, which is what keeps the grid one connected shape
-    and what bounds the search. An empty grid therefore yields nothing -- the
+    and what bounds the search. An empty grid therefore yields nothing: the
     seed placement is the search's job.
 
     Enumerates without judging. Beyond bounds, the mask and letter agreement
@@ -362,12 +362,12 @@ def crossing_candidates(
 
     A candidate is not a promise of progress. An answer whose every letter is
     already on the board fits, so it is offered, and `apply_placement` then
-    returns an empty tuple -- it filled nothing. Callers must not assume a
+    returns an empty tuple: it filled nothing. Callers must not assume a
     candidate fills at least one cell. Harmless for the search, which draws
     only from answers not yet used, but it is not an invariant this
     function provides.
 
-    ORDER IS PART OF THE CONTRACT (the search's node order must be a pure
+    Order is part of the contract (the search's node order must be a pure
     function of its inputs): filled cells row-major, that is row
     0 left-to-right, then row 1, and so on; within one cell, `answers` in the
     order given; within one answer, ascending letter offset; within one offset,
@@ -382,7 +382,7 @@ def crossing_candidates(
     reading the board cell by cell.
     """
     holders = _answers_by_letter(answers)
-    # The mask reaches this enumeration as a CHARACTER in the derived line view,
+    # The mask reaches this enumeration as a character in the derived line view,
     # not as a second predicate: `_fits_line` already refuses any cell that is
     # neither a block nor the wanted letter, so a stamped cell is refused by the
     # check that is there. An unmasked call gets the rows back untouched.
@@ -392,7 +392,7 @@ def crossing_candidates(
         cw_grid.DOWN: tuple("".join(column) for column in zip(*rows, strict=True)),
     }
     found: list[Placement] = []
-    # Membership only -- the returned order comes from `found`, so this set's
+    # Membership only: the returned order comes from `found`, so this set's
     # hash-seeded iteration order never reaches output. A start that failed to
     # fit is remembered too: its verdict cannot change within one enumeration.
     judged: set[tuple[str, int, int, str]] = set()

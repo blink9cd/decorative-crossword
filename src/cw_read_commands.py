@@ -1,8 +1,8 @@
 """cw_read_commands: what `preview` and `shade` do with a parsed command line.
 
 Kept apart from `cw_commands` along the seam the subcommands already draw:
-`fill` searches for a grid and writes one, while these two READ a `--source`
-grid this tool may never have produced and change nothing in it -- the kinship
+`fill` searches for a grid and writes one, while these two read a `--source`
+grid this tool may never have produced and change nothing in it: the kinship
 they share with `gaps`, the third reader, rather than with `fill`.
 
 Every `add_argument` call stays in `decorative_crossword.py`, for the reason
@@ -39,7 +39,7 @@ def _require_no_position(features: tuple[str, ...]) -> None:
     accepted position cannot be withdrawn.
 
     A value carrying the mark is refused whole, before its position is parsed,
-    so a malformed one is never told what a well-formed pin looks like -- as
+    so a malformed one is never told what a well-formed pin looks like, as
     though pins were welcome here.
     """
     for feature in features:
@@ -80,13 +80,13 @@ def _preview(args: argparse.Namespace) -> int:
     """Run `preview` and return its exit code, or raise one of `cw_command_base.REFUSALS`.
 
     There is no exit 1 here: `preview` has no constraint to miss. It renders a
-    grid whose CONTENT is questionable -- an entry with no
-    clue, a theme used but not declared -- without complaint, because those are
+    grid whose content is questionable (an entry with no
+    clue, a theme used but not declared) without complaint, because those are
     for whatever consumes the grid to judge, not this tool. A stray lone letter
     draws a warning from `cw_command_base.load_source` and is drawn all the same.
 
-    `--cell` and the SHAPE of each `--feature` -- a position, a repeat -- are
-    checked BEFORE the source is read, because they are the faults here that
+    `--cell` and the shape of each `--feature` (a position, a repeat) are
+    checked before the source is read, because they are the faults here that
     need no file to diagnose, and reading first would spend the read to reach
     the same refusal. So is `--out`, which may be neither a directory nor the
     source itself. Whether the grid holds each answer needs the grid.
@@ -108,7 +108,7 @@ def _preview(args: argparse.Namespace) -> int:
             args.cell,
             None,
             None,
-            empty_blocks=args.empty_blocks,
+            empty_blocks=bool(args.empty_blocks),
         ),
     )
     return 0
@@ -117,16 +117,16 @@ def _preview(args: argparse.Namespace) -> int:
 def _shade_config_from(args: argparse.Namespace) -> cw_config.ShadeConfig:
     """Assemble the typed `shade` configuration from a parsed command line.
 
-    The one transformation it makes is UPPERCASING `--word`. The word list is
+    The one transformation it makes is uppercasing `--word`. The word list is
     case-folded on the way in, so a word copied out of a lower-case list into
-    `--word` has to reach the same answer as the same word in that list --
+    `--word` has to reach the same answer as the same word in that list:
     without the fold it would be refused as "not letters A-Z", which is a true
     sentence about the wrong thing.
     """
     return cw_config.ShadeConfig(
         min_length=args.min_length,
         top=args.top,
-        exclude_grid_answers=args.exclude_grid_answers,
+        exclude_grid_answers=bool(args.exclude_grid_answers),
         word=None if args.word is None else args.word.upper(),
         cell=args.cell,
     )
@@ -135,10 +135,10 @@ def _shade_config_from(args: argparse.Namespace) -> cw_config.ShadeConfig:
 def _require_one_shade_mode(args: argparse.Namespace) -> None:
     """Raise UsageError unless exactly one mode flag, and a usable `--out`, is set.
 
-    `--words` and `--word` are two MODES rather than two settings, so neither
+    `--words` and `--word` are two modes rather than two settings, so neither
     a default nor a precedence rule between them would be honest: only the
     operator knows which they meant. `--out` asks for a picture of one word,
-    so it is refused in the ranked mode rather than accepted and ignored --
+    so it is refused in the ranked mode rather than accepted and ignored:
     silently-inert flags are how a command line comes to mean something other
     than what it says.
     """
@@ -160,7 +160,7 @@ def _require_placeable_word(
 ) -> cw_shade.Placement:
     """The placement for `--word`, or the UsageError saying why there is none.
 
-    The exclusion is checked FIRST and gets its own message, mirroring
+    The exclusion is checked first and gets its own message, mirroring
     `cw_commands`' `_require_reachable_features`: "these two flags ask for
     opposite things" is a different thing to tell the operator than "this grid
     cannot spell that", and only they can say which they meant.
@@ -192,7 +192,7 @@ def _shade_one_word(
 
     There is no exit 1 here: a word that cannot be placed is a flag naming
     something the given grid does not contain, which belongs on the exit-2
-    line -- the same reading `preview --feature` already gets.
+    line, the same reading `preview --feature` already gets.
 
     The render is built before anything is written, so a refusal from it leaves
     no file behind: exit 2 writes none.
@@ -207,7 +207,7 @@ def _shade_one_word(
                 config.cell,
                 None,
                 cw_svg.HiddenShading(placement.word, placement.cells),
-                empty_blocks=args.empty_blocks,
+                empty_blocks=bool(args.empty_blocks),
             ),
         )
     print(cw_shade_report.render_placement_report(placement), file=sys.stdout)

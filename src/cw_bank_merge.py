@@ -12,7 +12,7 @@ its candidates on a seeded hash of each placement (`cw_order`), and the emitted
 document follows the grid's own runs.
 
 Every file is validated by `cw_bank.parse_bank`, so each meets every rule a
-lone bank meets, with one widening: an entry may name a theme ANY file of the
+lone bank meets, with one widening: an entry may name a theme any file of the
 set declares. A names bank then need not copy the site-wide bank's theme
 record, a copy that would disagree with its original the first time that
 record was edited.
@@ -60,7 +60,7 @@ _THEME_FIELDS = tuple(field.name for field in fields(cw_bank.ThemeInfo))
 
 #: The most differing records one refusal names; the rest are counted. Two
 #: banks may share every answer, so a refusal naming each would grow with the
-#: files -- two banks of a hundred thousand answers rated differently made one
+#: files: two banks of a hundred thousand answers rated differently made one
 #: of megabytes. Ten show whether the disagreement is one slip or a whole
 #: column edited in one file, and are few enough to fix by hand before the
 #: next run names the next ten.
@@ -108,7 +108,7 @@ def _first_records(
     equal to the first is dropped; one that differs is a fault naming the key,
     both files and each field in `compared` that differs, and the faults are
     reported in one refusal (`_faults_message`). A dict, because its insertion
-    order IS the order of first appearance, so no hash-seeded order can reach
+    order is the order of first appearance, so no hash-seeded order can reach
     the merged bank.
     """
     first: dict[str, _Record] = {}
@@ -158,7 +158,7 @@ def parse_banks(files: Sequence[BankFile]) -> BankSet:
     """Validate every bank file and merge them, in the order given, into one bank.
 
     Raises BankError for a file `cw_bank.parse_bank` refuses, a theme two files
-    declare differently, or an answer two files record differently -- checked
+    declare differently, or an answer two files record differently, checked
     in that order, the themes before any entry, since every entry is checked
     against the merged themes.
     """

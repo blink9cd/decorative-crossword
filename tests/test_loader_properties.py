@@ -7,17 +7,17 @@ and the barred-term list reader. So do two functions that take operator text
 without a file: the barred-term screen and the `--island-letters` parser.
 
 The binding claim is the same for every one of them: whatever the input, the
-function returns, or it raises its own refusal type -- the one its command
-turns into exit 2 and a single line naming the input -- and nothing else. Any
+function returns, or it raises its own refusal type (the one its command
+turns into exit 2 and a single line naming the input), and nothing else. Any
 other exception escapes the `except` clause and fails the property. A file
 reader's refusal must also name the file, or the operator cannot tell which
 input was wrong.
 
 Where a reader hands its result on, the property follows it one step further.
 A bank payload goes to `cw_bank.parse_bank`, which must take it or refuse it
-as `BankError` too -- the reader refuses a repeated key, over-deep nesting and
+as `BankError` too: the reader refuses a repeated key, over-deep nesting and
 a long integer wherever they sit, but judges no field's value, so without this
-a NaN or a surrogate in one would reach no validator at all -- and every
+a NaN or a surrogate in one would reach no validator at all, and every
 refusal quotes it, so `repr` must be able to walk it. A grid file's theme text
 is drawn into an SVG, so it must hold only characters XML allows, which is
 re-derived here rather than asked of the subject.
@@ -219,7 +219,7 @@ class TestJsonReaderProperties(_ReaderCase):
             cw_bank.parse_bank(payload)
 
     # Regression seeds, each a file the reader once failed on. A label no SVG
-    # can hold -- a lone surrogate, a control character -- was accepted. The
+    # can hold (a lone surrogate, a control character) was accepted. The
     # long number and the deeper nesting escaped the parser, and the deep
     # nesting, wherever it sat, overflowed the refusal that quoted it.
     @given(loader_fixtures.json_files(_GRID))
@@ -380,7 +380,7 @@ class TestTextProperties(unittest.TestCase):
         )
         self.assertEqual(dict(screened.themes), dict(bank.themes))
         for entry in bank.entries:
-            # A term that IS an entry's written form, in any case, bars it.
+            # A term that is an entry's written form, in any case, bars it.
             if entry.written.lower() in terms:
                 self.assertIn(entry.answer, gone)
         for _, reason in dropped:

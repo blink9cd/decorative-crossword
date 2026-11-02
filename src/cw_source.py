@@ -4,11 +4,11 @@
 an empty one. The source contributes its rows, and every run of them is one of
 three things:
 
-- an entry the BANK holds, described by the bank's own record;
-- an entry KEPT from the source, for a run the bank lacks but the source's own
+- an entry the bank holds, described by the bank's own record;
+- an entry kept from the source, for a run the bank lacks but the source's own
   `clues` map declares, carried into the search bank with the clue and theme
   that record gives it;
-- a PARTIAL run, one neither holds nor declares, that a bank answer not yet on
+- a partial run, one neither holds nor declares, that a bank answer not yet on
   the grid could still be laid over: a half-written word the fill completes.
 
 A run that is none of the three is refused rather than guessed at.
@@ -20,11 +20,11 @@ one the search sees. A source adds only what the bank lacks.
 
 **A source that passes breaks the one rule only where the fill must finish it.**
 Once `start_from` returns, every run of the source's rows that breaks the
-distinct-run rule under the vocabulary it hands back -- the bank's answers plus
-every kept entry -- is one of its partial runs, and an unused answer could
+distinct-run rule under the vocabulary it hands back (the bank's answers plus
+every kept entry) is one of its partial runs, and an unused answer could
 still be laid over each. The walk's step test and the best-effort guard rest on
 that property, and `tests/test_source_properties.py` holds `start_from` to it.
-It is a promise about the START only: `cw_reach.completable` ignores the lines
+It is a promise about the start only: `cw_reach.completable` ignores the lines
 crossing a run, so a partial run that passes may still never be completed.
 
 **Every refusal names every offender of its kind**, never the first. That is
@@ -32,11 +32,11 @@ why a kept entry is parsed on its own rather than in one batch, and why the
 `--excluded-terms` refusal gathers the bank entries the caller's screen dropped
 and the kept entries the terms bar into one message.
 
-`start_from` takes a bank the caller has ALREADY screened with
+`start_from` takes a bank the caller has already screened with
 `--excluded-terms`, plus what that screen dropped. It screens only the kept
 entries itself, because they never passed through the caller's screen.
 
-`resolve_size` is the check on the size FLAGS beside a source, decided before
+`resolve_size` is the check on the size flags beside a source, decided before
 its content matters: they may grow the source's grid, never crop it, and never
 past `cw_grid.MAX_SIDE`. It raises `cw_config.ConfigError`, because that is a
 contradictory command line rather than a fault in the grid. `place_source` then
@@ -256,9 +256,9 @@ def _kept_bank(
     Going through `parse_bank` rather than building entries directly holds a
     kept entry to every rule a bank.json entry meets: A-Z answers, declared
     themes, non-empty theme fields and the clue-safety screen. Each entry is
-    parsed ON ITS OWN, because `parse_bank` stops at the first bad entry and the
-    refusal must name them all. No two kept entries share an answer -- repeats
-    are refused before this runs -- so the per-entry parses cannot disagree
+    parsed on its own, because `parse_bank` stops at the first bad entry and the
+    refusal must name them all. No two kept entries share an answer (repeats
+    are refused before this runs), so the per-entry parses cannot disagree
     about a duplicate.
     """
     themes: dict[str, cw_bank.ThemeInfo] = {}
@@ -291,8 +291,8 @@ def _refuse_screened(
     One refusal, whichever side an entry came from: a source run the caller's
     screen dropped from the bank, and a kept entry the terms bar. Named in run
     scan order with each one's reason. A dropped run is refused even when the
-    source declares it -- keeping it would carry an answer past the very
-    screen that removed it -- which is why `start_from` never keeps one.
+    source declares it (keeping it would carry an answer past the very
+    screen that removed it), which is why `start_from` never keeps one.
     """
     reasons = dict(dropped)
     if terms is not None:
@@ -321,14 +321,14 @@ def start_from(
     removed, and `terms` the barred terms themselves (None when none were
     given). Raises SourceError, naming every offender, for a repeated answer,
     a run nothing declares that no unused bank answer could complete, a kept
-    entry the bank's parser refuses, or an entry `--excluded-terms` bars --
+    entry the bank's parser refuses, or an entry `--excluded-terms` bars,
     checked in that order, so repeats are refused before anything is parsed.
     """
     runs = cw_grid.runs_from_rows(document.rows)
     held = {entry.answer for entry in bank.entries}
     removed = {answer for answer, _ in dropped}
     accounted = held | removed
-    # A repeat is an ANSWER held twice. A partial run spells no answer, so two
+    # A repeat is an answer held twice. A partial run spells no answer, so two
     # copies of one are no repeat: different answers may finish them.
     _refuse_repeats(
         [run for run in runs if run.text in accounted or run.text in document.clues]
@@ -394,8 +394,8 @@ def source_lines(
 
     The count is taken from `start`, the source's rows as placed on the grid,
     rather than from the grid that came back: it says what the operator handed
-    in, and every other block already describes the result. A partial run -- one
-    `allowed`, the search bank, does not spell -- is no entry, so it is counted
+    in, and every other block already describes the result. A partial run (one
+    `allowed`, the search bank, does not spell) is no entry, so it is counted
     apart, and its clause is left out when the source holds none. A lone letter
     is counted whether or not it may stand as an island, because the question
     here is only what the source held. `kept` is named in the order given, and
@@ -409,7 +409,7 @@ def source_lines(
 
     The completed line is the one read off `rows`, the grid that came back:
     each partial run with the answer now covering it. It is left out when none
-    was completed -- on the empty board a refusal or an unfinished walk writes.
+    was completed: on the empty board a refusal or an unfinished walk writes.
     The absorbed line follows it, read off `rows` the same way: each answer
     that grew source entries under `--absorb-entries`, and which (`_absorptions`).
     """

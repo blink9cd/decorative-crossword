@@ -38,8 +38,8 @@ import cw_text
 class UsageError(ValueError):
     """A refusal on the exit-2 line that no other module owns.
 
-    Every case is about which FLAGS were supplied, or about a flag naming
-    something the given input does not contain -- neither of which belongs to
+    Every case is about which flags were supplied, or about a flag naming
+    something the given input does not contain, neither of which belongs to
     the bank, the config or the emitter, so none of them has an existing error
     type to borrow.
     """
@@ -47,7 +47,7 @@ class UsageError(ValueError):
 
 #: Every exception whose meaning is "the run could not happen", which is exit
 #: 2. Named once so every handler refuses exactly the same set, and
-#: listed by type rather than collapsed into `ValueError`: every one IS a
+#: listed by type rather than collapsed into `ValueError`: every one is a
 #: ValueError subclass, and catching the base would swallow a genuine bug in
 #: the search or the renderer and report it as an operator's mistake.
 #: `cw_source.SourceError` is the `fill --source` grid no fill can start from.
@@ -80,8 +80,8 @@ def refuse(tool: str, exc: Exception) -> int:
 class ArgumentParser(argparse.ArgumentParser):
     """argparse's parser, with its error line escaped as `refuse` escapes one.
 
-    argparse quotes an argument as it was typed in some of its refusals -- one
-    it does not recognize, or an abbreviation matching more than one option --
+    argparse quotes an argument as it was typed in some of its refusals (one
+    it does not recognize, or an abbreviation matching more than one option),
     so its error line could hand the terminal a control character or a bidi
     control. A refusal that quotes with `repr` is escaped already.
 
@@ -111,7 +111,7 @@ def load_phrases(
 
     A list holding nothing usable is refused, for the reason `gaps` refuses
     such a `--words` list: a report saying no pair joined would describe a list
-    the operator believes was read. The test runs BEFORE the barred terms
+    the operator believes was read. The test runs before the barred terms
     screen the list, so a list they empty is not refused: every line of it is
     still named, under the reason it was skipped.
 
@@ -149,7 +149,7 @@ def load_source(tool: str, path: Path) -> cw_grid_document.GridDocument:
     """Read the `--source` grid at `path`, warning on stderr about each stray letter.
 
     Raises `cw_emit.EmitError` exactly as `cw_grid_document.load_document` does, and for
-    a grid larger than `cw_grid.MAX_SIDE` either way -- here, the one reader of
+    a grid larger than `cw_grid.MAX_SIDE` either way: here, the one reader of
     a grid file, and before the stray scan, whose work grows with the grid.
 
     The one reader `preview`, `shade`, `gaps` and `fill` share, because each
@@ -159,7 +159,7 @@ def load_source(tool: str, path: Path) -> cw_grid_document.GridDocument:
     `<tool>: warning: cell <row>,<col> (<letter>) belongs to no entry: <reason>`,
     its row and column counted from 0.
 
-    WARNED, never refused. A consumer's acceptance check is the gate, not this
+    Warned, never refused. A consumer's acceptance check is the gate, not this
     tool; `preview` is wanted most on a broken grid; and `gaps` is the
     subcommand that finds a letter to join a stray into a word. So the warning
     changes nothing else about the run. `fill` judges a stray separately, at
@@ -192,7 +192,7 @@ def render(
     fixed: tuple[tuple[int, int], ...] = (),
     empty_blocks: bool = False,
 ) -> str:
-    """Draw one grid. The ONLY place any handler reaches the renderer.
+    """Draw one grid. The only place any handler reaches the renderer.
 
     Every caller hands in a `GridDocument`, so `fill --preview`, a standalone
     `preview` of the file that fill just wrote, and every other caller render
@@ -206,7 +206,7 @@ def render(
         cw_svg.RenderRequest(
             rows=document.rows,
             # Narrowed to labels here rather than teaching cw_svg about
-            # ThemeInfo: the preview legend draws a theme's NAME and never its
+            # ThemeInfo: the preview legend draws a theme's name and never its
             # summary, so carrying the record into the renderer would add a
             # dependency edge from the SVG layer to the bank layer for a field
             # it does not use.

@@ -2,22 +2,22 @@
 
 The instrument behind the tool's one rule rather than an exception to it. Every
 maximal run of two or more filled cells must be a distinct bank answer, so a
-denser grid is a demand on the BANK; this module turns "this grid is sparser
+denser grid is a demand on the bank; this module turns "this grid is sparser
 than I want" into the specific letter patterns that would answer that demand,
 and it writes nothing into any grid. Constructing filler stays impossible: the
 output is a question for the operator, and the fill still happens the one way it
 can, by an answer entering the bank and `fill` running again.
 
-The load-bearing subtlety is WELDING. A blocked cell between two existing runs
-does not create a short run out of its immediate neighbors -- it joins them,
+The load-bearing subtlety is welding. A blocked cell between two existing runs
+does not create a short run out of its immediate neighbors: it joins them,
 and the whole joined line is what must then be a bank answer. Reading only the
 neighbors of `AB.CD` reports a three-letter demand where the truth is a
 five-letter one, and it stays silent about `AB` and `CD` ceasing to be entries.
-So each demand carries the FULL run it would create plus the answers that run
+So each demand carries the full run it would create plus the answers that run
 would absorb, and `tests/test_gaps.py`'s `TestWelding` fails any reader that
 loses either half.
 
-A cell whose fill would create no run at all is an ORPHAN and is excluded, not
+A cell whose fill would create no run at all is an orphan and is excluded, not
 ranked: a lone letter forms no entry, so it answers no demand on the bank, and
 `cw_place.grid_violations` is documented as silent about one. They are counted
 rather than dropped, because a count that is not accounted for is a count that
@@ -43,11 +43,11 @@ import cw_grid
 #: here" would read as the opposite of what it asks.
 UNKNOWN = "?"
 
-#: Per direction, the step that walks BACKWARD along it and the step that walks
+#: Per direction, the step that walks backward along it and the step that walks
 #: forward. Backward comes first because a pattern reads in the run's own
 #: direction, so the backward arm is reversed into place ahead of the gap.
 #: A lookup rather than an if/else, so an unrecognized direction raises
-#: KeyError loudly instead of being silently treated as one of the two --
+#: KeyError loudly instead of being silently treated as one of the two:
 #: the same choice, for the same reason, as `cw_grid._STEPS`.
 _ARMS: dict[str, tuple[tuple[int, int], tuple[int, int]]] = {
     cw_grid.ACROSS: ((0, -1), (0, 1)),
@@ -59,7 +59,7 @@ _ARMS: dict[str, tuple[tuple[int, int], tuple[int, int]]] = {
 class Demand:
     """One maximal run a fill would create, with the new cell written as UNKNOWN.
 
-    `row` and `col` are where the RUN starts, not where the gap is: a reader
+    `row` and `col` are where the run starts, not where the gap is: a reader
     sent to the gap's own coordinates would be looking at the wrong square of
     a welded run. `absorbed` names the existing answers this run would swallow,
     which is the cost of the fill and is empty for a pure addition.
@@ -78,7 +78,7 @@ class Candidate:
 
     `demands` holds one or two entries, ACROSS before DOWN, and never zero: a
     cell that would create no run is an orphan and never becomes a Candidate.
-    Both demands must be satisfied by the SAME letter, which is what makes a
+    Both demands must be satisfied by the same letter, which is what makes a
     two-demand cell a materially bigger ask than a one-demand cell.
     """
 
@@ -111,7 +111,7 @@ class GapAnalysis:
     pins so a reader can trust the report's arithmetic rather than re-deriving it.
 
     `masked` is the cells a `--mask` picture forbids a letter. A third tier
-    rather than more orphans: an orphan is a cell a letter COULD take and should
+    rather than more orphans: an orphan is a cell a letter could take and should
     not, which is a different sentence from one that may never hold one, and a
     reader given the wrong one would go looking for the crossing that caused it.
     """
@@ -144,7 +144,7 @@ def _demand_for(
 ) -> Demand | None:
     """The run a letter at (row, col) would create along `direction`, or None.
 
-    None when the letter would stand alone on this axis -- both arms empty, so
+    None when the letter would stand alone on this axis: both arms empty, so
     the "run" is the one cell and `cw_grid.MIN_RUN` is not reached. That is not
     a failure: it is how a cell with a neighbor on only one axis comes back
     with a single demand.
@@ -189,7 +189,7 @@ def analyze_grid(
 
     Row-major, so the order is the one a reader scanning the grid expects and
     is stable across processes. That matters for `masked` in particular: it is
-    read off the GRID and never by iterating the set, whose order is hash-seeded
+    read off the grid and never by iterating the set, whose order is hash-seeded
     and whose contents reach a report.
 
     A masked cell is set aside before it is examined at all. `gaps` exists to
@@ -244,7 +244,7 @@ class Resolution:
     Three outcomes, and keeping them apart is the point of the subcommand:
     `fills` non-empty means the operator can already pay for this gap;
     `unmatched` non-empty names the patterns nothing matches; and both empty is
-    the CROSSING -- every pattern has a word, no single letter has them all.
+    the crossing: every pattern has a word, no single letter has them all.
     """
 
     candidate: Candidate
@@ -260,7 +260,7 @@ class Resolution:
     def new_words(self) -> int:
         """How many answers the operator must invent before this gap can be filled.
 
-        A crossing costs ONE, not one per demand: either pattern gaining a
+        A crossing costs one, not one per demand: either pattern gaining a
         single word whose letter the other pattern already answers clears it.
         Charging two there would send the operator looking for a word they do
         not need.
@@ -277,17 +277,17 @@ def _available(
 ) -> frozenset[str]:
     """The answers `candidate` may draw on, honoring the distinctness rule.
 
-    The vocabulary less what this grid already spends -- and PLUS what this
+    The vocabulary less what this grid already spends, and plus what this
     fill would retire, because an answer a weld absorbs is off the grid by the
     time the new run needs a name, and is therefore free for this candidate's
     other demand.
 
     Counted rather than set-subtracted, because absorption frees an
-    OCCURRENCE and not a word. A grid handed to `gaps` may already spell one
-    answer twice -- it is hand-authored input, and telling the operator so is
-    half the point of the subcommand -- and against a set the surviving copy
+    occurrence and not a word. A grid handed to `gaps` may already spell one
+    answer twice (it is hand-authored input, and telling the operator so is
+    half the point of the subcommand), and against a set the surviving copy
     would vanish along with the absorbed one, so the resolver would offer a
-    letter whose run spelled an answer still standing elsewhere on the grid --
+    letter whose run spelled an answer still standing elsewhere on the grid,
     breaking the one rule this module exists to serve.
     """
     absorbed = Counter(candidate.absorbed)
@@ -304,7 +304,7 @@ def _fill_for(
     """The fill `letter` would make of `candidate`, or None if it would not.
 
     Two ways to fail, and the first is not the obvious one: a letter that makes
-    both demands spell the SAME word is refused however available that word is,
+    both demands spell the same word is refused however available that word is,
     because one answer cannot stand as two distinct entries.
     """
     words = tuple(
@@ -327,7 +327,7 @@ def resolve(
 ) -> Resolution:
     """Ask `vocabulary` what it can do for one candidate.
 
-    An absent vocabulary is the EMPTY vocabulary rather than a second code
+    An absent vocabulary is the empty vocabulary rather than a second code
     path: every pattern comes back unmatched, which is the honest reading of
     "nothing was offered", and there is one implementation to keep correct.
     """
@@ -351,7 +351,7 @@ def resolve_all(
 ) -> tuple[Resolution, ...]:
     """Resolve every candidate of `analysis` against `vocabulary`.
 
-    The grid's own answers are read once, here, as a MULTISET: a grid may
+    The grid's own answers are read once, here, as a multiset: a grid may
     already spell one answer twice, and counting it once would let a fill
     absorb one copy and then re-spend the word the other copy still holds.
     They are looked up by key and never iterated, so no ordering of theirs
@@ -367,7 +367,7 @@ def _rank_key(resolution: Resolution) -> tuple[bool, int, int, int, int]:
     """Cheapest ask first; the trailing cell makes the order total and stable.
 
     Absorption leads because it is a different kind of cost from the others:
-    every other tier ADDS an answer, while an absorbing fill retires ones the
+    every other tier adds an answer, while an absorbing fill retires ones the
     operator curated, and no number of short patterns makes that the cheaper
     move.
     """

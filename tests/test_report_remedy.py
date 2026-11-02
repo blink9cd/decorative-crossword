@@ -43,7 +43,7 @@ class TestTwoLetterRemedy(unittest.TestCase):
     """A grid over `--max-two-letter` names the figure that would clear it."""
 
     def test_names_the_cap_that_would_admit_this_grid(self) -> None:
-        # Density and themes are opened wide so the cap is the ONLY miss, and so
+        # Density and themes are opened wide so the cap is the only miss, and so
         # the one knob asserted below cannot be some other constraint's.
         config = _config(min_themes=0, max_blocked=95.0, max_two_letter=1)
         outcome = _outcome(_TWO_TWOS, config=config)
@@ -84,8 +84,8 @@ class TestRemedy(unittest.TestCase):
         )
 
     def test_names_max_blocked_rounded_UP_to_a_figure_that_clears(self) -> None:
-        # 4 of 9 cells blocked is 44.44...%, which renders as "44.4" -- a figure
-        # STILL below the achieved density, so an operator who set it there
+        # 4 of 9 cells blocked is 44.44...%, which renders as "44.4", a figure
+        # still below the achieved density, so an operator who set it there
         # would be refused again. The stated figure is rounded up instead.
         config = _config(max_blocked=20.0, min_themes=0)
         text = cw_report.render_report(
@@ -97,13 +97,13 @@ class TestRemedy(unittest.TestCase):
             "  loosen --max-blocked to 44.5 or higher, or shrink --rows / --cols",
         )
         # Only the constraint actually missed earns a knob: a block that listed
-        # every option would be a menu. The density here is too HIGH, not too
+        # every option would be a menu. The density here is too high, not too
         # low, and --min-themes is 0, so neither of those lines belongs.
         self.assertEqual(_lines(text, "  lower --min-blocked"), [])
         self.assertEqual(_lines(text, "  lower --min-themes"), [])
 
     def test_offers_no_density_knob_at_exactly_the_ceiling(self) -> None:
-        # 2 blocked of 8 cells is exactly 25.0%, which MEETS a 25.0% ceiling.
+        # 2 blocked of 8 cells is exactly 25.0%, which meets a 25.0% ceiling.
         # A `>=` comparison here would hand this run a "loosen --max-blocked"
         # line contradicting its own echoed missed list, in the one module whose
         # whole job is telling the operator the truth about the run.
@@ -121,14 +121,14 @@ class TestRemedy(unittest.TestCase):
     def test_offers_no_theme_knob_at_exactly_the_floor(self) -> None:
         # The twin of the density boundary above, on the other axis. Pets
         # carries 2 entries and reaches the floor; Food carries none. So
-        # exactly ONE theme reaches it, against a --min-themes of 1: the floor
-        # is MET, and `met < min_themes` re-spelled as `<=` would offer "lower
+        # exactly one theme reaches it, against a --min-themes of 1: the floor
+        # is met, and `met < min_themes` re-spelled as `<=` would offer "lower
         # --min-themes" beside a missed list naming only density.
         config = _config(max_blocked=20.0, min_themes=1)
         rows = ("CAT", "O..", "WET")
         outcome = _outcome(rows, config=config)
         text = cw_report.render_report(outcome, _bank(), config, [])
-        # Pin the fixture ON the boundary, so it cannot drift off it unnoticed.
+        # Pin the fixture on the boundary, so it cannot drift off it unnoticed.
         self.assertEqual(
             cw_accept.themes_meeting_floor(rows, _bank(), config), config.min_themes
         )
@@ -138,8 +138,8 @@ class TestRemedy(unittest.TestCase):
         self.assertEqual(len(_lines(text, "  loosen")), 1)
 
     def test_names_min_blocked_rounded_DOWN_to_a_figure_that_clears(self) -> None:
-        # 3 of 16 cells blocked is 18.75%, which rounds to "18.8" -- a figure
-        # ABOVE the achieved density, so it would not clear either. Rounded down.
+        # 3 of 16 cells blocked is 18.75%, which rounds to "18.8", a figure
+        # above the achieved density, so it would not clear either. Rounded down.
         config = _config(rows=4, cols=4, min_blocked=30.0, min_themes=0)
         rows = ("CATS", "O...", "WEST", "SEED")
         text = cw_report.render_report(
@@ -251,8 +251,8 @@ class TestRemedy(unittest.TestCase):
 
     def test_names_the_feature_knob_on_a_grid_holding_no_entry(self) -> None:
         # A walk cut at its root comes back holding no entry, and its missed
-        # list names the absent feature, so the block must say how to place it
-        # -- with or without --source. Only the density and theme figures of an
+        # list names the absent feature, so the block must say how to place it,
+        # with or without --source. Only the density and theme figures of an
         # empty grid go: this one misses both, and neither earns a knob.
         config = _config(feature="COW")
         outcome = _outcome(("...", "...", "..."), config=config)
@@ -275,7 +275,7 @@ class TestRemedy(unittest.TestCase):
     def test_offers_no_knob_on_a_grid_holding_no_entry_and_no_feature(self) -> None:
         # The same empty grid with nothing featured misses density and themes
         # alone, and arithmetic on a grid holding no entry points at nothing an
-        # operator can act on -- so the knob block is absent, not empty.
+        # operator can act on, so the knob block is absent, not empty.
         config = _config()
         outcome = _outcome(("...", "...", "..."), config=config)
         text = cw_report.render_report(outcome, _bank(), config, [])
@@ -291,7 +291,7 @@ class TestRemedy(unittest.TestCase):
         # A pre-flight refusal comes back with zero steps, the bank's own
         # reasons, and the grid the run began from: here an empty board. A knob
         # read off that unsearched grid would advise loosening --max-blocked to
-        # 100 -- true of the rectangle and useless to the operator.
+        # 100: true of the rectangle and useless to the operator.
         config = _config(min_themes=3, min_entries_per_theme=3)
         refusals = cw_accept.preflight(_bank(), config)
         refusal = cw_search.SearchOutcome(
@@ -408,7 +408,7 @@ class TestExactDensity(unittest.TestCase):
 
     def test_a_grid_exactly_on_the_ceiling_is_no_miss(self) -> None:
         # A float verdict called this grid over its 28.0 ceiling while the
-        # shortfall line, counting cells, called it within -- in one report.
+        # shortfall line, counting cells, called it within, in one report.
         config = _config(rows=10, cols=10, max_blocked=28.0, min_themes=0)
         outcome = _outcome(_TWENTY_EIGHT_OF_100, config=config)
         text = cw_report.render_report(outcome, _bank(), config, [])

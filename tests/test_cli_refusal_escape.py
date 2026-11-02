@@ -7,8 +7,8 @@ terminal or make the rest of the line display as other text than it holds. So
 the message is printed escaped, as a skipped word-list line is, whichever of
 the tool or its parser made the refusal, from the top-level parser and from
 each subcommand's alike. An argument holding a byte that is not UTF-8 reaches
-the tool as a lone surrogate, and what a real stderr then carries -- its escape,
-and exit 2 -- is pinned in bytes from a child process.
+the tool as a lone surrogate, and what a real stderr then carries (its escape,
+and exit 2) is pinned in bytes from a child process.
 
 Run through test_decorative_crossword.py's `load_tests` hook.
 """

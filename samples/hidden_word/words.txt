@@ -2,7 +2,7 @@
 #
 # One word per line. Blank lines and lines starting with "#" are ignored, case
 # is folded, and a line that is not a usable word is skipped and named in the
-# report rather than failing the run -- "well-known" below is there to show
+# report rather than failing the run: "well-known" below is there to show
 # that, and "antelope" is there to show both the case fold and what
 # --exclude-grid-answers does to a word the grid already answers.
 

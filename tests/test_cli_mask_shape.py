@@ -1,9 +1,9 @@
 """Grouped suite: a real fill under a mask writes no letter the picture forbids.
 
-The claim the whole feature rests on, checked on the WRITTEN grid rather than on
+The claim the whole feature rests on, checked on the written grid rather than on
 anything the search reports about itself. A mask consulted in `cw_place.fits` but
-missed in `crossing_candidates` -- the two are parallel predicates, not one choke
-point -- still returns a grid with letters where the operator drew none, and only
+missed in `crossing_candidates` (the two are parallel predicates, not one choke
+point) still returns a grid with letters where the operator drew none, and only
 reading the file catches that.
 
 The pictures here are shapes rather than single cells, deliberately. One masked
@@ -11,7 +11,7 @@ cell can be missed by a seam and still leave a grid that looks plausible; a
 silhouette cannot, because the search has to route every crossing around it.
 
 A sibling file rather than a section of `test_cli_mask.py`, which owns the
-command line -- exit codes, sizes, refused files. This one owns the search.
+command line: exit codes, sizes, refused files. This one owns the search.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
 `load_tests` hook, which puts the project root and `src/` on `sys.path`.
@@ -100,7 +100,8 @@ class TestShapedFill(cli_fixtures.QuietCase):
         # The mask must cost nothing where it forbids nothing: under an all-open
         # picture, the same seed, bank and size write exactly the grid a run
         # without the flag writes. This pins the result; whether a change leaves
-        # the walk itself unchanged is `tools/walk_equivalence`'s to prove.
+        # the walk itself unchanged is a separate walk-comparison harness's to
+        # prove; it is not shipped here.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
             decorative_crossword.main(space.fill())

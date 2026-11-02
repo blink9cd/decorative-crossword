@@ -7,9 +7,9 @@ contract over text; this holds the file around the parser: bytes that are not
 UTF-8, a byte-order mark, and every line ending an editor uses.
 
 The property: a file reads as a mask or as a `MaskError` naming it, and a file
-reads as its own text does -- the same mask `parse_mask` makes of the decoded
+reads as its own text does: the same mask `parse_mask` makes of the decoded
 bytes, and, when its bytes are UTF-8 with no byte-order mark, a refusal only
-where `parse_mask` refuses that text too -- so reading a file adds nothing to
+where `parse_mask` refuses that text too, so reading a file adds nothing to
 the picture and takes nothing from it. An accepted mask is also the one drawn
 by the text's editor lines, re-derived here: each line that is not a comment,
 its trailing whitespace trimmed, is one row, and each `MASKED` in it one
@@ -53,8 +53,8 @@ settings.register_profile(
 )
 settings.load_profile("crossword_mask_file_properties")
 
-#: Text weighted toward a picture -- both marks, the comment prefix, the line
-#: ends an editor makes and those it does not -- because arbitrary text is
+#: Text weighted toward a picture (both marks, the comment prefix, the line
+#: ends an editor makes and those it does not), because arbitrary text is
 #: almost never one, and a mask that reads is the interesting case.
 _NEAR_PICTURE = st.text(
     alphabet=st.sampled_from(

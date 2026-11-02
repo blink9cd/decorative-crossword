@@ -25,7 +25,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-#: Three themes carrying three answers each. MULTI-THEME deliberately: a
+#: Three themes carrying three answers each. Multi-theme deliberately: a
 #: single-themed bank cannot exercise the theme floor as anything but a
 #: pass/fail flag, and it hides the per-theme report block entirely.
 #: Each theme is a {label, summary} record. Both fields are required and
@@ -49,11 +49,11 @@ ENTRIES: list[dict[str, str]] = [
 
 BANK: dict[str, object] = {"themes": THEMES, "entries": ENTRIES}
 
-#: A bank that declares NO themes and attaches none: the `themes` map "may be
+#: A bank that declares no themes and attaches none: the `themes` map "may be
 #: empty", with each entry's optional `theme` key simply absent rather
 #: than null. Its own constant rather than BANK with the theme fields stripped,
 #: because what these answers have to be is short and mutually crossable on a
-#: small grid -- the opposite of what BANK's three-theme shape is arranged for.
+#: small grid: the opposite of what BANK's three-theme shape is arranged for.
 THEMELESS_ANSWERS: tuple[str, ...] = ("DELTA", "EAGLE", "TIGER", "LEMON")
 
 THEMELESS_BANK: dict[str, object] = {
@@ -83,7 +83,7 @@ def bank_with_clue(clue: str) -> dict[str, object]:
 
 
 def bank_with_theme_key(key: str) -> dict[str, object]:
-    """A one-entry bank whose declared theme KEY is `key`.
+    """A one-entry bank whose declared theme key is `key`.
 
     Separate from `bank_with_clue` because the key is a different untrusted
     field reaching the emitted document by a different path, and nothing but

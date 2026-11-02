@@ -11,8 +11,8 @@ Two rules hold for every input file:
   and a word list line holding one of them would be read as two words.
 
 The line rule is carried by one shared split, which the three readers that
-take a file line by line -- the excluded-terms list, the mask and the word or
-phrase list -- all call. For a text holding none of the eight, each reader
+take a file line by line (the excluded-terms list, the mask and the word or
+phrase list) all call. For a text holding none of the eight, each reader
 must return exactly what it did when it split with `str.splitlines`, and a
 property per reader holds it to that.
 
@@ -165,7 +165,7 @@ class TestEditorLines(unittest.TestCase):
 
     def test_a_final_line_end_closes_a_line_rather_than_opening_one(self) -> None:
         # As `str.splitlines` has it, so a reader loses nothing and gains no
-        # blank last line -- which a mask would refuse.
+        # blank last line, which a mask would refuse.
         for text, lines in (
             ("", ()),
             ("a", ("a",)),

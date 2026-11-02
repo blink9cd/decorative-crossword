@@ -1,6 +1,6 @@
 """cw_json: parses the JSON text of a file the operator wrote, or says why it cannot.
 
-Both JSON inputs this tool reads -- a word bank and a grid file -- are parsed
+Both JSON inputs this tool reads (a word bank and a grid file) are parsed
 here, because `json.loads` fails in more ways than `json.JSONDecodeError` names
 and a reader catching only that one lets the rest escape as a traceback. That
 exits 1, which this tool also uses for "no conforming grid was found", so a
@@ -13,8 +13,8 @@ from a file anyone can hand-edit:
 * nesting deep enough to exhaust the stack while parsing, as `RecursionError`,
   which is not a `ValueError` at all.
 
-A fourth is not a parse failure at all. Nesting a little shallower PARSES, and
-then overflows the stack as soon as a refusal quotes the value -- and every
+A fourth is not a parse failure at all. Nesting a little shallower parses, and
+then overflows the stack as soon as a refusal quotes the value, and every
 refusal in the bank and grid validators quotes the value at fault. A quote
 keeps only the start of the value, but it is cut from the whole `repr`, which
 recurses once per level however little of it the message keeps. So the depth
@@ -22,9 +22,9 @@ is bounded here, once, where an untrusted payload is born, rather than at each
 refusal downstream.
 
 A fifth the parser does not report at all: a key written twice in one object.
-That is grammatical JSON -- RFC 8259 leaves which one counts to each reader --
+That is grammatical JSON (RFC 8259 leaves which one counts to each reader)
 and Python's `json` keeps the last and says nothing, so a hand edit that leaves
-an old line behind -- a clue or a label written twice -- would be overruled
+an old line behind (a clue or a label written twice) would be overruled
 silently. It is refused as a `RepeatedKeyError`, naming the key and the object
 that repeats it, as a path from the top of the file, so a repeat among hundreds
 of bank entries can be found. The parser reports no position, so the path is
@@ -41,8 +41,8 @@ from collections.abc import Iterable, Iterator
 import cw_text
 
 #: The deepest a file may nest, counting every object and array on the way
-#: down. Neither format needs more than three -- the document, a map or list in
-#: it, and a record in that -- so anything deeper is malformed somewhere. The
+#: down. Neither format needs more than three (the document, a map or list in
+#: it, and a record in that), so anything deeper is malformed somewhere. The
 #: margin lets a merely misshapen file reach the validator that names its
 #: actual fault, and the ceiling keeps quoting any parsed value far inside the
 #: interpreter's recursion limit.
@@ -106,10 +106,10 @@ def _members(repeats: _Repeats, pairs: list[tuple[str, object]]) -> dict[str, ob
 
     Left to `json.loads`, the last of two same-named members would win: a bank
     entry written with two answers would be read as the second. Which one the
-    operator meant is a guess, so the file is refused instead -- but not from
+    operator meant is a guess, so the file is refused instead, but not from
     here, which sees the object's members and not where the object sits. It is
     recorded by identity, holding the object too. The same key in two
-    different objects -- an `answer` in every entry -- is what every file
+    different objects (an `answer` in every entry) is what every file
     holds, and is not a repeat.
     """
     members: dict[str, object] = {}

@@ -28,7 +28,7 @@ import property_strategies as ps  # noqa: E402 - same bootstrap
 # The same convention the property suites follow, and for the same reason: a
 # registered profile loaded before the class bodies, never an `@settings`
 # decorator. Its own name so import order cannot decide which profile the
-# `@given` test below snapshots -- see `tests/test_search_properties.py` for the
+# `@given` test below snapshots. See `tests/test_search_properties.py` for the
 # full note.
 # too_slow is suppressed as well: on a cold .hypothesis cache the first draw also
 # pays Hypothesis's one-time setup (the unicode tables a text strategy needs, a scan
@@ -81,7 +81,7 @@ def _assert_within_declared_bounds(
         case.assertLessEqual(side, ps.MAX_SIDE)
     case.assertEqual(config.min_blocked, ps.MIN_BLOCKED)
     case.assertIn(config.max_blocked, ps.MAX_BLOCKED_CHOICES)
-    # 1, not 0: a floor of zero lets the EMPTY grid conform at the ceiling
+    # 1, not 0: a floor of zero lets the empty grid conform at the ceiling
     # this strategy draws, which would make every property in the search suite
     # hold vacuously. The mechanism is at the bound itself in
     # `property_strategies`; this is the assertion that pins it.
@@ -105,7 +105,7 @@ class TestRunScan(unittest.TestCase):
     """The independent rule reading, checked against hand-built grids."""
 
     def test_it_finds_across_runs_before_down_runs(self) -> None:
-        # ACROSS row-major then DOWN column-major -- the same documented order
+        # ACROSS row-major then DOWN column-major: the same documented order
         # cw_grid.runs_from_rows promises, arrived at independently.
         found = ps.scan_runs(("AB.", "C..", "..."))
         self.assertEqual(
@@ -132,15 +132,15 @@ class TestRunScan(unittest.TestCase):
 
     def test_a_lone_filled_cell_is_not_a_run(self) -> None:
         # The MIN_RUN boundary, and the exact case
-        # cw_place.grid_violations is documented as being SILENT about: the
+        # cw_place.grid_violations is documented as being silent about: the
         # orphan property compares this empty result against filled_cells.
         rows = ("X..", "...", "...")
         self.assertEqual(ps.scan_runs(rows), ())
         self.assertEqual(ps.filled_cells(rows), {(0, 0)})
 
     def test_an_empty_grid_has_no_runs(self) -> None:
-        # The zero-width branch. No search can produce this -- --rows and --cols
-        # are validated positive -- so only a direct call reaches it.
+        # The zero-width branch. No search can produce this (--rows and --cols
+        # are validated positive), so only a direct call reaches it.
         self.assertEqual(ps.scan_runs(()), ())
         self.assertEqual(ps.filled_cells(()), set())
 

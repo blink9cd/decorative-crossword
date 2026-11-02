@@ -1,9 +1,9 @@
 """Grouped suite: the renderer shading a hidden word's scattered cells.
 
-`--feature` shades one whole ANSWER, located by its text, and cannot express a
+`--feature` shades one whole answer, located by its text, and cannot express a
 hidden word: those cells are scattered by construction and belong to no single
 run. Without this the `shade` subcommand would find cells nothing could draw,
-which is half a feature -- the useful loop is *find a hidden word, then look at
+which is half a feature: the useful loop is *find a hidden word, then look at
 it*, and it needs the picture.
 
 The extension is deliberately narrow. `RenderRequest.hidden` carries the cells
@@ -76,11 +76,11 @@ class TestHiddenShading(unittest.TestCase):
     def test_a_coordinate_outside_the_grid_draws_nothing_and_does_not_raise(
         self,
     ) -> None:
-        """The renderer asks the GRID which of its cells are shaded.
+        """The renderer asks the grid which of its cells are shaded.
 
         So a coordinate the grid does not have simply never matches. Validating
         the source is the CLI's job and this does not repeat
-        it -- the shape of the check is what makes not repeating it safe.
+        it: the shape of the check is what makes not repeating it safe.
         """
         rendered = cw_svg.render_svg(
             fixtures.request(hidden=cw_svg.HiddenShading("X", ((99, 99),)))
@@ -122,7 +122,7 @@ class TestHiddenShading(unittest.TestCase):
 
         COW and CAT share the corner, so a shading built by concatenating
         each run's cells rather than taking one set would still pass a
-        membership check -- the equality below is what pins that the shared
+        membership check: the equality below is what pins that the shared
         cell is one cell, and that neither feature's cells were dropped.
         """
         rendered = cw_svg.render_svg(fixtures.request(features=("COW", "CAT")))
@@ -143,7 +143,7 @@ class TestHiddenShading(unittest.TestCase):
         """The same request renders the same bytes.
 
         A set of cells is the natural way to ask "is this one shaded", and a
-        set is also the classic way an ordering leaks into output -- so this
+        set is also the classic way an ordering leaks into output, so this
         pins that nothing here iterates one.
         """
         request = fixtures.request(

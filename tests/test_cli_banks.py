@@ -2,16 +2,16 @@
 
 `fill` and `gaps` merge every `--bank` into one bank, in the order the flags are
 given. What the merge decides is `test_bank_merge.py`'s; these cases prove each
-handler hands over every bank -- to the merge, to the output-path check and to
-the repeated-file check -- and that everything downstream of the bank sees the
+handler hands over every bank (to the merge, to the output-path check and to
+the repeated-file check), and that everything downstream of the bank sees the
 merged one: a `--feature`, a `--prefer`, the `--excluded-terms` screen, the
 report, `gaps`' vocabulary and its answer pairs.
 
 **Flag order orders the report, never the grid.** The search sorts its
 candidates on a ranking and a seeded hash of each placement
 (`cw_order.ordered_candidates`), which no two candidates share, and the emitted
-document follows the grid's own runs -- so a grid is the same bytes whichever
-bank comes first, and MEASURED so. What the order does reach is every report
+document follows the grid's own runs, so a grid is the same bytes whichever
+bank comes first, and measured so. What the order does reach is every report
 block that lists the bank, which is what `TestFillOrder` pins, beside the grid
 bytes staying put.
 

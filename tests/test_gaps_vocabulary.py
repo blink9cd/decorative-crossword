@@ -1,10 +1,10 @@
 """Grouped suite: what a vocabulary says about a gap, and how gaps are ranked.
 
-The derivation in `test_gaps.py` says what a fill would DEMAND. This suite is
+The derivation in `test_gaps.py` says what a fill would demand. This suite is
 the other half: given the words the operator actually holds, which gaps are
 already payable and which need a word that does not exist yet. That split is
-the whole point of the subcommand -- a list of coordinates nobody can act on
-becomes a short list of specific asks -- so the cases here pin the three
+the whole point of the subcommand (a list of coordinates nobody can act on
+becomes a short list of specific asks), so the cases here pin the three
 outcomes apart from each other.
 
 Two of them are easy to get wrong and are pinned deliberately:
@@ -17,7 +17,7 @@ Two of them are easy to get wrong and are pinned deliberately:
   swallows, so an answer this candidate absorbs is available again to its own
   other demand. `TestAbsorptionFreesAnswers` holds the case; without the rule
   the resolver refuses a fill that is in fact legal. What it frees is the
-  OCCURRENCE, not the word: a grid that spells one answer twice keeps spending
+  occurrence, not the word: a grid that spells one answer twice keeps spending
   it after a fill absorbs one copy, and the same class holds that case beside
   this one so the two cannot drift apart.
 
@@ -34,11 +34,11 @@ import cw_gaps
 #: down, so the A at (0, 0) already belongs to an entry.
 ONE_DEMAND = ("A.", "B.")
 
-#: A gap at (1, 1) demanding `E?` across and `A?` down at once -- two runs one
+#: A gap at (1, 1) demanding `E?` across and `A?` down at once: two runs one
 #: letter has to satisfy together.
 TWO_DEMANDS = ("HAY.", "E...", "D...", "GIRL")
 
-#: A gap at (1, 1) whose two demands are the SAME pattern, `A?`. A letter here
+#: A gap at (1, 1) whose two demands are the same pattern, `A?`. A letter here
 #: would need one word to stand as two distinct entries, which no grid allows.
 SAME_PATTERN = (".A.", "A..", "...")
 
@@ -51,9 +51,9 @@ GRID_HOLDING_AB = ("AB.", "...", "A..")
 #: grid once the fill lands, so it is available to the other demand.
 ABSORBS_AND_REUSES = ("..A", "AB.", "...")
 
-#: `ABSORBS_AND_REUSES` with the answer AB spelled a SECOND time, in row 2. The
+#: `ABSORBS_AND_REUSES` with the answer AB spelled a second time, in row 2. The
 #: across demand still absorbs row 1's copy, so a resolver that tracks answers
-#: as a set sees AB go free -- while row 2 goes on spelling it, untouched by
+#: as a set sees AB go free, while row 2 goes on spelling it, untouched by
 #: this fill. Kept beside the grid it differs from by one row, because a
 #: resolver that tracks answers as a set resolves the two identically.
 ABSORBS_ONE_OF_TWO = ("..A", "AB.", "AB.")
@@ -131,7 +131,7 @@ class TestTheCrossing(unittest.TestCase):
 
     def test_no_shared_letter_yields_no_fill(self) -> None:
         # EX pays the across demand `E?` with X and AM pays the down demand
-        # `A?` with M, so each pattern has a word -- and no single letter pays
+        # `A?` with M, so each pattern has a word, and no single letter pays
         # both, which is the whole distinction.
         resolution = _for_cell(_resolve(TWO_DEMANDS, {"EX", "AM"}), 1, 1)
         self.assertEqual(resolution.fills, ())
@@ -157,11 +157,11 @@ class TestTheCrossing(unittest.TestCase):
 
 
 class TestDistinctness(unittest.TestCase):
-    """Every run on a grid is a DISTINCT answer, and the resolver honors it."""
+    """Every run on a grid is a distinct answer, and the resolver honors it."""
 
     def test_a_word_already_on_the_grid_is_not_available(self) -> None:
         # AB is the across run in row 0, so it cannot also become the run this
-        # fill creates -- and with nothing else offered, `A?` is unmet rather
+        # fill creates, and with nothing else offered, `A?` is unmet rather
         # than merely unfilled.
         resolution = _for_cell(_resolve(GRID_HOLDING_AB, {"AB"}), 2, 1)
         self.assertEqual((resolution.fills, resolution.unmatched), ((), ("A?",)))
@@ -171,7 +171,7 @@ class TestDistinctness(unittest.TestCase):
         self.assertEqual(resolution.fills, ())
 
     def test_an_identical_pair_is_a_crossing_not_a_miss(self) -> None:
-        # The refusal above is about reusing ONE word, not about the patterns
+        # The refusal above is about reusing one word, not about the patterns
         # looking alike: each is matched, so neither is reported unmet.
         resolution = _for_cell(_resolve(SAME_PATTERN, {"AB"}), 1, 1)
         self.assertEqual(
@@ -191,7 +191,7 @@ class TestAbsorptionFreesAnswers(unittest.TestCase):
     def test_absorbing_one_copy_does_not_free_a_doubled_answer(self) -> None:
         # The grid spells AB twice and this fill absorbs one copy. The other
         # still stands, so AB is not the resolver's to spend and the down demand
-        # `A?` goes unmet; offering B here would write a THIRD AB onto a grid
+        # `A?` goes unmet; offering B here would write a third AB onto a grid
         # already breaking the one rule the subcommand serves.
         resolution = _for_cell(_resolve(ABSORBS_ONE_OF_TWO, {"ABB", "AB"}), 1, 2)
         self.assertEqual((resolution.fills, resolution.unmatched), ((), ("A?",)))

@@ -3,11 +3,11 @@
 `preview --feature` repeats as `fill --feature` does, but takes a bare ANSWER
 only. `preview` locates an answer in a grid it did not build, and the shading
 follows the answer's text, so a position could change nothing drawn:
-`ANSWER@ROW,COL,DIR` is REFUSED at exit 2 rather than read as an assertion, and
+`ANSWER@ROW,COL,DIR` is refused at exit 2 rather than read as an assertion, and
 an answer named twice is refused, as `fill` refuses it.
 
 Several cases give the flags in an order chosen so that a last-wins
-`--feature` -- argparse's default for a repeated flag -- would pass the wrong
+`--feature` (argparse's default for a repeated flag) would pass the wrong
 one: the value that has to be checked comes first, where a last-wins flag
 drops it.
 

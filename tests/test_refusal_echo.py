@@ -10,8 +10,8 @@ diagnosis. So every quote goes through `cw_text.shown`, which keeps the first
 
 Two halves. The CLI cases feed refused inputs holding huge values and measure
 what reaches stderr. The guard reads every module the tool runs, with `ast`,
-and fails on any `!r` or `!a` conversion and any `repr` or `ascii` call -- each
-quotes a value whole -- outside `shown` itself and the one-character escape in
+and fails on any `!r` or `!a` conversion and any `repr` or `ascii` call (each
+quotes a value whole) outside `shown` itself and the one-character escape in
 `cw_text.visible`. It sees only those four shapes: a `%r` in a format string or
 a `{!r}` field handed to `str.format` quotes a value whole just as well and
 passes it unseen.
@@ -33,7 +33,7 @@ from tests import cli_fixtures
 _HUGE = 1_000_000
 
 #: The most stderr one refusal of a file may take: the quote, the file's path
-#: and the sentence around them, with room to spare -- three orders of
+#: and the sentence around them, with room to spare: three orders of
 #: magnitude under what quoting the whole value takes.
 _MAX_STDERR_BYTES = 1_000
 

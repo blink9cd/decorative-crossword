@@ -46,7 +46,7 @@ def _mode_of(path: Path) -> int:
 
 
 class TestLoadDocument(unittest.TestCase):
-    """A grid_source.json is read, or refused with a reason -- never guessed at."""
+    """A grid_source.json is read, or refused with a reason, never guessed at."""
 
     def test_reads_the_documented_shape(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
@@ -86,7 +86,7 @@ class TestLoadDocument(unittest.TestCase):
             )
 
     def test_an_entry_with_no_clue_is_read_without_complaint(self) -> None:
-        # Questionable CONTENT is for whatever consumes the grid to judge, not
+        # Questionable content is for whatever consumes the grid to judge, not
         # this loader.
         with tempfile.TemporaryDirectory() as folder:
             path = _written(
@@ -120,7 +120,7 @@ class TestLoadDocument(unittest.TestCase):
                 cw_grid_document.load_document(Path(folder))
 
     def test_reports_a_file_that_is_not_valid_utf_8(self) -> None:
-        # UnicodeDecodeError is a ValueError and NOT an OSError. Uncaught, it
+        # UnicodeDecodeError is a ValueError and not an OSError. Uncaught, it
         # escapes the CLI's refusal set and gives `preview` an exit 1 it does
         # not have.
         with tempfile.TemporaryDirectory() as folder:
@@ -158,7 +158,7 @@ class TestLoadDocument(unittest.TestCase):
                     cw_grid_document.load_document(_written(folder, payload))
 
     def test_rejects_a_themes_value_of_the_wrong_type(self) -> None:
-        # The last two are the record's own FIELDS being wrong, which the
+        # The last two are the record's own fields being wrong, which the
         # record-shape check above them cannot reach: a well-formed object
         # whose label or summary is not a string.
         cases: list[object] = [
@@ -185,7 +185,7 @@ class TestLoadDocument(unittest.TestCase):
                     cw_grid_document.load_document(path)
 
     def test_rejects_a_non_string_key_reached_without_json(self) -> None:
-        # Unreachable through a FILE -- JSON object keys are always strings --
+        # Unreachable through a file (JSON object keys are always strings),
         # but `parse_document` is public and takes any payload, exactly as
         # `cw_bank.parse_bank` does, so the guard is tested where it can fire.
         with self.assertRaises(cw_emit.EmitError):
@@ -248,20 +248,20 @@ class TestWriteAtomically(unittest.TestCase):
 class TestWriteAtomicallyMode(unittest.TestCase):
     """The permission bits a written file comes back with.
 
-    `os.replace` carries the STAGING file's mode onto the target, and a staging
-    file made by `tempfile` is readable by its creator alone -- so without a
+    `os.replace` carries the staging file's mode onto the target, and a staging
+    file made by `tempfile` is readable by its creator alone, so without a
     carry-over every file this writer touches would come back 0600, execute
     bit gone. Both losses are quiet: git records only the executable bit, and
     `git checkout --` restores a mode only on a run that rewrites the content
     too, so a narrowed file stays narrowed in that working tree indefinitely.
 
-    A rewrite keeps the file's OWN bits. A NEW file gets what a plain write
+    A rewrite keeps the file's own bits. A new file gets what a plain write
     would have given it under the current umask, because there is no template
-    to copy from -- and a new file is the ORDINARY case here, not an edge:
+    to copy from, and a new file is the ordinary case here, not an edge:
     `--out` names wherever the operator wants the picture, and `cw_paths`
     never requires that the file already exist.
 
-    Every assertion compares a mode READ BACK from disk against another read
+    Every assertion compares a mode read back from disk against another read
     back the same way, never against a literal. Windows' `chmod` only toggles
     the read-only flag, so a literal would pin the author's platform instead of
     asserting the relationship on the running one.
@@ -290,10 +290,10 @@ class TestWriteAtomicallyMode(unittest.TestCase):
         self.assertEqual(_mode_of(path), before)
 
     def test_a_rewrite_keeps_the_execute_bit(self) -> None:
-        """The sharper loss, and the one git WOULD have reported had it survived.
+        """The sharper loss, and the one git would have reported had it survived.
 
         Nothing this tool writes today is runnable, which is a fact about its
-        outputs rather than about the writer -- and it is the writer that has to
+        outputs rather than about the writer, and it is the writer that has to
         hold, because a shared one acquires call sites.
         """
         path, before = self.seeded("regenerate.sh", 0o755)
@@ -316,7 +316,7 @@ class TestWriteAtomicallyMode(unittest.TestCase):
         The case is here for the opposite mistake: widening every output to
         whatever the umask gives is as much a decision about the operator's
         directory as narrowing it, and this tool has no business taking either.
-        Its bite comes from the create asking for 0o666 -- drop the carry-over
+        Its bite comes from the create asking for 0o666: drop the carry-over
         and a private file comes back 0644, not 0600.
         """
         path, before = self.seeded("private.svg", 0o600)
@@ -340,8 +340,8 @@ class TestWriteAtomicallyMode(unittest.TestCase):
         A umask separates a creation mode from a literal only where it does not
         already strip the bits the two disagree on: `0o002` leaves group-write
         standing, which is what tells asking for `0o666` apart from asking for a
-        hardcoded `0o644`. `0o077` then catches the opposite mistake -- a mode
-        stamped on AFTER creation, which bypasses the umask rather than being
+        hardcoded `0o644`. `0o077` then catches the opposite mistake: a mode
+        stamped on after creation, which bypasses the umask rather than being
         filtered by it.
 
         A single typical umask such as `0o022` cannot tell the two apart:
@@ -371,7 +371,7 @@ class TestWriteAtomicallyOnWindows(unittest.TestCase):
 
     def test_a_rewrite_where_fchmod_does_not_exist_still_writes(self) -> None:
         # `os.fchmod` reached Windows only in Python 3.13, and a mode is carried
-        # only onto a file that already exists -- so overwriting a grid is the one
+        # only onto a file that already exists, so overwriting a grid is the one
         # run a bare call breaks there, with an AttributeError no caller reports.
         # patch.dict restores os's namespace on exit; pop's default keeps this
         # runnable on a host that has no fchmod to remove.
@@ -386,9 +386,9 @@ class TestWriteAtomicallyOnWindows(unittest.TestCase):
         # Without O_BINARY a Windows descriptor is in text mode, and the C runtime
         # writes every "\n" as "\r\n" underneath `newline="\n"`, so no committed
         # sample would come out byte-identical there. The flag exists only on
-        # Windows, so it is faked -- at Windows' own value -- and stripped again
+        # Windows, so it is faked (at Windows' own value) and stripped again
         # before the real open, since on this host that bit may mean something else.
-        # The host's own flag, read before the patch, is put back: on Windows it IS
+        # The host's own flag, read before the patch, is put back: on Windows it is
         # 0x8000, and an open with it stripped would write CRLF and fail the byte check.
         fake_binary = 0x8000
         host_binary = getattr(os, "O_BINARY", 0)

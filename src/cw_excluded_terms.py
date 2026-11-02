@@ -20,7 +20,7 @@ import cw_text
 from cw_bank import Bank, BankEntry, BankError
 
 #: A line whose first non-blank character is this is a comment in a term list.
-#: Only the FIRST character: a trailing-comment rule would silently truncate a
+#: Only the first character: a trailing-comment rule would silently truncate a
 #: term that legitimately contains a hash.
 _COMMENT_PREFIX = "#"
 
@@ -56,7 +56,7 @@ def load_excluded_terms(path: Path) -> frozenset[str]:
 def _term_pattern(term: str) -> re.Pattern[str]:
     r"""A whole-word, case-insensitive matcher for one barred term.
 
-    `re.escape` because a term is a WORD the operator typed, not a pattern: an
+    `re.escape` because a term is a word the operator typed, not a pattern: an
     unescaped `.` in "b.oom" would screen BLOOM and every other five-letter
     answer shaped like it, silently over-reaching the list the operator wrote.
 
@@ -70,7 +70,7 @@ def _term_pattern(term: str) -> re.Pattern[str]:
 def _drop_reason(entry: BankEntry, terms: Mapping[str, re.Pattern[str]]) -> str | None:
     """Why `entry` is barred, or None if no term matches it.
 
-    `terms` is walked in the order its caller built it -- sorted -- so which
+    `terms` is walked in the order its caller built it, sorted, so which
     term a two-match entry is reported under is fixed rather than decided by a
     `frozenset`'s hash-seeded iteration order, which must never reach output.
 
@@ -98,7 +98,7 @@ def screen_excluded(
 
     Whole-word and case-insensitive, against both the answer and its clue.
 
-    It never raises. A drop is REPORTED, not fatal: the pairs come back for the
+    It never raises. A drop is reported, not fatal: the pairs come back for the
     report to list by name and count, because a screen that silently removed
     part of the bank would make "placed 24 of 61" a lie about a number the
     operator supplied.

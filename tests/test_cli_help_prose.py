@@ -6,7 +6,7 @@ stays a table of option declarations. Its `add_argument` calls stay together
 there, so the whole command-line surface reads in one place; prose is what can
 leave.
 
-What that costs is DISTANCE. A flag and its description do not sit on
+What that costs is distance. A flag and its description do not sit on
 adjacent lines, so no reader can see at a glance that the right constant
 reached the right option, and an orphaned or doubled-up constant looks exactly
 like a correct one. These tests buy that distance back.
@@ -16,12 +16,12 @@ Python file to. Prose written straight into an `add_argument` call would grow
 it one option at a time, each step too small to notice, until it passed that
 size with no single change to blame.
 
-Read as SOURCE rather than by importing the modules: the question is where a
-string is written, and an imported module cannot answer that -- by then the
+Read as source rather than by importing the modules: the question is where a
+string is written, and an imported module cannot answer that: by then the
 constant and a literal are the same object.
 
 `TestEachEpilogNamesWhatItClaims` asks a different question, what an epilog
-TELLS its reader, so it reads `--help` as printed instead. An epilog's exit-2
+tells its reader, so it reads `--help` as printed instead. An epilog's exit-2
 list is where a reader learns what a subcommand refuses without running it, and
 it is written in `cw_help`, far from the code that refuses, so a rewrite that
 drops a refusal reads as fine to anyone who does not know that code. Each phrase
@@ -51,7 +51,7 @@ _HELP_SUFFIX = "_HELP"
 
 #: A floor on the SCAN's denominator, not on the number of options. Every
 #: assertion below is a statement about a set, and each one passes trivially
-#: over an empty set -- the shape that reports a clean result while measuring
+#: over an empty set, the shape that reports a clean result while measuring
 #: nothing at all. This is what makes the others mean something.
 _MIN_HELP_CONSTANTS = 10
 
@@ -136,7 +136,7 @@ class TestProseLivesInTheHelpModule(unittest.TestCase):
     def test_no_option_writes_multi_line_help_into_the_entry_point(self) -> None:
         # The span, not the character count, is the thing that costs headroom,
         # and the two agree anyway: ruff wraps any help too long for one line
-        # into the parenthesized form, so "more than one line" IS "long here".
+        # into the parenthesized form, so "more than one line" is "long here".
         offenders = []
         for call in _add_argument_calls(_parse(_ENTRY_POINT)):
             value = _help_argument(call)
@@ -228,6 +228,17 @@ class TestEachEpilogNamesWhatItClaims(cli_fixtures.QuietCase):
                 "picture that already has one",
                 "because any default would be a guess at what the consumer of "
                 "the grid wants",
+            ),
+        )
+
+    def test_shade_names_clustering_as_the_figure_that_matters(self) -> None:
+        # Parenthesized so "the number that matters" reads as clustering's
+        # gloss, not as a fourth item in the list of what is reported.
+        self._assert_help_names(
+            "shade",
+            (
+                "reported with its length, the rows it spans, and its clustering "
+                "(the number that matters). Low is good",
             ),
         )
 

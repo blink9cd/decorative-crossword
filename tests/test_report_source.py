@@ -199,7 +199,7 @@ class TestKeptEntriesUnderRatings(unittest.TestCase):
         outcome = make_outcome(bank=bank, config=config)
         report = cw_report.render_report(outcome, bank, config, (), kept=("COW",))
         self.assertIn(
-            "Worst rating in the grid: 3 -- 1 unrated answer(s), which count as 3.",
+            "Worst rating in the grid: 3 (1 unrated answer(s), which count as 3).",
             report.splitlines(),
         )
 
@@ -209,7 +209,7 @@ class TestUnplacedUnderASource(unittest.TestCase):
 
     def test_an_empty_bank_file_says_so_when_every_run_is_kept(self) -> None:
         # Counted over the full bank, the line would read "every bank entry is
-        # in the grid" -- a success claim about a --bank file that held nothing.
+        # in the grid": a success claim about a --bank file that held nothing.
         bank = cw_bank.Bank(
             themes={},
             entries=(
@@ -257,8 +257,8 @@ class TestKnobsWhenTheGridHoldsNoEntry(unittest.TestCase):
 
     def test_a_pre_flight_refusal_under_a_source_offers_no_knob(self) -> None:
         # The refusal writes the source, which holds CAT and a stray Q. The
-        # missed list is the refusal's reason alone, so a knob for Q -- or for
-        # the source's density -- would clear a constraint nobody named.
+        # missed list is the refusal's reason alone, so a knob for Q (or for
+        # the source's density) would clear a constraint nobody named.
         bank = make_bank()
         config = make_config(start=("CAT", "...", "..Q"), min_themes=3)
         refusals = cw_accept.preflight(bank, config)
@@ -359,7 +359,7 @@ class TestSizeKnobsUnderASource(unittest.TestCase):
 
     def test_the_density_knob_under_a_source_stops_at_its_ceiling(self) -> None:
         # 4 of 9 cells blocked is 44.4%, over a 20.0% ceiling. `fill` refuses a
-        # --rows or --cols under the source's own size, and this grid IS the
+        # --rows or --cols under the source's own size, and this grid is the
         # source's size, so "or shrink" would advise a value turned away at exit 2.
         config = make_config(start=_START, max_blocked=20.0, min_themes=0)
         report = cw_report.render_report(

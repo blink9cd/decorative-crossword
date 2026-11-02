@@ -140,7 +140,7 @@ class TestRefuseUnusableOutputs(unittest.TestCase):
             )
 
     def test_an_output_under_a_file_is_refused_as_lacking_a_directory(self) -> None:
-        # The parent exists but is a file, so no DIRECTORY of that name exists:
+        # The parent exists but is a file, so no directory of that name exists:
         # the refusal's sentence stays true, and nothing reaches the write.
         with tempfile.TemporaryDirectory() as folder:
             parent = _touch(Path(folder) / "parent.json")

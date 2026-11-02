@@ -1,4 +1,4 @@
-"""What the pinned and banked `fill` samples are FOR, read back out of their committed files.
+"""What the pinned and banked `fill` samples are for, read back out of their committed files.
 
 `tests/test_samples.py` regenerates every `fill` sample and compares bytes, which
 proves each file is what the tool produces today. It does not say a file still
@@ -50,9 +50,9 @@ class TestNameGridSample(unittest.TestCase):
     """The committed name grid holds each pin exactly where its command puts it.
 
     The byte comparison in `tests/test_samples.py` proves the file is what the
-    tool produces; it does not say the file shows what the sample is FOR. A
+    tool produces; it does not say the file shows what the sample is for. A
     regression that moved every pin by one cell would regenerate a new
-    committed grid that still matched itself -- this reads the pins back out of
+    committed grid that still matched itself, so this reads the pins back out of
     it.
     """
 
@@ -75,7 +75,7 @@ class TestNameGridSample(unittest.TestCase):
 
 
 class TestBestGridSample(cli_fixtures.QuietCase):
-    """The committed best grid shows what it is FOR: a preference that decided, and islands.
+    """The committed best grid shows what it is for: a preference that decided, and islands.
 
     The byte comparison in `tests/test_samples.py` proves the files are what
     the tool produces. These say the files still show the two flags doing their
@@ -103,7 +103,7 @@ class TestBestGridSample(cli_fixtures.QuietCase):
 
     def test_without_the_preference_the_search_keeps_another_grid(self) -> None:
         # The same command with --prefer removed. Islands are a function of the
-        # grid, so the rows can only differ if the SEARCH kept another grid --
+        # grid, so the rows can only differ if the search kept another grid,
         # which is the preference deciding, not decoration.
         argv = list(_CASES["best_grid"])
         at = argv.index("--prefer")
@@ -118,7 +118,7 @@ class TestBestGridSample(cli_fixtures.QuietCase):
 
 
 class TestRatedGridSample(cli_fixtures.QuietCase):
-    """The committed rated grid shows what it is FOR: one rating that decided.
+    """The committed rated grid shows what it is for: one rating that decided.
 
     The byte comparison in `tests/test_samples.py` proves the files are what
     the tool produces. This says they still show a rating choosing between two
@@ -164,7 +164,7 @@ class TestRatedGridSample(cli_fixtures.QuietCase):
 
 
 class TestSymmetricGridSample(cli_fixtures.QuietCase):
-    """The committed symmetric grid shows what it is FOR: the preference deciding.
+    """The committed symmetric grid shows what it is for: the preference deciding.
 
     Without this, a change that stopped the level deciding would regenerate the
     sample into the grid the search found first, which matches itself as well.
@@ -196,7 +196,7 @@ class TestSymmetricGridSample(cli_fixtures.QuietCase):
 
 
 class TestTwoBanksSample(cli_fixtures.QuietCase):
-    """The committed two-bank grid shows what it is FOR: a grid neither bank makes alone.
+    """The committed two-bank grid shows what it is for: a grid neither bank makes alone.
 
     The byte comparison in `tests/test_samples.py` proves the files are what
     the tool produces. These say the grid still holds the second bank's
@@ -233,8 +233,8 @@ class TestPhraseGridSample(unittest.TestCase):
     """The committed phrase grid lays each written answer by its letters, and clues it.
 
     Its bank's `sayings` theme holds an answer for each shape the bank accepts
-    beyond plain letters -- a space, a hyphen, an apostrophe, a space beside
-    apostrophes -- plus one left unclued, and the command features two of them
+    beyond plain letters (a space, a hyphen, an apostrophe, a space beside
+    apostrophes), plus one left unclued, and the command features two of them
     as written.
     """
 

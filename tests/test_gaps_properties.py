@@ -1,15 +1,15 @@
 """Property suite: the gap analysis, checked against what actually happens.
 
-`analyze_grid` reads a grid and PREDICTS what a letter in each blocked cell
+`analyze_grid` reads a grid and predicts what a letter in each blocked cell
 would do to it. That is exactly the shape a property test can hold to account,
 because the prediction is checkable: write the letter in and ask `cw_grid`,
 which is the authority on what a run is, what really happened.
 
 So the headline properties here never restate the analysis's own method. They
 fill the cell, re-derive the grid's runs from scratch, and assert the
-prediction matched -- the demanded pattern IS a run at the coordinates it
-named, the number of demands IS the number of runs that now contain the cell,
-and the absorbed answers ARE the old runs the new one swallowed. A neighbors-
+prediction matched: the demanded pattern is a run at the coordinates it
+named, the number of demands is the number of runs that now contain the cell,
+and the absorbed answers are the old runs the new one swallowed. A neighbors-
 only reader, a transposed axis, or a demand that forgot to weld all fail
 against a grid nobody had to think of first.
 
@@ -39,12 +39,12 @@ sys.path.insert(0, str(_HERE.parent / "src"))
 import cw_gaps  # noqa: E402 - import follows the sys.path bootstrap above
 import cw_grid  # noqa: E402 - same bootstrap
 
-# A REGISTERED profile, loaded at import and before any class body, never an
-# `@settings` decorator -- a `@given` test snapshots its settings when it is
-# DECORATED, and a decorator would pin the property's settings where no
+# A registered profile, loaded at import and before any class body, never an
+# `@settings` decorator: a `@given` test snapshots its settings when it is
+# decorated, and a decorator would pin the property's settings where no
 # campaign runner could re-stamp them: Hypothesis refuses a second settings
 # object on a function that already carries one.
-# Its own profile NAME, distinct from every other property module's here, so no
+# Its own profile name, distinct from every other property module's here, so no
 # import order can decide what this module's tests had already snapshotted.
 # too_slow is suppressed as well: on a cold .hypothesis cache the first draw also
 # pays Hypothesis's one-time setup (the unicode tables a text strategy needs, a scan
@@ -59,7 +59,7 @@ settings.register_profile(
 settings.load_profile("crossword_gaps_properties")
 
 #: A two-letter alphabet plus the block. Deliberately tiny: short runs and
-#: repeated texts are what make WELDS and shared patterns common in the drawn
+#: repeated texts are what make welds and shared patterns common in the drawn
 #: grids, and those are the cases the analysis is easiest to get wrong on.
 #: Over twenty-six letters most drawn grids would be sparse noise.
 _CELL_ALPHABET = "AB" + cw_grid.BLOCK
@@ -88,7 +88,7 @@ _VOCABULARY = st.frozensets(
 def _grids(draw: st.DrawFn) -> tuple[str, ...]:
     """A small rectangular grid of letters and blocks.
 
-    The two sides are drawn independently so NON-SQUARE grids are in range: a
+    The two sides are drawn independently so non-square grids are in range: a
     transposed arm walk passes every square grid and fails here.
     """
     height = draw(st.integers(min_value=_MIN_SIDE, max_value=_MAX_SIDE))
@@ -102,7 +102,7 @@ def _grids(draw: st.DrawFn) -> tuple[str, ...]:
 def _with_letter(
     rows: Sequence[str], row: int, col: int, letter: str
 ) -> tuple[str, ...]:
-    """`rows` with one cell replaced -- the fill the analysis is predicting."""
+    """`rows` with one cell replaced: the fill the analysis is predicting."""
     return tuple(
         line if index != row else line[:col] + letter + line[col + 1 :]
         for index, line in enumerate(rows)
@@ -165,7 +165,7 @@ class TestThePredictionHolds(unittest.TestCase):
     ) -> None:
         # The count of runs the filled cell ends up inside is the count of
         # demands it should have had. A transposed or forgotten axis fails
-        # here even when every demand it DID report is correct.
+        # here even when every demand it did report is correct.
         for candidate in cw_gaps.analyze_grid(rows).candidates:
             cell = (candidate.row, candidate.col)
             filled = _with_letter(rows, *cell, _PROBE)
@@ -182,7 +182,7 @@ class TestThePredictionHolds(unittest.TestCase):
         self, rows: tuple[str, ...]
     ) -> None:
         # Re-derived from cw_grid rather than from the analysis: the old runs
-        # whose cells the new run entirely covers ARE what the fill retires,
+        # whose cells the new run entirely covers are what the fill retires,
         # and a demand that under-reported them would leave the operator
         # unaware of what the fill costs.
         before = cw_grid.runs_from_rows(rows)
@@ -209,7 +209,7 @@ class TestResolutionIsSound(unittest.TestCase):
 
     @given(_grids(), _VOCABULARY)
     # A regression seed, carried as an `@example` rather than left in a corpus
-    # database: the suite runs DERANDOMIZED, which Hypothesis forbids alongside
+    # database: the suite runs derandomized, which Hypothesis forbids alongside
     # a database, so a corpus seed would guard only exploratory runs. Row 4 is
     # load-bearing: it is the second AB, and without it the grid is legal and
     # the property holds.
@@ -252,10 +252,10 @@ class TestResolutionIsSound(unittest.TestCase):
         # word the operator could use, or the report is sending them to invent
         # something they already own.
         #
-        # What "could use" means is re-derived from the FILLED grid, never
+        # What "could use" means is re-derived from the filled grid, never
         # from the resolver's own availability rule. Recomputing that rule
         # here made this test agree with the subject even while the subject
-        # was wrong: it read the grid's answers as a SET, so a fill that
+        # was wrong: it read the grid's answers as a set, so a fill that
         # absorbed one copy of a doubled answer looked free to re-spell it,
         # and the mirror said so too. `cw_grid` is the authority on what is
         # still standing, so it is the one asked.
@@ -263,7 +263,7 @@ class TestResolutionIsSound(unittest.TestCase):
         for resolution in search.resolutions:
             candidate = resolution.candidate
             cell = (candidate.row, candidate.col)
-            # Which runs survive a fill is decided by WHERE the letter lands,
+            # Which runs survive a fill is decided by where the letter lands,
             # not by which letter it is, so this is derived once per candidate.
             filled = _with_letter(rows, *cell, _PROBE)
             through = _runs_covering(filled, cell)

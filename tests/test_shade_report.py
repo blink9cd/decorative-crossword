@@ -2,11 +2,11 @@
 
 The report is this subcommand's product on stdout, exactly as the fill report
 is `fill`'s: a ranked opinion plus the accounting behind it. Two things are
-pinned here beyond the wording. First, the counts have to ADD UP -- a headline
+pinned here beyond the wording. First, the counts have to add up: a headline
 saying 57 candidates out of 1332 words is only meaningful beside the reasons
 the other 1275 did not qualify, and a block that quietly stopped counting one
 of them would leave a plausible-looking report that is wrong. Second, the
-placement report has to name the CELLS in both the project's own
+placement report has to name the cells in both the project's own
 `(row, column)` convention and a paste-ready form, because a caller who cannot
 paste them has not been given the answer.
 
@@ -29,7 +29,7 @@ ROWS = ("CAT..", ".A...", "..T..", "DOG..")
 
 
 #: The `--cell` default, taken from the one place that owns it rather than
-#: written out again -- `cw_config` says a default lives in `DEFAULTS` exactly
+#: written out again: `cw_config` says a default lives in `DEFAULTS` exactly
 #: once. `cast` is how every other reader of that `Mapping[str, object]`
 #: narrows a value.
 _DEFAULT_CELL = cast(int, cw_config.DEFAULTS["cell"])
@@ -160,7 +160,7 @@ class TestSearchReport(unittest.TestCase):
         """A lower `--min-length` only readmits words the floor turned away.
 
         ZEBRA clears this floor and is simply unspellable here, so the floor
-        removed nothing and advising a lower one is advice that cannot help --
+        removed nothing and advising a lower one is advice that cannot help:
         the same false remedy the exclusion case below is guarded against.
         """
         report = self._report(("ZEBRA",), min_length=cw_grid.MIN_RUN + 1)
@@ -187,8 +187,8 @@ class TestSearchReport(unittest.TestCase):
     def test_the_floor_is_offered_only_when_there_is_room_below_it(self) -> None:
         """`validate_shade_config` refuses a floor under MIN_RUN.
 
-        So a run already AT the floor cannot take this advice -- following it
-        would exit 2 -- even when a word fell under it. Such a word cannot come
+        So a run already at the floor cannot take this advice (following it
+        would exit 2) even when a word fell under it. Such a word cannot come
         out of `load_word_list`, which screens anything under MIN_RUN, so it is
         handed to the search directly: the guard is on the floor, not on how
         the word arrived.
@@ -230,7 +230,7 @@ class TestPlacementReport(unittest.TestCase):
         )
 
     def test_offers_a_paste_form_that_is_valid_json(self) -> None:
-        """Parsed rather than string-matched: the point is that it PASTES."""
+        """Parsed rather than string-matched: the point is that it pastes."""
         report = cw_shade_report.render_placement_report(self._placement(ROWS, "CAT"))
         line = next(line for line in report.splitlines() if "Paste form" in line)
         payload = json.loads(line.split(":", 1)[1].strip())
@@ -244,14 +244,14 @@ class TestPlacementReport(unittest.TestCase):
         """The finding a person cannot eyeball, stated in words as well.
 
         DOG's letters have one home each, consecutive in the last row, so the
-        shading would read as a corrupted answer -- and the report has to say
+        shading would read as a corrupted answer, and the report has to say
         so rather than leaving a bare number the reader has no scale for.
         """
         report = cw_shade_report.render_placement_report(self._placement(ROWS, "DOG"))
         self.assertIn("corrupted answer", report)
 
     def test_the_verdict_turns_on_one_neighboring_step(self) -> None:
-        """The threshold is DERIVED from the penalty table, not a loose number.
+        """The threshold is derived from the penalty table, not a loose number.
 
         A placement whose clustering reaches the cost of a single same-row
         neighboring step has bunched, whichever steps paid for it; one below

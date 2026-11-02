@@ -1,14 +1,14 @@
 """Grouped suite: drawing the letters `fill --source` fixed, in bold.
 
 A fill that starts from a source grows around letters the operator already
-had, and the render says which those were. The mark is the letter's WEIGHT and
+had, and the render says which those were. The mark is the letter's weight and
 nothing else, because each other channel a cell has is already spoken for:
 its background is the block, the feature shading or the theme tint, and its
 bottom-right corner holds the theme marker. Weight also survives a monochrome
 print, which a color could not.
 
-Every case reads the render back as a document -- which layer holds a letter,
-what the stylesheet declares for it -- rather than matching a template, as the
+Every case reads the render back as a document (which layer holds a letter,
+what the stylesheet declares for it) rather than matching a template, as the
 page test in `test_svg_visibility.py` also does.
 
 `TestNoRegression` guards the other side: a render with nothing fixed carries no
@@ -77,7 +77,7 @@ class TestNoRegression(unittest.TestCase):
 
     def test_coordinates_naming_no_letter_change_nothing(self) -> None:
         # A block cannot be bold and a cell off the grid is not drawn, so the
-        # request carries nothing to mark -- and a layer, a stylesheet rule or
+        # request carries nothing to mark, and a layer, a stylesheet rule or
         # a caption line that nothing on the picture answers to would be a lie.
         self.assertEqual(_render(fixed=NO_LETTER), _render())
 
@@ -163,7 +163,7 @@ class TestCaption(unittest.TestCase):
     """The caption says what bold means, and counts what it marks."""
 
     def test_the_caption_counts_the_fixed_letters_drawn(self) -> None:
-        # NO_LETTER rides along to show the count is of letters DRAWN, so the
+        # NO_LETTER rides along to show the count is of letters drawn, so the
         # caption cannot disagree with the picture it sits under.
         lines = svg_fixtures.caption_lines(_render(fixed=FIXED + NO_LETTER))
         self.assertIn(CAPTION.format(len(FIXED)), lines)

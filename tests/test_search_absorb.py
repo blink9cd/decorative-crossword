@@ -2,8 +2,8 @@
 
 Without the flag every source entry is held as its exact run (`test_search_source`
 pins that). With it, an entry the bank holds may be absorbed into a longer bank
-answer lying along all of its cells -- grown at either end, or welded to another
-entry through a filled block -- and every source letter stays where it was. A
+answer lying along all of its cells (grown at either end, or welded to another
+entry through a filled block), and every source letter stays where it was. A
 `--feature` pin, and an entry kept only because the source declares it, are still
 held exactly. Every grid here is wider than tall, so a transposed read cannot pass.
 """
@@ -163,7 +163,7 @@ class TestKeepingAnEntryBreaksATie(unittest.TestCase):
         # JANE with JO down, and JANET, both hold five letters and nothing else
         # separates them; JANET and JO together fall under the 62% floor.
         # Measured with the level removed: seeds 6, 11 and 12 choose JANET, and
-        # seed 1 chooses JO -- so each seed here decides nothing but the level.
+        # seed 1 chooses JO, so each seed here decides nothing but the level.
         for seed in (1, 6, 11, 12):
             with self.subTest(seed=seed):
                 outcome = cw_search.search(

@@ -2,7 +2,7 @@
 
 This tool writes operator text to three sinks: the report on a terminal, the
 SVG, and the grid file. A terminal reads a C0 or C1 control, or DEL, as a
-command rather than text -- an escape sequence can retitle the window, erase
+command rather than text: an escape sequence can retitle the window, erase
 lines already printed, or wrap a name in a hyperlink pointing anywhere. XML 1.0
 admits none of the C0 block but tab, line feed and carriage return, no
 surrogate and neither U+FFFE nor U+FFFF, however they are written, so one in a
@@ -24,7 +24,7 @@ no further than the line of text that holds it: in the legend, the label
 alone; in the caption, the rest of that line, since the grid's size and
 blocked percentage come before every label. Printed, it reorders the rest of
 the report line, which could then show the reader something other than what
-it holds -- so the report escapes one wherever it prints a skipped line or a
+it holds, so the report escapes one wherever it prints a skipped line or a
 bank theme label.
 
 A refusal names the value at fault, and quotes one read from a file with
@@ -57,8 +57,8 @@ _BIDI_CONTROLS = (
 )
 
 #: The most characters of a value a refusal quotes: enough for the start of
-#: any value an operator must find in a file -- a label, a clue, the opening
-#: of a list where an object belongs -- and few enough that a huge one cannot
+#: any value an operator must find in a file (a label, a clue, the opening
+#: of a list where an object belongs), and few enough that a huge one cannot
 #: bury the sentence around it.
 SHOWN_MAX_CHARS = 200
 
@@ -92,8 +92,8 @@ def visible(text: str) -> str:
 def shown(value: object) -> str:
     """`value` as a refusal quotes it: its `repr`, cut after `SHOWN_MAX_CHARS` characters.
 
-    `repr` because it already writes every character a terminal would obey --
-    a C0 or C1 control, a bidi control, a lone surrogate -- as an escape, so the
+    `repr` because it already writes every character a terminal would obey
+    (a C0 or C1 control, a bidi control, a lone surrogate) as an escape, so the
     quote is safe to print whatever the value holds; a cut that falls inside an
     escape leaves printable text all the same. A repr past the cap keeps its
     first `SHOWN_MAX_CHARS` characters and states the whole one's length, as

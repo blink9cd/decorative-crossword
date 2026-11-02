@@ -2,8 +2,8 @@
 
 What only a real run can settle: that the warning reaches stdout, that the exit
 code is the one the grid earned without it, that a barred `--phrases` line is
-named and never listed as wordplay, and -- the promise no unit test can make --
-that the grid a run WRITES is the same with the terms as without them, because
+named and never listed as wordplay, and (the promise no unit test can make)
+that the grid a run writes is the same with the terms as without them, because
 a barred join is reported and never steers the search.
 
 Every barred term is a made-up letter string, never a real word.
@@ -82,7 +82,7 @@ class TestFillWarnsAboutBarredJoins(cli_fixtures.QuietCase):
 
     def test_the_grid_written_is_the_same_with_the_terms_as_without(self) -> None:
         # Every ordered join of every bank answer is barred, so whatever grid
-        # the search keeps warns -- terms that matched nothing would leave the
+        # the search keeps warns: terms that matched nothing would leave the
         # two runs identical for no reason worth pinning.
         answers = [entry["answer"] for entry in cli_fixtures.ENTRIES]
         joins = [f"{a}{b}".lower() for a in answers for b in answers if a != b]

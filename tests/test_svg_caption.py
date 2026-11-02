@@ -1,12 +1,12 @@
 """Tests for cw_svg's caption tiers, legend geometry and number formatting.
 
 Kept apart from `test_svg.py` at a class boundary: each file holds one coherent
-concern -- the document's structure there, what it says about itself here.
+concern: the document's structure there, what it says about itself here.
 
 The caption's two tiers are a correctness requirement, not a layout preference.
 The derivable tier is read out of the grid and is always
 present; the configuration tier is stamped only when the caller actually knows
-those values, and is ABSENT -- not blank, not defaulted -- when it does not.
+those values, and is absent (not blank, not defaulted) when it does not.
 """
 
 import re

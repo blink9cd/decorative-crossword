@@ -3,7 +3,7 @@
 The walk may pass through a grid holding a run that is not yet an answer, as long as
 some unused answer could still be laid over it. These tests pin what "could still"
 means, one condition at a time, and that a step which breaks nothing never pays for
-the answer lookup. Whether the grids a search RETURNS obey the rule is a different
+the answer lookup. Whether the grids a search returns obey the rule is a different
 question, answered in `test_search_interlock.py`.
 """
 
@@ -55,7 +55,7 @@ class TestCompletable(unittest.TestCase):
 
     def test_an_answer_no_longer_than_the_run_is_no_completion(self) -> None:
         # A run that already spells an answer and still breaks the rule is a
-        # repeat, and only a LONGER answer laid over it could change that.
+        # repeat, and only a longer answer laid over it could change that.
         self.assertFalse(cw_reach.completable(("AB",), _across(0, 0, "AB"), ("AB",)))
 
     def test_every_offset_of_the_run_inside_the_answer_is_tried(self) -> None:
@@ -129,7 +129,7 @@ class TestStepAllowed(unittest.TestCase):
 
     def test_an_answer_already_on_the_board_completes_nothing(self) -> None:
         # WILTS holds LTS, but it is already an entry, so it is not unused: only
-        # a SECOND copy could lie over the break, and that copy breaks the rule.
+        # a second copy could lie over the break, and that copy breaks the rule.
         rows = ("W.LTS", ".....", "WILTS")
         self.assertFalse(
             cw_reach.step_allowed(rows, frozenset({"WILTS"}), (), _holders("WILTS"))
@@ -183,7 +183,7 @@ class TestHoldersByFragment(unittest.TestCase):
 
     def test_an_answer_is_never_listed_under_itself(self) -> None:
         # A run that already spells an answer and still breaks the rule is a
-        # repeat, which only a LONGER answer could change.
+        # repeat, which only a longer answer could change.
         self.assertNotIn("SALT", _holders("WILTS", "SALT"))
 
     def test_an_answer_holding_a_fragment_twice_is_listed_once(self) -> None:
@@ -194,8 +194,8 @@ class TestHoldersByFragment(unittest.TestCase):
         self.assertNotIn("L", _holders("WILTS"))
 
     def test_an_answer_no_line_of_the_grid_can_hold_is_not_indexed(self) -> None:
-        # Indexing an answer costs every substring of it -- about L**3 / 6
-        # characters, ten gigabytes for one 4,000-letter answer -- and a
+        # Indexing an answer costs every substring of it (about L**3 / 6
+        # characters, ten gigabytes for one 4,000-letter answer), and a
         # 30-letter answer can never lie on a grid whose longest line is 7.
         index = cw_reach.holders_by_fragment(("CAT", "AB" * 15), longest=7)
         self.assertEqual(dict(index), {"CA": ("CAT",), "AT": ("CAT",)})
@@ -208,8 +208,8 @@ class TestHoldersByFragment(unittest.TestCase):
 class TestWalkBreaks(unittest.TestCase):
     """The breaks the walk made itself: every break but one along a `--source` partial run.
 
-    The walk treats its own breaks differently from a source's half-written words --
-    it may lay only a repair over the first, and is left free around the second -- so
+    The walk treats its own breaks differently from a source's half-written words
+    (it may lay only a repair over the first, and is left free around the second), so
     which is which is pinned here, one shape at a time.
     """
 
@@ -223,7 +223,7 @@ class TestWalkBreaks(unittest.TestCase):
         )
 
     def test_a_repeated_answer_is_one(self) -> None:
-        # The rule reports the LATER copy of a repeat, and so does this.
+        # The rule reports the later copy of a repeat, and so does this.
         self.assertEqual(
             cw_reach.walk_breaks(("AB.AB",), frozenset({"AB"}), ()),
             (_across(0, 3, "AB"),),

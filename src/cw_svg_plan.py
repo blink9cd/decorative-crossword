@@ -1,7 +1,7 @@
 """What one render is asked for, and everything derived from it before drawing.
 
 Kept apart from `cw_svg` along a real seam: everything here turns a request
-into VALUES (which cell shows which theme, which cells are shaded, what the
+into values (which cell shows which theme, which cells are shaded, what the
 caption says, where everything sits), and nothing here emits an element.
 `cw_svg` paints a `Plan`; it never re-derives one.
 
@@ -32,15 +32,15 @@ class HiddenShading:
     entries on purpose, so there is no run to find and nothing this module
     could derive them from. Choosing them is `cw_shade`'s job.
 
-    Declared HERE and not imported from `cw_shade`, even though that module's
+    Declared here and not imported from `cw_shade`, even though that module's
     `Placement` carries the same two fields plus a score: the renderer draws
     cells and has no business depending on the module that scores them. The
     caller builds one of these from a `Placement`, which is a two-field
     projection and not a conversion anyone has to think about.
 
     Nothing is validated. A coordinate outside the grid, or on a block, simply
-    never matches a cell the grid actually draws -- the cell layer asks each of
-    ITS OWN cells whether it is shaded, rather than walking these. Validating
+    never matches a cell the grid actually draws: the cell layer asks each of
+    its own cells whether it is shaded, rather than walking these. Validating
     the source is the CLI's job, and the shape of that
     lookup is what makes not repeating it safe here.
     """
@@ -53,7 +53,7 @@ class HiddenShading:
 class RenderRequest:
     """One render's inputs.
 
-    `settings` is the caption's configuration tier -- the seed, the requested
+    `settings` is the caption's configuration tier: the seed, the requested
     density range, the theme floor. It is None under a bare `preview`, which
     has no honest way to know any of them, and the tier is then absent from the
     picture rather than defaulted.
@@ -67,7 +67,7 @@ class RenderRequest:
     rows: tuple[str, ...]
     themes: Mapping[str, str]
     entry_themes: Mapping[str, str]
-    #: Every answer to shade and to name, in the order the caller gave them --
+    #: Every answer to shade and to name, in the order the caller gave them,
     #: the order the caption lists them in. Empty means none.
     features: tuple[str, ...]
     cell: int
@@ -75,7 +75,7 @@ class RenderRequest:
     hidden: HiddenShading | None
     #: The blocked cells `gaps --out` is marking, in the order it ranked them.
     #: Defaulted, since only `gaps --out` supplies it. Unlike `hidden`, these
-    #: are cells the grid draws as BLOCKS, which is why they cannot travel
+    #: are cells the grid draws as blocks, which is why they cannot travel
     #: through `shaded_cells`: a block resolves its class before the shading is
     #: consulted, so the mark is drawn over the fill in a layer of its own
     #: instead of replacing it.
@@ -86,7 +86,7 @@ class RenderRequest:
     fixed: tuple[tuple[int, int], ...] = ()
     #: Draw every blocked cell as a hole rather than a black square, so the
     #: grid's outline reads as a shape. Defaulted like the two above. It is a
-    #: property of the DRAWING and not of the grid: the same `grid_source.json`
+    #: property of the drawing and not of the grid: the same `grid_source.json`
     #: renders either way, and the caption's blocked percentage stays true of
     #: the grid whichever is chosen.
     empty_blocks: bool = False
@@ -101,10 +101,10 @@ class Plan:
     theme_by_cell: Mapping[tuple[int, int], str]
     #: Every cell the render shades, whichever of the two reasons put it there.
     #: One membership set rather than two, because the cell layer asks one
-    #: question -- "is this cell shaded" -- and a second set would let the two
+    #: question ("is this cell shaded"), and a second set would let the two
     #: reasons produce two different shadings of the same cell.
     shaded_cells: frozenset[tuple[int, int]]
-    #: The fixed cells that hold a letter in this grid. Narrowed ONCE, here,
+    #: The fixed cells that hold a letter in this grid. Narrowed once, here,
     #: because the letter layers and the caption both ask it: a coordinate on a
     #: block or off the grid draws nothing, so it must count for nothing too.
     fixed_cells: frozenset[tuple[int, int]]
@@ -122,7 +122,7 @@ def _theme_by_cell(
     A crossing cell sits in two entries that may carry different themes, and it
     can show only one tint and one marker. The tie-break is run order, which
     `cw_grid.runs_from_rows` documents as every ACROSS run before every DOWN
-    one -- so the across reading wins, always, rather than whichever entry
+    one, so the across reading wins, always, rather than whichever entry
     happened to be visited last.
 
     An entry whose theme is not declared renders plain: there is no label to
@@ -142,9 +142,9 @@ def _theme_by_cell(
 def _featured_answers(request: RenderRequest) -> tuple[str, ...]:
     """The answers to shade and to name, in the order given.
 
-    An empty answer is dropped here, ONCE. Both the shading and the caption
-    ask this question, and asking it twice is how they would come to disagree
-    -- a caller assembling the flags conditionally must not be able to get a
+    An empty answer is dropped here, once. Both the shading and the caption
+    ask this question, and asking it twice is how they would come to disagree:
+    a caller assembling the flags conditionally must not be able to get a
     caption line that names nothing above a grid with nothing shaded.
     """
     return tuple(answer for answer in request.features if answer)

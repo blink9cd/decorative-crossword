@@ -1,7 +1,7 @@
-"""Tests that the walk ACTS on `--max-two-letter`: an over-cap grid is walked past, not kept.
+"""Tests that the walk acts on `--max-two-letter`: an over-cap grid is walked past, not kept.
 
 `test_search_parts.py` proves `cw_accept.missed_constraints` names the cap. That cannot
-show the search consults the verdict -- that with a look-ahead of zero an over-cap grid
+show the search consults the verdict: that with a look-ahead of zero an over-cap grid
 is not taken as the first conforming one and returned. The board below was found by
 searching small banks for one where the cap changes the grid the walk returns.
 """

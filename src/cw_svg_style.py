@@ -1,7 +1,7 @@
 """The render's visual vocabulary: classes, palette, markers, geometry, elements.
 
-Kept apart from `cw_svg` so that module holds one concern -- turning a grid
-into a document -- while this one holds the other: what that document is
+Kept apart from `cw_svg` so that module holds one concern (turning a grid
+into a document), while this one holds the other: what that document is
 allowed to look like. Names are public rather than underscore-private wherever
 `cw_svg` or the suites that pin the render need to read them; a value nobody
 outside this file reads stays private.
@@ -24,12 +24,12 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from xml.sax.saxutils import escape
 
-#: The SVG namespace. It is an identifier rather than a fetch -- but a document
+#: The SVG namespace. It is an identifier rather than a fetch, but a document
 #: without it parses as XML and renders as nothing at all, which is the same
 #: blank page an escaping bug produces, so it is never optional.
 SVG_NAMESPACE = "http://www.w3.org/2000/svg"
 
-#: Layer classes. Every layer is homogeneous -- one kind of element each -- so a
+#: Layer classes. Every layer is homogeneous (one kind of element each), so a
 #: reader, and a test, can address one concern without filtering.
 CELL_LAYER = "cw-cells"
 MARKER_LAYER = "cw-marks"
@@ -37,13 +37,13 @@ LETTER_LAYER = "cw-letters"
 
 #: The layer the letters `fill --source` was handed are drawn in, bold. Its own
 #: layer rather than a class on each `<text>`, so every layer stays one kind of
-#: element with one rule -- and a reader, and a test, can ask which letters were
+#: element with one rule, and a reader, and a test, can ask which letters were
 #: fixed by reading one layer.
 FIXED_LETTER_LAYER = "cw-fixed-letters"
 
 #: The layer `gaps --out` draws its marks in. Its own layer rather than a cell
 #: class, because a gap is a BLOCK and `cw_svg._cell_class` resolves a block
-#: before it ever consults the shading -- so the mark has to sit OVER the
+#: before it ever consults the shading, so the mark has to sit over the
 #: block's fill instead of replacing it.
 GAP_LAYER = "cw-gaps"
 SWATCH_LAYER = "cw-swatches"
@@ -57,17 +57,17 @@ PLAIN_CLASS = "cw-cell"
 
 #: The class a block carries under `--empty-blocks`, where it paints nothing
 #: and the page shows through. Its rect is still emitted, so the change is a
-#: paint and never a geometry -- but its rule has to cancel the SHARED cell
+#: paint and never a geometry, but its rule has to cancel the shared cell
 #: stroke as well as the fill, and `.{EMPTY_BLOCK_CLASS}` alone would lose
 #: that contest: a bare class ranks below `.{CELL_LAYER} rect`, which is why
 #: `stylesheet` spells the descendant form rather than this token alone.
 EMPTY_BLOCK_CLASS = "cw-block-empty"
 
 #: The class on the one rect that covers the whole canvas. SVG has no
-#: background property a root element can carry -- `svg{fill:...}` sets the
-#: fill of the shapes inside it, not the paper -- so the only portable way to
+#: background property a root element can carry (`svg{fill:...}` sets the
+#: fill of the shapes inside it, not the paper), so the only portable way to
 #: paint the page is to draw it. Without one, the legend and the caption sit
-#: outside the grid on whatever the VIEWER paints, which is near-black in a
+#: outside the grid on whatever the viewer paints, which is near-black in a
 #: dark-mode browser and a checkerboard in some image viewers, and near-black
 #: ink on it is invisible while the markup stays perfect.
 PAGE_CLASS = "cw-page"
@@ -116,7 +116,7 @@ def theme_class(order: int) -> str:
 # Tint alone cannot carry the grouping: it has to survive a monochrome print
 # and a color-vision difference. Each theme also gets a
 # shape, drawn in the bottom-right corner of every cell it owns and repeated in
-# its legend row -- from the same builder, so the legend cannot advertise a
+# its legend row, from the same builder, so the legend cannot advertise a
 # shape the grid does not draw.
 # --------------------------------------------------------------------------
 
@@ -134,7 +134,7 @@ _BAR_HEIGHT_RATIO = 0.34
 def gap_mark(left: float, top: float, size: float) -> str:
     """An open ring inscribed in the mark box, for one gap `gaps --out` listed.
 
-    An OUTLINE rather than a filled shape, and deliberately not any of the
+    An outline rather than a filled shape, and deliberately not any of the
     theme markers: it must not be mistaken for a theme at a glance, and the
     non-color rule means the difference has to be a shape rather than a tint.
     Its fill and stroke come from the layer, as every other marker's do.
@@ -198,7 +198,7 @@ class Marker:
 
 
 #: The marker cycle. Its length is deliberately not the tint palette's, so a
-#: tint/marker PAIR repeats far later than either sequence alone does.
+#: tint/marker pair repeats far later than either sequence alone does.
 _MARKERS: tuple[Marker, ...] = (
     Marker("circle", _marker_dot),
     Marker("rect", _marker_bar),
@@ -298,7 +298,7 @@ def geometry_for(
 ) -> Geometry:
     """Lay the grid, then the legend, then the caption down one column.
 
-    The document is as wide as its widest CONTENT, not as wide as its grid: a
+    The document is as wide as its widest content, not as wide as its grid: a
     narrow grid under a long caption would otherwise have that caption clipped
     away, and the caption is what makes a saved render self-describing.
     """
@@ -309,7 +309,7 @@ def geometry_for(
     swatch = cell * _SWATCH_RATIO
     swatch_gap = cell * _SWATCH_GAP_RATIO
     # max(..., default=0) rather than rows[0]: an empty grid has no first row,
-    # and the renderer must not be the thing that crashes on one -- rejecting it
+    # and the renderer must not be the thing that crashes on one: rejecting it
     # is the CLI's job.
     grid_width = max((len(row) for row in rows), default=0) * cell
     grid_height = len(rows) * cell
@@ -423,15 +423,15 @@ def stylesheet(
     """The one inline `<style>` block the whole document is painted from.
 
     Class rules rather than per-element attributes: the file stays small, and
-    counting one class ATTRIBUTE in the raw text counts the cells carrying it.
-    Counting the bare TOKEN would not -- the selector below spells it too,
+    counting one class attribute in the raw text counts the cells carrying it.
+    Counting the bare token would not: the selector below spells it too,
     which is why `cw_svg.FEATURE_CLASS` exposes the whole attribute.
     """
     stroke = f"stroke:{_INK};stroke-width:{fmt(geometry.cell * _STROKE_RATIO)}"
     # One rule or the other, in one slot: a block is painted in ink, or it is
     # not painted at all. Chosen here rather than appended the way the gaps and
-    # fixed rules are, because those ADD a layer that did not exist, while this
-    # REPLACES a paint -- appending would leave a document declaring a block
+    # fixed rules are, because those add a layer that did not exist, while this
+    # replaces a paint: appending would leave a document declaring a block
     # fill that nothing in it carries. Keeping the slot also means the flag
     # moves no other rule out of its place, by construction rather than by care.
     block_rule = (
@@ -442,7 +442,7 @@ def stylesheet(
     rules = [
         # First rule for the first thing drawn: the page the whole document is
         # read against. Its own class rather than the plain cell's, so the two
-        # can be told apart -- and so a test asking what color the page is has
+        # can be told apart, and so a test asking what color the page is has
         # something to read that the grid does not also answer for.
         _rule(f".{PAGE_CLASS}", f"fill:{_PAPER}"),
         _rule(f".{CELL_LAYER} rect", stroke),
@@ -452,7 +452,7 @@ def stylesheet(
         _rule(f".{FEATURE_TOKEN}", f"fill:{_FEATURE_FILL}"),
         # Two rules rather than one selector list: each marker layer's ink is
         # then readable back out of the stylesheet on its own, which is what
-        # lets a test prove the marker is VISIBLE and not merely present.
+        # lets a test prove the marker is visible and not merely present.
         _rule(f".{MARKER_LAYER}", f"fill:{_INK}"),
         _rule(f".{LEGEND_MARKER_LAYER}", f"fill:{_INK}"),
         _rule(f".{LETTER_LAYER} text", _letter_declarations(geometry)),
@@ -467,9 +467,9 @@ def stylesheet(
     ]
     if gaps:
         # Added only for a render that actually draws gaps, so no other
-        # document declares a rule for a layer it does not carry -- the same
+        # document declares a rule for a layer it does not carry, the same
         # reason `cw_svg` omits the layer itself. The ring takes whatever its
-        # own cell does NOT: a mark on an ink block has to be the page color or
+        # own cell does not: a mark on an ink block has to be the page color or
         # it is black on black, and a mark on an empty block has to be ink or
         # it is white on white. Either way the contrast is with the block, so
         # the two cases cannot share one color.

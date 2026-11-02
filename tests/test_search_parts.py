@@ -58,7 +58,7 @@ class TestPreflight(unittest.TestCase):
         self.assertTrue(reasons)
 
     def test_refuses_a_floor_no_single_theme_is_deep_enough_for(self) -> None:
-        # Three themes exist and the theme COUNT is met; the per-theme depth is
+        # Three themes exist and the theme count is met; the per-theme depth is
         # not. A pre-flight counting only declared themes waves this through.
         reasons = cw_search.preflight(
             _themed_bank(), _config(min_themes=3, min_entries_per_theme=4)
@@ -83,7 +83,7 @@ class TestPreflight(unittest.TestCase):
     def test_reports_every_reason_a_request_fails(self) -> None:
         # An unthemed bank whose one answer is also too long trips two checks.
         # `preflight` promises every reason: told only the first, an operator
-        # fixes it, re-runs, and is told the second -- discoverability one
+        # fixes it, re-runs, and is told the second: discoverability one
         # round-trip at a time.
         reasons = cw_search.preflight(_bank(["EXTRAORDINARY"]), _config(rows=5, cols=5))
         self.assertEqual(len(reasons), 2)
@@ -115,7 +115,7 @@ class TestPreflight(unittest.TestCase):
 
 
 class TestDensityDistance(unittest.TestCase):
-    """How far outside the window a grid sits -- the best-effort ranking's axis."""
+    """How far outside the window a grid sits: the best-effort ranking's axis."""
 
     def test_is_zero_inside_the_window(self) -> None:
         self.assertEqual(
@@ -163,7 +163,7 @@ class TestDensityDistance(unittest.TestCase):
 class TestThemeFloorStatus(unittest.TestCase):
     """The count and the verdict, from one walk and one comparison.
 
-    Every caller but the verdict-only `theme_floor_met` needs BOTH halves --
+    Every caller but the verdict-only `theme_floor_met` needs both halves:
     the verdict to decide whether to speak, the count to say "lower
     --min-themes to N". Pinned as a whole tuple so a transposed return, which
     would still type-check, fails here.
@@ -179,7 +179,7 @@ class TestThemeFloorStatus(unittest.TestCase):
 
     def test_reports_the_count_beside_an_unmet_verdict(self) -> None:
         # The count is what the report turns into a remedy, so it has to be
-        # right on the branch that MISSES -- a status computing it only when
+        # right on the branch that misses: a status computing it only when
         # the floor is met would leave that line quoting nothing.
         self.assertEqual(
             cw_accept.theme_floor_status(
@@ -236,7 +236,7 @@ class TestThemeFloorMet(unittest.TestCase):
 
     def test_agrees_with_the_missed_constraint_it_gates(self) -> None:
         # The verdict and the sentence must never disagree. A boundary case on
-        # each side of the floor, checked against the SAME inputs
+        # each side of the floor, checked against the same inputs
         # missed_constraints sees.
         for min_themes, expected in ((1, True), (2, False)):
             with self.subTest(min_themes=min_themes):
@@ -311,10 +311,10 @@ class TestMissedConstraints(unittest.TestCase):
 
     def test_rejects_a_feature_that_is_only_a_substring(self) -> None:
         # CATS is on the board; CAT is not an entry. The feature is a hard
-        # constraint on the grid's ENTRIES, so scanning the row
+        # constraint on the grid's entries, so scanning the row
         # strings for its letters would report it present, mark the grid
         # conforming, and have the render shade cells for an entry that is not
-        # there -- the worst available outcome, because it looks finished.
+        # there: the worst available outcome, because it looks finished.
         missed = cw_accept.missed_constraints(
             ("CATS.", ".....", ".....", ".....", "....."),
             _one_theme_bank(["CATS", "CAT"]),
@@ -326,7 +326,7 @@ class TestMissedConstraints(unittest.TestCase):
     def test_counts_only_themed_entries_towards_the_floor(self) -> None:
         # The unthemed answer on the board is a perfectly legal entry; it just
         # cannot carry a theme floor. A count taken over runs rather than over
-        # THEMED runs reports the floor met.
+        # themed runs reports the floor met.
         mixed = _entries_bank((("CAT", None), ("COW", "a")), {"a": "A"})
         missed = cw_accept.missed_constraints(_ONE_ANSWER_ROWS, mixed, _config())
         self.assertEqual(len(missed), 1)
@@ -343,7 +343,7 @@ class TestTwoLetterCap(unittest.TestCase):
         self.assertEqual(missed, ("2 two-letter entries, over the requested cap of 1",))
 
     def test_accepts_a_grid_exactly_at_the_cap(self) -> None:
-        # The cap is a ceiling the grid may REACH: `<` in place of `<=` would
+        # The cap is a ceiling the grid may reach: `<` in place of `<=` would
         # refuse a grid carrying exactly the capped count.
         self.assertEqual(
             cw_accept.missed_constraints(
@@ -381,8 +381,8 @@ class TestTwoLetterCap(unittest.TestCase):
 class TestSnapshotRank(unittest.TestCase):
     """The best-effort ranking: theme floor, then density, then entries placed.
 
-    That ORDER is fixed, and it is the whole content of the
-    rule -- each case below gives the state that should win the worse figure on
+    That order is fixed, and it is the whole content of the
+    rule: each case below gives the state that should win the worse figure on
     every later level, so a rank that dropped or reordered a term picks the
     other one.
     """
@@ -413,8 +413,8 @@ class TestSnapshotRank(unittest.TestCase):
         return cw_select.snapshot(rows, (), self._bank(), config).rank
 
     def test_ranks_a_met_theme_floor_above_everything_else(self) -> None:
-        # Two entries in one theme reach the floor at 82.9% blocked -- outside
-        # the window -- against three entries in no theme sitting inside it.
+        # Two entries in one theme reach the floor at 82.9% blocked (outside
+        # the window) against three entries in no theme sitting inside it.
         # The theme term is the only one that favors the winner.
         self.assertGreater(self._rank(self._TWO_THEMED), self._rank(self._THREE_MIXED))
 

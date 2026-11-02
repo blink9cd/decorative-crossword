@@ -1,9 +1,9 @@
 """Tests for cw_symmetry: how many of a grid's cell pairs match under one symmetry.
 
-The measure is the letter-or-block PATTERN, never the letters: two partner cells
+The measure is the letter-or-block pattern, never the letters: two partner cells
 match when both hold a letter or both are blocked. Each pair is counted once, and
-a cell that is its own partner -- the center under rotation, a middle column under
-a left-right mirror -- is no pair at all, so a figure of "N of M" holds no match
+a cell that is its own partner (the center under rotation, a middle column under
+a left-right mirror) is no pair at all, so a figure of "N of M" holds no match
 that came free.
 """
 

@@ -1,7 +1,7 @@
-"""Grouped suite: how `parse_bank` validates a declared THEME record.
+"""Grouped suite: how `parse_bank` validates a declared theme record.
 
-`TestParseBankThemes` covers the `themes` map's own shape -- the two required
-fields, the rejected bare-label form, and the screen both fields go through --
+`TestParseBankThemes` covers the `themes` map's own shape (the two required
+fields, the rejected bare-label form, and the screen both fields go through),
 and `TestThemesDeclaredElsewhere` the themes an entry may name when several
 banks merge. Nothing is shared with `test_bank.py` but `cw_bank` itself.
 
@@ -22,7 +22,7 @@ class TestParseBankThemes(unittest.TestCase):
     """The `themes` map's own shape, at the untrusted-input boundary."""
 
     def test_rejects_a_theme_with_no_summary(self) -> None:
-        """The consumer's readout LEADS with the summary.
+        """The consumer's readout leads with the summary.
 
         A theme declared without one renders an empty readout on the page and
         nothing downstream can notice: the document is well-formed, the
@@ -63,7 +63,7 @@ class TestParseBankThemes(unittest.TestCase):
         """The bare `slug: "Label"` shape is rejected, not coerced.
 
         The bank is this project's untrusted-input boundary, so that shape
-        fails loudly here rather than being read as a label with no summary --
+        fails loudly here rather than being read as a label with no summary,
         which would push a theme with nothing to say all the way to the page.
         """
         with self.assertRaises(cw_bank.BankError):

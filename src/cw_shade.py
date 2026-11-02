@@ -1,7 +1,7 @@
 """cw_shade: which cells to shade so their letters spell a hidden word.
 
 A finished decorative crossword can shade some of its cells gray so that those
-letters, read in normal reading order, spell one more answer -- a bonus threaded
+letters, read in normal reading order, spell one more answer: a bonus threaded
 through the puzzle rather than lying along a line of it. This module answers the
 two questions that go with that: *which words can this grid spell at all*, and
 *which cells should be shaded for one of them*.
@@ -13,12 +13,12 @@ of hundred words out of a thousand, so candidacy alone filters almost nothing:
 a tool that stopped there would hand back a list its reader could not act on.
 
 **The second question is the load-bearing one, and the obvious answer to it is
-wrong.** Taking the first occurrence of each letter -- greedy, shorter, and
-apparently correct -- clusters the picks inside whichever answer happens to
+wrong.** Taking the first occurrence of each letter (greedy, shorter, and
+apparently correct) clusters the picks inside whichever answer happens to
 carry them, and the result reads as a corrupted entry rather than as a hidden
 word; on a real grid it shaded four consecutive letters of a nine-letter across
 answer. So the cells are chosen by a shortest path over `(letter index, cell)`
-minimizing the CLUSTERING PENALTY below, which charges a step for looking like
+minimizing the clustering penalty below, which charges a step for looking like
 part of an existing entry. `tests/test_shade.py`'s `TestGreedyIsNotEnough`
 fails against greedy on the cells rather than on the score, because greedy is
 what a later reader reaches for.
@@ -26,7 +26,7 @@ what a later reader reaches for.
 The penalty is the tool's opinion and the thing a person cannot eyeball. A
 score of 0 means one letter per row, which is how a real crossword's shaded
 squares scatter; a high one means the letters bunch, and is the tool saying
-*do not use this word* -- an answer already standing in the grid scores in the
+*do not use this word*: an answer already standing in the grid scores in the
 dozens or the hundreds, exactly as it should.
 
 Nothing here reads a bank, a network or any other project's data: the inputs
@@ -47,7 +47,7 @@ import cw_input
 #: term by a wide margin, and the reason the whole module exists: consecutive
 #: cells of one row are what make shading read as a corrupted answer instead of
 #: as a hidden word. Such a step is orthogonally touching as well, so it pays
-#: TOUCHING_PENALTY on top -- two separate observations about one step rather
+#: TOUCHING_PENALTY on top: two separate observations about one step rather
 #: than a fourth number to keep in step with these three.
 SAME_ROW_ADJACENT_PENALTY = 10
 
@@ -56,8 +56,8 @@ SAME_ROW_ADJACENT_PENALTY = 10
 #: become a problem when they are neighbors.
 SAME_ROW_PENALTY = 3
 
-#: A step whose two cells are orthogonally touching -- Manhattan distance at
-#: most TOUCHING_DISTANCE. It catches the VERTICAL version of the same fault,
+#: A step whose two cells are orthogonally touching: Manhattan distance at
+#: most TOUCHING_DISTANCE. It catches the vertical version of the same fault,
 #: which the two row terms above cannot see at all.
 TOUCHING_PENALTY = 6
 
@@ -68,13 +68,13 @@ TOUCHING_DISTANCE = 1
 #: The column gap that makes two cells in one row neighbors.
 ADJACENT_COLUMN_GAP = 1
 
-#: What a single same-row neighboring step costs -- the worst thing one step
-#: can be. DERIVED from the two terms it pays rather than written out again, so
+#: What a single same-row neighboring step costs: the worst thing one step
+#: can be. Derived from the two terms it pays rather than written out again, so
 #: it is the readable threshold between "these cells scatter" and "these cells
 #: bunch" without being a fourth tunable number. The threshold is the tool's
-#: judgment on a placement's WHOLE clustering, not a detector of that one step:
-#: lighter steps reach it between them -- three vertically touching steps do,
-#: with no same-row pair at all -- and a placement that clusters that much is
+#: judgment on a placement's whole clustering, not a detector of that one step:
+#: lighter steps reach it between them (three vertically touching steps do,
+#: with no same-row pair at all), and a placement that clusters that much is
 #: called bunched whichever steps paid for it.
 NEIGHBORING_STEP_PENALTY = SAME_ROW_ADJACENT_PENALTY + TOUCHING_PENALTY
 
@@ -97,7 +97,7 @@ class ShadeError(ValueError):
 class Placement:
     """One word, the cells chosen to shade for it, and what that choice costs.
 
-    `cells` is in reading order and holds exactly one cell per letter -- the
+    `cells` is in reading order and holds exactly one cell per letter: the
     letters are picked as a subsequence, so no cell can serve two of them and
     the cell count is identically the word's length. It is reported as the
     letter count alone rather than as two columns of the same number.
@@ -153,12 +153,12 @@ def clustering_penalty(previous: tuple[int, int], current: tuple[int, int]) -> i
 
     Three observations, scored independently of the order of the pair:
 
-    * the cells share a row and are one column apart -- the fault this whole
+    * the cells share a row and are one column apart: the fault this whole
       module exists to avoid, and the heaviest term;
-    * failing that, they merely share a row -- much lighter, because two shaded
+    * failing that, they merely share a row: much lighter, because two shaded
       squares on one line are ordinary until they are neighbors;
     * separately, they orthogonally touch, which is the only term that sees the
-      VERTICAL version of the same bunching.
+      vertical version of the same bunching.
 
     The first two are alternatives of one question ("how do these two sit in
     their row"), so a same-row neighboring step pays the heavier of them and
@@ -203,8 +203,8 @@ def _cheapest_reachable(
     """One step of the walk: the cheapest way to reach each of `candidates`.
 
     `reached` maps a cell index to `(cost so far, the index it came from)`.
-    Both loops run in ascending index order and improve on a STRICT `<`, so a
-    tie keeps the earliest predecessor and the earliest cell -- two runs must
+    Both loops run in ascending index order and improve on a strict `<`, so a
+    tie keeps the earliest predecessor and the earliest cell: two runs must
     produce byte-identical output, and a tie broken by a mapping's iteration
     order would not.
     """
@@ -233,7 +233,7 @@ def place_word(rows: Sequence[str], word: str) -> Placement | None:
     strictly later in reading order than the one before it, and the path's
     length is the sum of `clustering_penalty` over its steps.
 
-    Returns None when the grid cannot spell `word` in reading order at all --
+    Returns None when the grid cannot spell `word` in reading order at all,
     including for an empty word, which spells nothing and would otherwise come
     back as a placement of no cells.
 
@@ -307,7 +307,7 @@ def search_hidden_words(
     """Rank every word of `words` this grid can spell, and count what it cannot.
 
     The three exclusions are checked in the order they are cheapest and most
-    informative, and each word is counted under the FIRST that applies: a word
+    informative, and each word is counted under the first that applies: a word
     below `min_length` is counted short even if it is also an answer in the
     grid, because the floor is the operator's own filter and reporting one word
     under two headings would make the counts fail to add up.
@@ -344,8 +344,8 @@ def search_hidden_words(
 def _screen_word(word: str) -> str | None:
     """Why `word` cannot be a hidden word, or None when it can be one.
 
-    The same two rules `cw_bank` applies to a bank answer -- at least
-    `cw_grid.MIN_RUN` letters, and A-Z only -- because a hidden word is read
+    The same two rules `cw_bank` applies to a bank answer (at least
+    `cw_grid.MIN_RUN` letters, and A-Z only) because a hidden word is read
     off the same grid and the grid holds nothing else.
     """
     if len(word) < cw_grid.MIN_RUN:
@@ -363,9 +363,9 @@ def load_word_list(
 
     One word per line, a line ending where an editor ends one
     (`cw_input.editor_lines`). Blank lines, and lines whose first non-blank
-    character is `#`, are ignored silently -- they are how an operator
+    character is `#`, are ignored silently: they are how an operator
     annotates a list, and reporting them as skipped words would bury the
-    reports that matter. Every other line is stripped and UPPERCASED, so a
+    reports that matter. Every other line is stripped and uppercased, so a
     list typed in lower case works without a conversion step, and duplicates
     collapse to their first appearance.
 
@@ -375,11 +375,11 @@ def load_word_list(
     how `--phrases` is read:
     a phrase is written the way it is said, and two entries join with nothing
     between them. Off by default, because a hidden word or a gap's filler is
-    ONE word, and welding a line's two words into one would quietly answer a
+    one word, and welding a line's two words into one would quietly answer a
     question the operator did not ask.
 
-    A line that is not a usable word after that -- too short, or holding
-    anything outside A-Z -- is SKIPPED and returned by name and reason rather
+    A line that is not a usable word after that (too short, or holding
+    anything outside A-Z) is skipped and returned by name and reason rather
     than failing the run: fail only the bad item, never drop an ineligible one
     silently, report its specific reason and count it. A list nobody
     hand-curated will eventually carry a hyphen or a space, and refusing the
@@ -389,8 +389,8 @@ def load_word_list(
     screens no lines at all, and this tool's malformed-input handler,
     `cw_bank._parse_answer`, raises.
 
-    Nothing is dropped quietly -- the report names every skipped line -- and a
-    list that yields NO usable word at all is the caller's refusal to make, not
+    Nothing is dropped quietly (the report names every skipped line), and a
+    list that yields no usable word at all is the caller's refusal to make, not
     this reader's.
 
     Wraps `OSError` and `UnicodeDecodeError` into `ShadeError` for the reason

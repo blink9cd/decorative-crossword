@@ -1,4 +1,4 @@
-"""Tests that the render fetches NOTHING: the self-contained half of the contract.
+"""Tests that the render fetches nothing: the self-contained half of the contract.
 
 Kept apart from `test_svg.py` along a conceptual boundary: that file asks
 whether the document has the right parts, this one asks whether the document
@@ -14,11 +14,11 @@ nobody has thought of yet.
 A whitelist has exactly two blind spots, and both are closed here rather than
 left implicit:
 
-* it is only as broad as the documents it runs over -- an `<image>` injected
-  into the EMPTY-LAYER branch survives a whitelist proved against one richly
+* it is only as broad as the documents it runs over: an `<image>` injected
+  into the empty-layer branch survives a whitelist proved against one richly
   populated fixture, because that fixture emits no empty layer. Every
   assertion below therefore runs over several genuinely different documents;
-* ElementTree's default parser DISCARDS comments and processing instructions,
+* ElementTree's default parser discards comments and processing instructions,
   so no assertion on the parsed tree can see either. An in-root
   `<?xml-stylesheet href="branding.css"?>` is precisely the `href=` mechanism
   a blacklist named, and it carries no scheme and no `//`. One string-level
@@ -44,7 +44,7 @@ _ALLOWED_ATTRIBUTES = frozenset(
 )
 
 #: The one document that populates every layer, and so is the only one that can
-#: pin the whitelists as EQUALITIES rather than subsets.
+#: pin the whitelists as equalities rather than subsets.
 _RICHEST = "every layer populated"
 
 
@@ -128,7 +128,7 @@ class TestNothingIsFetched(unittest.TestCase):
 
     def test_nothing_precedes_the_root_but_the_xml_declaration(self) -> None:
         # The parser drops a doctype, so no assertion on the tree can see one.
-        # An external DTD -- `<!DOCTYPE svg SYSTEM "branding.dtd">` -- is a
+        # An external DTD (`<!DOCTYPE svg SYSTEM "branding.dtd">`) is a
         # fetch whose relative identifier carries no scheme and no `//`, so the
         # URL check cannot see it either. This is where it is visible.
         for description, rendered in _documents().items():
@@ -153,9 +153,9 @@ class TestNothingIsFetched(unittest.TestCase):
     def test_the_stylesheet_fetches_nothing(self) -> None:
         # Neither whitelist can reach inside the stylesheet, which is one text
         # node. Every rule this render emits has the shape
-        # `selector{property:value}` -- no at-rule and no function call -- and
+        # `selector{property:value}` (no at-rule and no function call), and
         # CSS reaches outside the file only through one or the other
-        # (`@import`, `@font-face`, `url(...)`). Asserting the SHAPE rather
+        # (`@import`, `@font-face`, `url(...)`). Asserting the shape rather
         # than naming the three keeps it a whitelist.
         for description, rendered in _documents().items():
             with self.subTest(document=description):
@@ -167,7 +167,7 @@ class TestNothingIsFetched(unittest.TestCase):
     def test_references_no_external_url(self) -> None:
         # Self-contained: it must open from a file:// path on a machine with no
         # network. The SVG namespace URI is an identifier
-        # rather than a fetch -- and a document missing it renders blank -- so it
+        # rather than a fetch (and a document missing it renders blank), so it
         # is removed before the check instead of being allowed to pass one.
         for description, rendered in _documents().items():
             with self.subTest(document=description):

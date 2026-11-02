@@ -6,7 +6,7 @@ lettered shape makes the silhouette ragged, and a single letter there fills it. 
 qualifies is kept narrow, and what goes in it must still read as something:
 
 - The cell has no letter above, below, left or right, so its letter joins no run and
-  the one rule is untouched; and a letter of the grid AS CHOSEN sits at one of its
+  the one rule is untouched; and a letter of the grid as chosen sits at one of its
   corners. Letters placed as islands never qualify a further cell, and nor does a
   lone letter the grid already held (`fixed`), so islands cannot chain out across
   empty space.
@@ -25,7 +25,7 @@ judgment about its look, and `fill` lays them only on a grid its search already 
 
 `stray_letters` reads the same shape back from a grid alone, for the subcommands that
 take a `--source` this tool may never have written. The grid the letters were laid on
-is gone by then, so a corner counts only when an ENTRY covers it. The two statements
+is gone by then, so a corner counts only when an entry covers it. The two statements
 share `ISLAND_LETTERS` and `_CORNERS` and differ only in what a corner letter must be.
 They agree on every grid `fill` lays islands on: there every letter outside `fixed` is
 in an entry, and a letter at a `fixed` cell never qualifies a corner, so a corner the
@@ -73,7 +73,7 @@ def parse_island_letters(text: str) -> tuple[str, ...]:
         if letter not in ISLAND_LETTERS:
             raise cw_config.ConfigError(
                 f"--island-letters: {cw_text.shown(letter)} is not one of "
-                f"{', '.join(ISLAND_LETTERS)} -- an island letter must read as a "
+                f"{', '.join(ISLAND_LETTERS)}: an island letter must read as a "
                 "word on its own"
             )
     return letters
@@ -109,12 +109,12 @@ def _island_letter(
 
     Emptiness beside the cell is read from the grid as it is being filled, so a
     neighbor filled a moment ago counts; the corner letter that qualifies it is
-    read from the ORIGINAL grid, so an island never qualifies another. A corner
+    read from the original grid, so an island never qualifies another. A corner
     in `fixed` counts as empty: it was lone before any island was laid, and an
     island beside it would chain off it just as it would off another island.
 
     A cell in `masked` is no island: a `--mask` picture forbids a letter there,
-    and an island is a letter. INELIGIBLE rather than refused -- an island is a
+    and an island is a letter. Ineligible rather than refused: an island is a
     choice this module makes for itself, so a mask takes the cell off the table
     the way blocks beside it already do. A `--feature` pin into the same cell is
     refused instead, because that one the operator wrote themselves.
@@ -145,13 +145,13 @@ def fill_islands(
 
     `letters` must be non-empty, as `parse_island_letters` guarantees. Islands
     come back in the row-major order they were laid. A letter at a `fixed` cell
-    never qualifies a corner -- pass `lone_cells` of the grid being decorated,
+    never qualifies a corner: pass `lone_cells` of the grid being decorated,
     so a lone letter it already holds is no seed. `fixed` is read for membership
     only, and so is `masked`, the cells a `--mask` picture forbids a letter.
 
     `spare` is how many blocked cells the grid may give up, or None for no limit.
     Each island takes one, so once `spare` are laid every later island is
-    skipped -- its cell stays blocked -- and the walk goes on, laying nothing.
+    skipped (its cell stays blocked), and the walk goes on, laying nothing.
     """
     original = tuple(rows)
     current = [list(row) for row in original]

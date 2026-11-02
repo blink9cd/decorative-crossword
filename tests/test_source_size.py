@@ -1,6 +1,6 @@
 """Tests for the canvas a `fill --source` grid is placed on, and where it sits.
 
-`--rows` and `--cols` beside a source GROW its grid: each flag given must be at
+`--rows` and `--cols` beside a source grow its grid: each flag given must be at
 least the source's own dimension, a flag left off takes the source's, and the
 source sits at the top-left, so every source cell keeps its coordinates in the
 grown grid. These are the pure halves; `tests/test_cli_grown.py` drives them

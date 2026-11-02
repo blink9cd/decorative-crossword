@@ -3,13 +3,13 @@
 `DEFAULTS` is the single source of every non-None default a value-taking
 option has, whichever subcommand takes it. The argument parser passes
 `default=DEFAULTS["min_blocked"]` rather than repeating a literal, and `--help`
-renders the live `default=` -- so a default lives here exactly once.
+renders the live `default=`, so a default lives here exactly once.
 
 `validate_fill_config` is a list of independent guard clauses, not a single
 merged predicate: each rejection must name the CLI option at fault, because a
 generic "bad configuration" would undo the discoverability the rest of the CLI
-builds. Every clause here is load-bearing -- a test fails if any one of them
-is deleted -- so a clause that would only ever be REDUNDANT with another one
+builds. Every clause here is load-bearing (a test fails if any one of them
+is deleted) so a clause that would only ever be redundant with another one
 already present is deliberately left out; `_validate_blocked_bounds` works
 through the case and says what the omission costs.
 """
@@ -48,8 +48,8 @@ DEFAULTS: Mapping[str, object] = MappingProxyType(
         "time_budget": 30.0,
         "max_steps": 0,
         # How many nodes `fill` keeps searching past its first conforming grid
-        # for a better one, as `cw_select.grid_score` ranks grids -- the order
-        # is stated there, once. A NODE count rather than a clock, so the grid chosen
+        # for a better one, as `cw_select.grid_score` ranks grids. The order
+        # is stated there, once. A node count rather than a clock, so the grid chosen
         # depends on the request alone. Sized by measurement: the case that
         # motivated it found its better grid 13 nodes after the first, and at
         # the tens of milliseconds a node a 1,300-answer bank costs this is about
@@ -57,8 +57,8 @@ DEFAULTS: Mapping[str, object] = MappingProxyType(
         "look_ahead": 500,
         "cell": 48,
         # `shade`'s two list knobs. The length floor is 5 because a hidden
-        # word is a BONUS answer and a three-letter one is not much of a
-        # bonus -- and because candidacy is a weak filter, so without a floor
+        # word is a bonus answer and a three-letter one is not much of a
+        # bonus, and because candidacy is a weak filter, so without a floor
         # the list is dominated by short words: on a real 9x9 the candidate
         # count falls from 224 to 63 at five letters, and the long words worth
         # choosing become visible. The list cap keeps a default run readable;
@@ -78,13 +78,13 @@ DEFAULTS: Mapping[str, object] = MappingProxyType(
 _SCRIPT_CLOSE_TAG = "</script"
 
 #: The blocked-cell percentage scale's ceiling. Named so the comparison and
-#: the message it produces cannot drift apart -- changing the bound in one
+#: the message it produces cannot drift apart: changing the bound in one
 #: spot changes what the operator is told in the other.
 _MAX_BLOCKED_PERCENT = 100
 
 #: The largest `--cell` edge, in SVG user units. Far above any drawing's need
-#: -- the largest grid `cw_grid.MAX_SIDE` allows is an ordinary document at
-#: this edge -- and it keeps the edge inside the float arithmetic that lays a
+#: (the largest grid `cw_grid.MAX_SIDE` allows is an ordinary document at
+#: this edge), and it keeps the edge inside the float arithmetic that lays a
 #: drawing out.
 MAX_CELL = 1000
 
@@ -108,8 +108,8 @@ def forbidden_clue_fragment(text: str) -> str | None:
     actually writes, and `cw_grid_document` on each theme field it reads from a
     grid file. Two copies of a screen whose whole job is to keep markup,
     terminal controls and characters XML cannot hold out of every output is a
-    hole rather than a duplication -- widening one copy leaves the other passing
-    the very text it was widened for -- so the rule is public here instead. The
+    hole rather than a duplication (widening one copy leaves the other passing
+    the very text it was widened for) so the rule is public here instead. The
     characters a terminal or an SVG cannot take are `cw_text`'s to name; a
     newline is one of them, and keeps its own words.
     """
@@ -125,7 +125,7 @@ def forbidden_clue_fragment(text: str) -> str | None:
 
 @dataclass(frozen=True)
 class FillConfig:
-    """A resolved `fill` run's settings -- one field per CLI option.
+    """A resolved `fill` run's settings: one field per CLI option.
 
     `seed` fixes the search's iteration order; it has no
     validation rule of its own because every integer is a legal seed.
@@ -145,8 +145,8 @@ class FillConfig:
     source was given. It is trusted to match `rows` and `cols` rather than
     checked against them, because the CLI places the source onto exactly that
     grid (`cw_source.place_source`). `source_size` is the source's own
-    `(rows, cols)`, which the placed rows can no longer tell -- a blocked row the
-    source ended on and one the grid added look alike -- and `(0, 0)` without a
+    `(rows, cols)`, which the placed rows can no longer tell (a blocked row the
+    source ended on and one the grid added look alike) and `(0, 0)` without a
     source.
 
     `absorb_entries` is `--absorb-entries`: a source entry the bank holds may
@@ -154,11 +154,11 @@ class FillConfig:
     nothing without `start`, which is why `validate_fill_config` refuses it there.
 
     `max_two_letter` is `--max-two-letter`: the most two-letter entries an
-    accepted grid may carry. `None` is no cap, and zero is a real one -- a caller
-    whose consumer allows no two-letter entry at all must be able to say so -- so
+    accepted grid may carry. `None` is no cap, and zero is a real one (a caller
+    whose consumer allows no two-letter entry at all must be able to say so), so
     nothing downstream may test it for truthiness.
 
-    `masked` is the cells a `--mask` picture forbids a letter, for MEMBERSHIP
+    `masked` is the cells a `--mask` picture forbids a letter, for membership
     only; `cw_mask` says why a mask rides on the config rather than in the grid.
     `mask_size` is the picture's own size, `cw_mask.NO_MASK_SIZE` without one.
     The two are separate for the reason `start` and `source_size` are: a mask
@@ -208,16 +208,16 @@ def _validate_blocked_bounds(config: FillConfig) -> None:
 
     Only the lower bound of `--min-blocked`, the upper bound of
     `--max-blocked`, and their relative order are checked directly. A
-    dedicated check for the other two combinations -- `--min-blocked` over
-    the ceiling, `--max-blocked` under 0 -- is not dead code (each is
+    dedicated check for the other two combinations (`--min-blocked` over
+    the ceiling, `--max-blocked` under 0) is not dead code (each is
     genuinely reachable: it would fire on plenty of inputs if it ran first),
-    it is simply always REDUNDANT with one of the three above. Whenever
+    it is simply always redundant with one of the three above. Whenever
     `--min-blocked` exceeds the ceiling, either `--max-blocked` is below it
     too (order check fires) or `--max-blocked` is at or above `--min-blocked`
     and therefore also over the ceiling (upper-bound check fires); the
     symmetric argument holds for `--max-blocked` under 0. So omitting the two
-    extra checks loses no coverage -- the input is still rejected with a
-    message naming a real flag -- it just means a value that is wrong on both
+    extra checks loses no coverage: the input is still rejected with a
+    message naming a real flag. It just means a value that is wrong on both
     fields costs one extra fix-and-rerun cycle instead of being named in a
     single pass.
     """
@@ -238,9 +238,9 @@ def _validate_blocked_bounds(config: FillConfig) -> None:
 def _validate_theme_floors(config: FillConfig) -> None:
     """Raise ConfigError unless the theme-coverage floors are in range.
 
-    `--min-themes` admits ZERO, which turns the theme floor off. A bank may
-    declare no themes at all, so every POSITIVE floor is one such a bank cannot
-    reach -- a positive-only rule here would make legal input guarantee a
+    `--min-themes` admits zero, which turns the theme floor off. A bank may
+    declare no themes at all, so every positive floor is one such a bank cannot
+    reach: a positive-only rule here would make legal input guarantee a
     refusal. No downstream special
     case goes with it: a floor of zero is met by any count of themes, so every
     comparison against it already answers "met" and the constraint stops being
@@ -262,8 +262,8 @@ def _validate_budgets(config: FillConfig) -> None:
     """Raise ConfigError unless the budgets are non-negative and one of them binds.
 
     Zero reads as "no limit" on both, which makes their combination the single
-    request nothing can stop. It is refused here -- before any searching, where
-    the message can name both flags -- rather than left to look like a hang.
+    request nothing can stop. It is refused here, before any searching, where
+    the message can name both flags, rather than left to look like a hang.
     """
     if config.time_budget < 0:
         raise ConfigError(
@@ -282,16 +282,16 @@ def validate_cell(cell: int) -> None:
     """Raise ConfigError unless `cell` is a usable SVG cell edge.
 
     `preview`'s only numeric knob, and the only flag it has that can produce a
-    file NOTHING CAN RENDER: every length in the document is a multiple of the
-    cell edge, so a zero or negative one WOULD emit a negative `viewBox` and a
-    negative `stroke-width` -- a structurally invalid SVG. An edge past
+    file nothing can render: every length in the document is a multiple of the
+    cell edge, so a zero or negative one would emit a negative `viewBox` and a
+    negative `stroke-width`: a structurally invalid SVG. An edge past
     `MAX_CELL` is refused too: the parser reads a whole number of any size, and
     one a few hundred digits long overflows that float arithmetic, a traceback
     rather than a refusal.
 
     It is configuration validation: specific, at exit 2, each rejection naming
     the option at fault. It lives beside the `fill` validators rather than in
-    the CLI for the same reason they do -- `DEFAULTS["cell"]` is here, and a
+    the CLI for the same reason they do: `DEFAULTS["cell"]` is here, and a
     check that named a flag would drift from the default it guards if the two
     lived apart.
     """
@@ -303,11 +303,11 @@ def validate_cell(cell: int) -> None:
 
 @dataclass(frozen=True)
 class ShadeConfig:
-    """A resolved `shade` run's settings -- one field per CLI option.
+    """A resolved `shade` run's settings: one field per CLI option.
 
     `word` is the answer `--word` names, already uppercased by the caller, or
     None in the ranked-search mode. Which of the two modes a run is in is
-    decided by the FLAGS the operator supplied rather than by a field here,
+    decided by the flags the operator supplied rather than by a field here,
     because "exactly one of `--words` and `--word`" is a question about
     presence and this struct holds values.
     """
@@ -322,8 +322,8 @@ class ShadeConfig:
 def _validate_word(word: str | None) -> None:
     """Raise ConfigError unless `--word` names something a grid could hold.
 
-    The same two rules a bank answer must satisfy -- at least `cw_grid.MIN_RUN`
-    letters, A-Z only -- because a hidden word is read off a grid, and a grid
+    The same two rules a bank answer must satisfy (at least `cw_grid.MIN_RUN`
+    letters, A-Z only) because a hidden word is read off a grid, and a grid
     holds nothing else. Checked here rather than left to come back as "this
     grid cannot spell it", which would be a true sentence pointing at the
     wrong thing: a `--word` of "cat-nap" is a mistake in the flag, not a fact
@@ -364,17 +364,17 @@ def validate_shade_config(config: ShadeConfig) -> None:
 
 @dataclass(frozen=True)
 class GapsConfig:
-    """A resolved `gaps` run's settings -- one field per numeric or toggle option.
+    """A resolved `gaps` run's settings: one field per numeric or toggle option.
 
     `--bank`, `--words`, `--phrases` and `--out` are absent for the same reason
-    `shade`'s mode flags are: they are questions about PRESENCE -- was a
-    vocabulary offered, was a render asked for -- and this struct holds values. The
+    `shade`'s mode flags are: they are questions about presence (was a
+    vocabulary offered, was a render asked for) and this struct holds values. The
     handler reads the flags; the resolver and the report are told the result.
 
-    `masked` is here for the opposite reason: a `--mask` picture's cells ARE a
-    value, and every reader of them -- the analysis, the headline, the density
-    and the ceiling advice -- already takes this struct. Membership only. Unlike
-    `FillConfig` there is no `mask_size` beside it, because `gaps` is GIVEN its
+    `masked` is here for the opposite reason: a `--mask` picture's cells are a
+    value, and every reader of them (the analysis, the headline, the density
+    and the ceiling advice) already takes this struct. Membership only. Unlike
+    `FillConfig` there is no `mask_size` beside it, because `gaps` is given its
     grid rather than asked to make one: the size agreement is a question about
     the `--source` file, so `cw_gaps_command` asks it where that file is read.
     """
@@ -489,7 +489,7 @@ def _validate_masked_source_letters(config: FillConfig) -> None:
     """Raise ConfigError if a `--source` letter sits where `--mask` forbids one.
 
     Runs after `_validate_mask_size`, so a mis-sized picture is named as that
-    first -- a cell of one names nothing the operator can find in either file.
+    first: a cell of one names nothing the operator can find in either file.
     """
     fault = cw_mask.forbidden_letter(config.start, config.masked)
     if fault is not None:

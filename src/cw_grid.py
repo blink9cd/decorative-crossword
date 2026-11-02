@@ -1,13 +1,13 @@
 """The grid model: cells, maximal-run derivation, and density.
 
-An entry is DERIVED from the letters, never declared -- a maximal line of two or
+An entry is derived from the letters, never declared: a maximal line of two or
 more filled cells in either direction. Every other
 module in this project reads runs through here, so the definition lives in one
 place and cannot drift between the search and the emitter.
 
 `Run` is frozen and therefore hashable (`@dataclass(frozen=True)` synthesizes
-`__hash__` over ALL of its fields, the two ints included), which makes
-`set(runs)` type-check -- but a set's iteration order is
+`__hash__` over all of its fields, the two ints included), which makes
+`set(runs)` type-check, but a set's iteration order is
 `PYTHONHASHSEED`-dependent, and output must be byte-identical across runs. Keep
 runs in the tuple `runs_from_rows` returns (or another order-preserving
 container); never route them through a `set` on any path that reaches emitted
@@ -49,8 +49,8 @@ MIN_RUN = 2
 #: anyone lays out needs more. It also bounds the work: a search path is at most
 #: one placement per cell, three Python frames each, so the cap bounds the depth
 #: `cw_search` makes room for; and the passes `preview`, `shade` and `gaps` make
-#: over a grid grow faster than its cell count. Held where each size enters --
-#: `--rows` and `--cols`, a `--mask` picture, every grid file read -- so a
+#: over a grid grow faster than its cell count. Held where each size enters
+#: (`--rows` and `--cols`, a `--mask` picture, every grid file read), so a
 #: refusal names that input.
 MAX_SIDE = 25
 
@@ -91,8 +91,8 @@ def _lines_for_direction(
     """
     if direction == ACROSS:
         return [(row_index, 0, row) for row_index, row in enumerate(rows)]
-    # DOWN: transpose. strict=True makes a ragged grid fail loudly right here --
-    # a mismatched row length raises ValueError at the transpose -- instead of
+    # DOWN: transpose. strict=True makes a ragged grid fail loudly right here
+    # (a mismatched row length raises ValueError at the transpose) instead of
     # zip's default silently truncating every column to the shortest row, which
     # would silently drop cells rather than signal the caller's bug.
     columns = zip(*rows, strict=True)
@@ -105,11 +105,11 @@ def _runs_in_line(
     """Accumulate maximal non-BLOCK stretches of `line` into Runs of length >= MIN_RUN.
 
     A single pass with one pending-stretch buffer, flushed whenever a BLOCK cell
-    is reached -- the shared logic both ACROSS and DOWN scans reduce to via
+    is reached: the shared logic both ACROSS and DOWN scans reduce to via
     `_lines_for_direction`. Scanning `line + BLOCK` rather than `line` appends a
     virtual terminator so a stretch that runs to the end of the line flushes
-    through this SAME branch as every interior one, rather than a second,
-    near-identical flush block after the loop -- one implementation of "turn a
+    through this same branch as every interior one, rather than a second,
+    near-identical flush block after the loop: one implementation of "turn a
     stretch into a Run" instead of two that could quietly drift apart.
     """
     d_row, d_col = _STEPS[direction]
@@ -152,7 +152,7 @@ def runs_from_rows(rows: Sequence[str]) -> tuple[Run, ...]:
     scan: every ACROSS run first, row-major (row 0's runs left-to-right, then
     row 1's, and so on), then every DOWN run, column-major (column 0's runs
     top-to-bottom, then column 1's, and so on). Output must be byte-identical
-    across runs of this project, so callers may rely on this order -- see the
+    across runs of this project, so callers may rely on this order. See the
     module docstring for why a `set` of these must not be used on any path that
     reaches it.
     """
@@ -177,14 +177,14 @@ def usable_cells(
     """`(cells this grid may use, how many of them are BLOCK)`.
 
     The one place this project's density arithmetic is spelled out. `masked` is
-    the cells a `--mask` picture forbids a letter, and they leave BOTH counts:
+    the cells a `--mask` picture forbids a letter, and they leave both counts:
     density means "of the cells this grid may use, how many are blocked", so a
     cell the operator drew out of the grid is no more a block than it is a
     letter. Counting it as blocked would make every shape "too dense" by
     construction against the default window.
 
     An unmasked call counts through `str.count`, at C speed, because
-    `cw_density.window_miss` asks this of every board the search judges --
+    `cw_density.window_miss` asks this of every board the search judges:
     hundreds of thousands of them inside one look-ahead window. The per-cell
     walk is paid only by a run that actually has a mask.
 
@@ -207,7 +207,7 @@ def usable_cells(
 
 
 def percent_of(blocked: int, total: int) -> float:
-    """`blocked` of `total` usable cells as the percentage every report SHOWS.
+    """`blocked` of `total` usable cells as the percentage every report shows.
 
     For display only: whether a grid is inside the requested window is
     `cw_density`'s question, asked in exact arithmetic, because this float can
@@ -216,7 +216,7 @@ def percent_of(blocked: int, total: int) -> float:
     grid, so it reads the same in every line; the figures that advise a bound,
     or that must show a miss one decimal would hide, are `cw_density`'s.
 
-    Returns 0.0 when there are no usable cells rather than dividing by zero --
+    Returns 0.0 when there are no usable cells rather than dividing by zero:
     a grid with no cells has none to be blocked, so "no blocks" is the honest
     answer, not an error. That covers the empty grid and the wholly-masked one
     alike; `cw_mask` refuses the second at the input boundary, so no command
@@ -242,7 +242,7 @@ def oversize(height: int, width: int) -> str | None:
 def blocked_percent(
     rows: Sequence[str], masked: AbstractSet[tuple[int, int]] = frozenset()
 ) -> float:
-    """Percent of the cells this grid MAY use that are BLOCK, as `percent_of` shows it.
+    """Percent of the cells this grid may use that are BLOCK, as `percent_of` shows it.
 
     `masked` defaults to none, which measures every cell.
     """
@@ -260,7 +260,7 @@ def _validate_row(index: int, row: object, width: int) -> str:
         raise ValueError(f"grid row {index} must be a string, got {cw_text.shown(row)}")
     if len(row) != width:
         raise ValueError(
-            f"grid row {index} holds {len(row)} cells, expected {width} -- "
+            f"grid row {index} holds {len(row)} cells, expected {width}: "
             "a grid may not be ragged"
         )
     for col, char in enumerate(row):
@@ -275,9 +275,9 @@ def _validate_row(index: int, row: object, width: int) -> str:
 def validate_rows(rows: object) -> tuple[str, ...]:
     """Narrow an untrusted grid payload into rows of cells, or raise ValueError.
 
-    `preview` refuses a source that is not a coherent grid -- ragged rows, an
+    `preview` refuses a source that is not a coherent grid: ragged rows, an
     empty grid, a cell that is neither a letter nor a block. The rule lives
-    HERE, beside `BLOCK` and `Grid`, because what a row
+    here, beside `BLOCK` and `Grid`, because what a row
     of cells may contain is this module's own definition; a copy in the reader
     that needs it would be a second statement of it, free to drift from the
     one `Grid` enforces on the writing side.
@@ -285,10 +285,10 @@ def validate_rows(rows: object) -> tuple[str, ...]:
     Takes `object` and hands back the narrowed tuple rather than taking
     `Sequence[str]`: the caller holds a `json.loads` result, so "a row that is
     not a string" has to stay a case this function can reject instead of one
-    the annotation pretends away -- and returning the tuple saves that caller
+    the annotation pretends away, and returning the tuple saves that caller
     a cast.
 
-    A list or a tuple is accepted -- `json.loads` yields the first, code
+    A list or a tuple is accepted: `json.loads` yields the first, code
     yields the second. A bare `str` is not, even though it satisfies
     `Sequence[str]`: it would read as a one-column grid of its own letters,
     which is the silent wrong answer rather than the loud one.
@@ -298,7 +298,7 @@ def validate_rows(rows: object) -> tuple[str, ...]:
             f"grid rows must be a list or tuple, got {cw_text.shown(rows)}"
         )
     if not rows:
-        raise ValueError("grid rows must not be empty -- a grid has no cells")
+        raise ValueError("grid rows must not be empty: a grid has no cells")
     first = rows[0]
     if not isinstance(first, str) or not first:
         raise ValueError(
@@ -353,7 +353,7 @@ class Grid:
         raising, so an off-by-one in a caller's arithmetic (`cw_search`'s
         backtracking) would write to the wrong row with no signal at all. Checking the range
         explicitly, rather than trusting an IndexError, is what catches that
-        wrap -- IndexError only fires on the positive-overflow side.
+        wrap: IndexError only fires on the positive-overflow side.
         """
         if not (0 <= row < self._rows) or not (0 <= col < self._cols):
             raise ValueError(

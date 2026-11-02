@@ -4,7 +4,7 @@ A search can reach several grids that meet every constraint. `fill` keeps walkin
 for `--look-ahead` nodes past the first and keeps the best by `grid_score`: most
 letters, then answers named by `--prefer`, then the grid's worst rating, then its
 matching cell pairs under `--prefer-symmetry`, then themed entries, then the
-`--absorb-entries` source entries still standing. That ORDER is the rule.
+`--absorb-entries` source entries still standing. That order is the rule.
 Letters come first because density is what a decorative grid is judged on at a
 glance; a named preference comes next because it is the operator's instruction for
 this one run; the worst rating is their standing judgment of word quality, written
@@ -14,19 +14,19 @@ comes last, so growing one happens whenever it pays on any other level and never
 merely because the walk happened to try it first.
 
 Symmetry (`cw_symmetry`) sits below the worst rating and above themes, and its count
-is fine-grained -- dozens of values against a rating's five -- so while it is asked
+is fine-grained (dozens of values against a rating's five), so while it is asked
 for, the levels under it rarely decide. Below the rating, a word rated a clunker
 still loses however balanced its grid, while symmetry keeps nearly every other tie,
 because ratings are coarse. Above themes, because a kind is asked for in this run
 and the themed count is a default nobody asked for. Without the flag the level is
 zero for every grid, so it never moves a choice.
 
-The rating level reads the WORST entry, never an average. Averaging hides one clunker
+The rating level reads the worst entry, never an average. Averaging hides one clunker
 behind a row of good words, and a reader notices the clunker. An unrated answer counts
 as `cw_bank.NEUTRAL_RATING`, so a bank that rates nothing ties every grid on this
 level, and the level never moves a choice.
 
-The window is counted in NODES from the FIRST conforming grid, and a better grid does
+The window is counted in nodes from the first conforming grid, and a better grid does
 not reopen it. Nodes rather than seconds, so the grid chosen is a function of the
 request and not of the machine; from the first grid rather than from each better one,
 so a long run of small improvements cannot keep a search open indefinitely. A tie keeps
@@ -81,7 +81,7 @@ def snapshot(
 ) -> Snapshot:
     """Capture one state, with its acceptance verdict and its best-effort rank.
 
-    The rank orders the best NON-conforming state: theme floor met, then
+    The rank orders the best non-conforming state: theme floor met, then
     distance from the density window, then entries placed. Higher is better,
     so the distance is negated. Conforming states are ordered by `grid_score`
     instead.
@@ -101,8 +101,8 @@ def snapshot(
 def worst_rating(rows: Sequence[str], bank: cw_bank.Bank) -> int:
     """The lowest rating among the grid's entries, an unrated one counting as neutral.
 
-    A run the bank holds no rating for -- unrated, or not a bank answer at all,
-    which `fill` never writes -- reads as `cw_bank.NEUTRAL_RATING`, and so does a
+    A run the bank holds no rating for (unrated, or not a bank answer at all,
+    which `fill` never writes) reads as `cw_bank.NEUTRAL_RATING`, and so does a
     grid with no entries, since nothing in it is worse. The report names this
     same figure, so it is computed here once.
     """
@@ -132,8 +132,8 @@ def grid_score(
     the `--prefer-symmetry` kind; without one it is zero for every grid, so it
     chooses nothing. Themed entries are counted by `cw_accept.theme_counts`, the
     one place that decides which runs carry a theme. The last count is how many
-    of `growable` -- the source entries `--absorb-entries` lets grow
-    (`cw_board.growable_runs`) -- the grid still holds as their exact runs.
+    of `growable`, the source entries `--absorb-entries` lets grow
+    (`cw_board.growable_runs`), the grid still holds as their exact runs.
     Without that flag `growable` is empty and the count is zero for every grid,
     so it chooses nothing either.
     """
@@ -151,7 +151,7 @@ def grid_score(
 class Selection:
     """The best conforming grid seen so far, and the window it is chosen within.
 
-    Not frozen: offers arrive as the walk proceeds. `compared` counts DISTINCT
+    Not frozen: offers arrive as the walk proceeds. `compared` counts distinct
     grids, because two placement orders can reach the same one and the report
     says how many grids were compared, not how many times.
     """

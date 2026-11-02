@@ -63,7 +63,7 @@ _MIN_GROUPED_TESTS_BY_FILE = {
     "test_config.py": 49,
     "test_emit.py": 36,
     "test_emit_load.py": 31,
-    "test_emit_write_path.py": 7,
+    "test_emit_write_path.py": 9,
     "test_place.py": 40,
     "test_search_parts.py": 38,
     "test_order.py": 21,
@@ -98,7 +98,7 @@ _MIN_GROUPED_TESTS_BY_FILE = {
     "test_cli_fixed.py": 3,
     "test_cli.py": 40,
     "test_cli_features.py": 16,
-    "test_cli_help_prose.py": 9,
+    "test_cli_help_prose.py": 10,
     "test_cli_preview.py": 29,
     "test_cli_preview_features.py": 12,
     "test_cli_shade.py": 27,
@@ -149,6 +149,7 @@ _MIN_GROUPED_TESTS_BY_FILE = {
     "test_cli_control_characters.py": 6,
     "test_label_properties.py": 2,
     "test_cli_finite.py": 3,
+    "test_cli_flag_defaults.py": 6,
     "test_input.py": 18,
     "test_cli_input.py": 4,
     "test_cli_undecodable_argv.py": 1,
@@ -177,8 +178,8 @@ def _grouped_suite() -> unittest.TestSuite:
 def _iter_cases(suite: unittest.TestSuite) -> Iterator[unittest.TestCase]:
     """Yield every actual TestCase leaf out of a nested suite tree.
 
-    unittest.TestLoader().discover() nests three deep -- top, per-module,
-    per-class -- not the flat two levels a fixed-depth loop would assume; a
+    unittest.TestLoader().discover() nests three deep (top, per-module,
+    per-class), not the flat two levels a fixed-depth loop would assume; a
     module with more than one test class (test_grid.py has several) makes
     a two-level walk land on inner TestSuite objects instead of TestCase
     instances, miscounting every file. Recursing keeps this correct regardless
@@ -300,7 +301,7 @@ class TestSuiteDiscovery(unittest.TestCase):
                 found.get(filename, 0),
                 floor,
                 f"tests/{filename} yielded {found.get(filename, 0)} tests, expected "
-                f"at least {floor} -- a test may have been removed from it",
+                f"at least {floor}: a test may have been removed from it",
             )
 
 

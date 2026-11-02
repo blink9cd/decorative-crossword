@@ -1,7 +1,7 @@
 """cw_gaps_summary: the head of the `gaps` report, and the tiers it counts in.
 
-The summary states the grid -- its size, its density, and the cells `--mask`
-took out of it -- then the vocabulary the search was handed, how the blocked
+The summary states the grid (its size, its density, and the cells `--mask`
+took out of it), then the vocabulary the search was handed, how the blocked
 cells split into tiers, and the `--max-blocked` that would let `fill` reach for
 one of them. `cw_gaps_report` renders the rest of the report, which lists the
 gaps tier by tier. Which gaps a run lists at all (`listable`) is decided here,
@@ -10,8 +10,8 @@ because the headline and that advice both depend on it.
 **A count that is not accounted for is a count that misleads**, a rule borrowed
 from `cw_shade_report` rather than re-decided. The headline splits every
 blocked cell it counts into exactly one tier, and those tiers add up to the
-blocked count it prints -- `tests/test_gaps_report.py` pins that they do, with
-a mask and without -- so a reader can act on the headline instead of
+blocked count it prints (`tests/test_gaps_report.py` pins that they do, with
+a mask and without), so a reader can act on the headline instead of
 recounting the grid. A masked cell is in neither, and is counted on a line of
 its own after the tiers.
 
@@ -61,8 +61,8 @@ ORPHAN_TIER = "whose letter would join no entry"
 #: headline's count leaves it out, so it is printed apart from the five tiers.
 MASKED_TIER = "that --mask forbids a letter"
 
-#: Percentages are printed to one decimal throughout this project -- see
-#: `cw_report`'s "24.7% blocked" -- and the ceiling advice is rounded UP to the
+#: Percentages are printed to one decimal throughout this project (see
+#: `cw_report`'s "24.7% blocked"), and the ceiling advice is rounded up to the
 #: place `cw_density` rounds it to, which is where this precision is read from.
 #: Rounding it down would print a ceiling that refuses the very grid it was
 #: printed to ask for.
@@ -72,7 +72,7 @@ _PERCENT_DECIMALS = cw_density.DECIMALS
 def _tier_of(resolution: cw_gaps.Resolution) -> str:
     """Which tier one resolved candidate belongs to.
 
-    Absorption is tested FIRST and therefore outranks readiness: a fill that
+    Absorption is tested first and therefore outranks readiness: a fill that
     retires an answer the operator curated is a different kind of cost from one
     that adds a word, and no amount of "you already have the words" makes
     losing two entries the cheap move.
@@ -114,7 +114,7 @@ def listable(
 
     One function rather than a rule the report and the CLI each apply: the exit
     code says whether this run found anything, and a report that listed
-    something while the exit code said nothing was found -- or the reverse --
+    something while the exit code said nothing was found (or the reverse)
     would be worse than either being wrong alone.
     """
     if config.include_absorbing:
@@ -130,9 +130,9 @@ def ceiling_for(*, blocked: int, total: int) -> Fraction:
     """The `--max-blocked` at which `fill` would reach for one more filled cell.
 
     `fill` accepts a grid at or under its ceiling, so a ceiling set to the
-    DENSER grid's own share accepts that grid and rejects today's -- which is
+    denser grid's own share accepts that grid and rejects today's, which is
     the whole of the advice, derived rather than guessed. The share is exact
-    and rounded UP to a tenth by `cw_density`, the module that judges the
+    and rounded up to a tenth by `cw_density`, the module that judges the
     ceiling, so the number a reader copies is one that rule accepts.
     """
     return cw_density.ceil_tenth(cw_density.percent(blocked - 1, total))
@@ -159,14 +159,14 @@ def _vocabulary_line(search: cw_gaps.GapSearch) -> str:
     """How many answers the resolver was handed, or that it was handed none.
 
     "No vocabulary was supplied" and "none of your words matched" are different
-    sentences about different things -- the run's inputs, and the operator's
-    bank -- and a reader who was told the second when the first was true would
+    sentences about different things (the run's inputs, and the operator's
+    bank), and a reader who was told the second when the first was true would
     go looking for a shortage that does not exist.
     """
     if search.vocabulary_size == 0:
         return (
             "Vocabulary: no vocabulary supplied, so every demand below is "
-            "reported as unmet -- pass --bank or --words to sort them."
+            "reported as unmet. Pass --bank or --words to sort them."
         )
     plural = "" if search.vocabulary_size == 1 else "s"
     return f"Vocabulary: {search.vocabulary_size} answer{plural} offered."
@@ -182,7 +182,7 @@ def _mask_line(
     so measuring it over what remains would state the subtraction in terms of
     its own result.
 
-    The numerator is the PICTURE's own count, `config.masked`, not the analysis's
+    The numerator is the picture's own count, `config.masked`, not the analysis's
     `masked` count. The two agree only because `cw_gaps_command` refuses a source
     letter in a masked cell: without that check the analysis counts fewer, since
     it classifies blocked cells alone, and this line would claim a cell may never
@@ -239,12 +239,12 @@ def _density_lines(
     """What to re-run so the search actually reaches for one of these gaps.
 
     The half of the loop a bare list would leave open, and it is not obvious:
-    adding the word to the bank may change NOTHING on its own. `fill` keeps the
+    adding the word to the bank may change nothing on its own. `fill` keeps the
     grid with the most letters it finds within `--look-ahead` nodes of the first
     one inside its window; this grid is already in one, and a denser grid that
     needs the new word can lie farther off than that. The ceiling is what makes
     the search reach for it.
-    Absent when nothing is listed -- advice about gaps the reader cannot see is
+    Absent when nothing is listed: advice about gaps the reader cannot see is
     noise.
     """
     if not listable(search, config):

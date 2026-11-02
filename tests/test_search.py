@@ -41,7 +41,7 @@ _LONG_BUDGET = 3600.0
 #: A step budget generous enough to reach the dense window below.
 _LONG_STEPS = 20000
 
-#: Seconds before a spawned child is abandoned -- a bound on a blocking call,
+#: Seconds before a spawned child is abandoned: a bound on a blocking call,
 #: not a guess at the search's duration (it runs in well under a second).
 _CHILD_TIMEOUT = 120.0
 
@@ -51,7 +51,7 @@ _CHILD_TIMEOUT = 120.0
 _DENSE_WINDOW = 80.0
 
 #: The seed the candidate-ordering tests run under. Chosen, not arbitrary: it
-#: is a seed whose tie-break key prefers the LOSING candidate in both of those
+#: is a seed whose tie-break key prefers the losing candidate in both of those
 #: tests, so a scoring term dropped from the wiring flips the emitted grid
 #: instead of leaving the outcome to the hash.
 _ADVERSARIAL_SEED = 9
@@ -85,7 +85,7 @@ pathlib.Path(sys.argv[4]).write_text(
 
 
 def _mixed_bank() -> cw_bank.Bank:
-    """The themed bank plus two unthemed answers -- a legal bank shape.
+    """The themed bank plus two unthemed answers: a legal bank shape.
 
     Derived from `themed_bank` rather than written out again, so the two cannot
     drift into disagreeing about what the themed half contains.
@@ -101,7 +101,7 @@ def _mixed_bank() -> cw_bank.Bank:
 def _dense_config(max_steps: int = _LONG_STEPS) -> cw_config.FillConfig:
     """A configuration whose window only a multi-answer grid can reach.
 
-    The step budget is the one field a caller varies -- it is what the
+    The step budget is the one field a caller varies: it is what the
     "budgets decide whether, never which" claim is tested against.
     """
     return _config(
@@ -128,7 +128,7 @@ def _run_child(
     payload = json.dumps(
         {
             # ThemeInfo is a dataclass, which json.dumps refuses; the child
-            # reads a bank FILE, so each record is written in its on-disk
+            # reads a bank file, so each record is written in its on-disk
             # shape rather than by serializing the object.
             "themes": {
                 key: {"label": info.label, "summary": info.summary}
@@ -221,8 +221,8 @@ class TestSearch(unittest.TestCase):
     def test_a_zero_time_budget_disables_the_wall_clock(self) -> None:
         # Zero is "no limit", the same reading `--max-steps` has, and it is
         # what lets a caller ask for a run whose result does not depend on
-        # machine speed: under a live clock, a search that merely runs SLOWLY
-        # returns a different -- worse -- grid rather than a later one. A clock
+        # machine speed: under a live clock, a search that merely runs slowly
+        # returns a different, worse, grid rather than a later one. A clock
         # that leaps past any budget on its every reading must therefore change
         # neither the grid nor the node count.
         runaway = iter([0.0])
@@ -249,8 +249,8 @@ class TestSearch(unittest.TestCase):
 
     def test_places_a_feature_another_bank_answer_contains(self) -> None:
         # CAT is a proper substring of CATS. The feature is a hard constraint
-        # on the grid's ENTRIES, so it has to be present as a
-        # run of its own -- a scan for its letters in a row string would accept
+        # on the grid's entries, so it has to be present as a
+        # run of its own: a scan for its letters in a row string would accept
         # a grid holding only CATS, and the render would then shade cells for
         # an entry that does not exist.
         outcome = cw_search.search(
@@ -286,10 +286,10 @@ class TestSearch(unittest.TestCase):
 
 
 class TestUnsatisfiableRequests(unittest.TestCase):
-    """Refused BEFORE the search, not after the budget."""
+    """Refused before the search, not after the budget."""
 
     def test_spends_no_step_on_a_request_pre_flight_refuses(self) -> None:
-        # An unthemed bank can never meet a POSITIVE theme floor, and this
+        # An unthemed bank can never meet a positive theme floor, and this
         # config asks for one, so no amount of searching would help. (A floor
         # of zero is a different request, and tests/test_cli_themeless.py runs
         # it end to end.)
@@ -316,7 +316,7 @@ class TestSeedPlacement(unittest.TestCase):
         )
         plain = cw_search.search(_themed_bank(), _config(), clock=_still)
         # The unfeatured search picks a different word, so a search that merely
-        # ALLOWED the feature somewhere would not satisfy this.
+        # allowed the feature somewhere would not satisfy this.
         self.assertNotEqual(plain.placed[0].answer, "CHALK")
         self.assertEqual(featured.placed[0].answer, "CHALK")
 
@@ -363,7 +363,7 @@ class TestCandidateOrdering(unittest.TestCase):
     """The candidate ordering, observed through the grid a search emits.
 
     TestSortKey (in test_order) pins the key itself; these pin that
-    `cw_order.ordered_candidates` actually FEEDS it both terms. Each case is built so
+    `cw_order.ordered_candidates` actually feeds it both terms. Each case is built so
     the seeded tie-break prefers the candidate that must lose, which is what
     makes a dropped term change the emitted grid rather than leave it to the
     hash. The 9x5 shape puts the seven-letter feature DOWN the middle column
@@ -379,7 +379,7 @@ class TestCandidateOrdering(unittest.TestCase):
 
     def test_prefers_the_candidate_that_fills_more_cells(self) -> None:
         # BLUES adds four cells, PA one, and both sit in the one satisfied
-        # theme -- so the fill count is the only term with anything to say.
+        # theme, so the fill count is the only term with anything to say.
         bank = _entries_bank(
             (("CRUMPET", "a"), ("BLUES", "a"), ("PA", "a")), {"a": "A"}
         )
@@ -400,7 +400,7 @@ class TestCandidateOrdering(unittest.TestCase):
 
 
 class TestBudgets(unittest.TestCase):
-    """Budgets decide WHETHER a grid is reached, never WHICH one."""
+    """Budgets decide whether a grid is reached, never which one."""
 
     def test_counts_one_step_per_node(self) -> None:
         # An unreachable window, so the cap is what stops the walk. Asserted as
@@ -464,7 +464,7 @@ class TestBudgets(unittest.TestCase):
 
     def test_skips_a_placement_that_fills_nothing(self) -> None:
         # CAT lies inside CATS, so re-placing it over those cells fills nothing
-        # and leaves the state identical -- a node whose child is its own
+        # and leaves the state identical: a node whose child is its own
         # parent. Without the zero-progress filter that recurses until the
         # interpreter gives up, so the assertion is that the call returns.
         outcome = cw_search.search(

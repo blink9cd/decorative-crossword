@@ -8,10 +8,10 @@ only describe.
 
 `cw_report.render_report` stays the one orchestrator. This module builds its
 closing block under the sourcing and ordering rules that module's docstring
-states -- what the grid holds is read back out of it, and every ordering comes
-from an ordered source -- and adds one rule of its own:
+states (what the grid holds is read back out of it, and every ordering comes
+from an ordered source), and adds one rule of its own:
 
-- **`outcome.missed` is authoritative for the VERDICT.** It is the only record
+- **`outcome.missed` is authoritative for the verdict.** It is the only record
   of a pre-flight refusal, which comes back with zero steps and the grid the run
   began from, and whose reasons are about the bank rather than about that grid,
   so they are echoed verbatim rather than recomputed.
@@ -51,7 +51,7 @@ def _sized_by_mask(config: cw_config.FillConfig) -> bool:
 
 
 def _shrinkable(config: cw_config.FillConfig) -> tuple[str, ...]:
-    """The size flags a knob may advise SHRINKING: each dimension above the source's own.
+    """The size flags a knob may advise shrinking: each dimension above the source's own.
 
     `cw_source.resolve_size` refuses a --rows or --cols under the source's own
     size at exit 2, so a knob may shrink only a dimension grown past it; a grid
@@ -70,7 +70,7 @@ def _shrinkable(config: cw_config.FillConfig) -> tuple[str, ...]:
 
 
 def _growable(config: cw_config.FillConfig) -> tuple[str, ...]:
-    """The size flags a knob may advise GROWING: each dimension under the cap.
+    """The size flags a knob may advise growing: each dimension under the cap.
 
     A --rows or --cols past `cw_grid.MAX_SIDE` is refused at exit 2, with or
     without a source, so a knob may grow only a dimension still short of it; a
@@ -107,13 +107,13 @@ def _grid_knobs(
             f"{cw_density.floor_tenth(share):.{cw_density.DECIMALS}f} or lower"
         )
     # The same verdict the theme block reads, not a third spelling of the
-    # comparison -- and the count with it, out of one walk. A local
-    # `met < config.min_themes` would be CORRECT: it is exactly the negation
+    # comparison, and the count with it, out of one walk. A local
+    # `met < config.min_themes` would be correct: it is exactly the negation
     # cw_accept computes. What is wrong with it is that it would be a third
-    # unpinned copy of the rule, free to be "tidied" to `<=`, which IS off by
+    # unpinned copy of the rule, free to be "tidied" to `<=`, which is off by
     # one in the direction that hurts: at met == min_themes the floor is met,
     # so `<=` would offer "lower --min-themes" beside a missed list that says
-    # nothing about themes -- the density-axis contradiction the boundary check
+    # nothing about themes: the density-axis contradiction the boundary check
     # above exists to prevent, arriving on the theme axis.
     met, floor_met = cw_accept.theme_floor_status(rows, bank, config)
     if not floor_met:
@@ -166,10 +166,10 @@ def _knob_lines(
 ) -> list[str]:
     """The concrete option to change for each constraint this grid misses.
 
-    None at all on a pre-flight refusal. Its reasons are about the BANK, and the
+    None at all on a pre-flight refusal. Its reasons are about the bank, and the
     grid that came back with them was never searched: an empty board, or under
     --source the source itself. A knob read off that grid would clear a
-    constraint the echoed reasons above never named -- loosening
+    constraint the echoed reasons above never named: loosening
     `--max-blocked` to 100 for an empty rectangle, or crossing a stray the
     refusal never judged. What those reasons give instead is the fact about the
     bank that made the request impossible, the half an operator can act on.

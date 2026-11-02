@@ -3,19 +3,19 @@
 This module turns a bank and a configuration into a grid. It owns the search
 and its determinism; the constraints it searches toward live in cw_accept,
 in both the forms this module needs them. What a single step may leave
-behind -- a run an unused answer could still complete -- is cw_reach's
+behind (a run an unused answer could still complete) is cw_reach's
 question; every grid this module accepts or returns obeys the one rule in full.
 Which placements a node tries, and in what order, is cw_order's. Which of
 several conforming grids it keeps is cw_select's.
 
-DETERMINISM IS THE GUARANTEE THIS MODULE EXISTS TO KEEP, and it is exactly
+Determinism is the guarantee this module exists to keep, and it is exactly
 this:
 
     Given the same seed, bank and configuration, any run that exits 0 emits a
-    byte-identical grid. The budgets can only decide WHETHER the search reaches
-    that grid, never WHICH grid it reaches -- with one stated exception.
+    byte-identical grid. The budgets can only decide whether the search reaches
+    that grid, never which grid it reaches, with one stated exception.
 
-The exception: a budget that closes the run INSIDE the look-ahead window keeps
+The exception: a budget that closes the run inside the look-ahead window keeps
 the best conforming grid seen so far, which a roomier budget might have bettered.
 That is inherent to choosing among grids within a window at all, so it is made
 visible rather than hidden: `SearchOutcome.look_ahead_cut` says so and the report
@@ -26,7 +26,7 @@ that does it is not, which is why every committed sample pins `--time-budget 0`.
 the ranking: a node count no request can change, so the same request always gives
 up the same detours and reaches the same grid.
 
-That holds only because node order is a pure function of the inputs -- a slower
+That holds only because node order is a pure function of the inputs: a slower
 machine explores the same nodes in the same order and simply stops sooner. So
 nothing here may take an ordering from a `set`, from a dict built out of one,
 or from the builtin `hash()`; see `cw_order.order_key` for why, and cw_grid's
@@ -86,8 +86,8 @@ DETOUR_BUDGET = 48
 #: Frames one placement adds: `_expand`, `_judge_and_walk`, `_try_placement`, once each.
 FRAMES_PER_PLACEMENT = 3
 
-#: Frames beneath and above the levels -- the caller's stack, a node's own
-#: calls -- with room to spare.
+#: Frames beneath and above the levels (the caller's stack, a node's own
+#: calls), with room to spare.
 FRAMES_OUTSIDE_THE_WALK = 100
 
 
@@ -96,7 +96,7 @@ class SearchOutcome:
     """What one search produced: a grid, how it got there, and how it ended.
 
     `rows` is always a grid of the requested size, even when the search was
-    refused before it started -- a caller writing best-effort output on exit 1
+    refused before it started: a caller writing best-effort output on exit 1
     must never have to special-case an absent grid.
 
     `placed` is the placement history, in the order applied. The grid's own
@@ -158,16 +158,16 @@ def _budget_spent(state: _SearchState) -> bool:
     precisely so a test can pin a deterministic node budget instead of a wall
     clock.
 
-    **Zero means "no limit" on BOTH budgets**, and the symmetry is load-bearing
+    **Zero means "no limit" on both budgets**, and the symmetry is load-bearing
     rather than tidy. A step cap alone cannot make a run reproducible: this is
     an `elif`, so whenever the cap has not yet fired the clock is still read,
-    and a search that merely runs SLOWLY then returns a different -- worse --
+    and a search that merely runs slowly then returns a different, worse,
     grid rather than a later one. Dropping the clock is what lets a caller ask
     for a result that is a function of the bank and the seed alone, which is
     what every committed sample needs. `cw_config` refuses the one combination
     this opens up, both budgets zero, so nothing here can run unbounded.
 
-    The boundary: the count is incremented BEFORE this test, so the node that
+    The boundary: the count is incremented before this test, so the node that
     reaches `--max-steps N` is cut before it does any work, leaving **N-1**
     productive nodes. `1` is therefore the smallest budget that terminates and
     does nothing at all, not the one that tries a single placement.
@@ -191,10 +191,10 @@ def _try_placement(
     """Apply, check the step, recurse, and undo exactly what was filled.
 
     The check is whole-grid after every tentative placement, not incremental
-    bookkeeping -- but it is `cw_reach.step_allowed`, not the rule in full. The
+    bookkeeping, but it is `cw_reach.step_allowed`, not the rule in full. The
     grid may hold a run an unused answer could still complete, which is what
     lets the walk reach interlocked grids; `_judge_and_walk` is where the rule
-    applies in full. The undo runs on the way out of a SUCCESSFUL
+    applies in full. The undo runs on the way out of a successful
     branch too: every snapshot kept holds its own copy of the rows, so
     leaving the grid as it was found keeps every frame's state honest.
 
@@ -246,14 +246,14 @@ def _judge_and_walk(
     """A node within budget: acceptance, then each candidate in ranked order.
 
     A conforming state is offered to `state.selection`, and the walk goes on
-    below it -- a denser grid may lie deeper -- until the look-ahead window
+    below it (a denser grid may lie deeper) until the look-ahead window
     closes; a look-ahead of zero closes it at once, keeping the first grid.
     The loop stops as soon as the budget latches: without that, every frame
     still open would start one more child and the step count would overrun its
     own cap.
 
     A node may stand on a run that is not an answer yet (`_try_placement`), so
-    it is judged -- for acceptance and as a best-effort grid alike -- only when
+    it is judged (for acceptance and as a best-effort grid alike) only when
     the rule holds in full. The written grid, its preview and the report all
     come from one of those two, so no partial grid can reach any of them.
     """
@@ -300,7 +300,7 @@ def _first_best(
 ) -> cw_select.Snapshot:
     """The best-effort state before the walk takes a step.
 
-    The pinned board, which every state the walk reaches holds -- unless the
+    The pinned board, which every state the walk reaches holds, unless the
     source left a partial run on it. That board breaks the one rule, and so does
     every board holding its letters until the run is finished, so none of them
     may be returned. The stand-in is an empty board naming each run as missed,
@@ -347,7 +347,7 @@ def search(
     `clock` is injected so a test can pin the deadline instead of waiting on
     one: a suite that depends on real elapsed time fails on a loaded machine.
     It is read once before the walk starts, and at most once per node
-    thereafter -- never per node under `--time-budget 0`.
+    thereafter, never per node under `--time-budget 0`.
 
     `kept` names the entries `bank` carries only because a --source declared
     them (`cw_source.StartSource.kept`). Under `--absorb-entries` every other
@@ -357,7 +357,7 @@ def search(
     the first (`cw_select`), or the best non-conforming one seen, with `missed`
     naming each constraint that state fails. An
     unsatisfiable request comes back with `steps == 0` and pre-flight's reasons
-    -- pre-flight refuses it before the search, not after the budget -- and
+    (pre-flight refuses it before the search, not after the budget), and
     with the start rows: an empty board, or the --source grid, never the pinned
     board. That board may be the very thing pre-flight refused, and a
     best-effort write must not put a grid that breaks the one rule on disk.

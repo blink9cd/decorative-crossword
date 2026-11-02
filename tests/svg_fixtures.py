@@ -2,17 +2,17 @@
 
 Named `*_fixtures.py` rather than `test_*.py` on purpose: the aggregator
 discovers `test_*.py` only, so this module carries no floor of its own and is
-never miscounted as a suite -- like every `*_fixtures.py` module here.
+never miscounted as a suite, like every `*_fixtures.py` module here.
 
-The wide fixture is deliberately NON-SQUARE and MULTI-THEME. A square,
+The wide fixture is deliberately non-square and multi-theme. A square,
 single-themed default hides two whole input shapes from every test built on
 it: a row/column transposition renders identically on a square grid, and a
 one-theme grid never exercises the tint cycle, the marker cycle, or the
 tie-break at a crossing where two entries carry different themes.
 
 The helpers below parse the render rather than string-matching it, because the
-failure this module's subject exists to prevent -- a malformed document that
-renders as a blank page -- is invisible to a substring check.
+failure this module's subject exists to prevent (a malformed document that
+renders as a blank page) is invisible to a substring check.
 """
 
 import re
@@ -25,7 +25,7 @@ import cw_svg
 
 #: The `--cell` default, taken from `cw_config.DEFAULTS`, the one place that
 #: owns it. A literal here would be a second copy of it, and the fixture's
-#: point is only that every suite renders at one known size -- not at one
+#: point is only that every suite renders at one known size, not at one
 #: particular number. `cast` because `DEFAULTS` is a `Mapping[str, object]`.
 DEFAULT_CELL = cast(int, cw_config.DEFAULTS["cell"])
 
@@ -53,7 +53,7 @@ WIDE_THEMES: Mapping[str, str] = {
     "water": "Water",
 }
 
-#: PLUMS (ACROSS) and PEAR (DOWN) cross at (0, 0) carrying DIFFERENT themes,
+#: PLUMS (ACROSS) and PEAR (DOWN) cross at (0, 0) carrying different themes,
 #: which is what makes the crossing tie-break observable at all.
 WIDE_ENTRY_THEMES: Mapping[str, str] = {
     "PLUMS": "fruit",
@@ -142,7 +142,7 @@ def _tag(local_name: str) -> str:
     """The namespace-qualified ElementTree tag for one SVG element name.
 
     Built from the subject's own namespace constant so the suites never restate
-    the URL -- restating it is how a namespace change passes a green suite.
+    the URL: restating it is how a namespace change passes a green suite.
     """
     return f"{{{cw_svg.SVG_NAMESPACE}}}{local_name}"
 
@@ -156,7 +156,7 @@ def layers(rendered: str) -> dict[str, ElementTree.Element]:
     """Every `<g>` in the document, keyed by its class attribute.
 
     A missing layer surfaces as a KeyError at the point of use, which is a loud
-    local failure -- so there is no lookup-failed branch here to leave uncovered.
+    local failure, so there is no lookup-failed branch here to leave uncovered.
     """
     return {str(group.get("class")): group for group in parse(rendered).iter(_tag("g"))}
 
@@ -202,10 +202,10 @@ def stylesheet(rendered: str) -> str:
 def rule_values(rendered: str, prop: str, *selectors: str) -> list[str]:
     """The value each selector declares for `prop`, read out of the stylesheet.
 
-    An ink that renders invisibly -- shading, marker or text in the paper
-    color, a grid rule the color of the cells it separates -- is present in
+    An ink that renders invisibly (shading, marker or text in the paper
+    color, a grid rule the color of the cells it separates) is present in
     the markup and absent from the picture, so it can only be caught by
-    comparing the VALUES the document declares.
+    comparing the values the document declares.
 
     `selectors` are given without their leading `.`, and may be descendant
     selectors ("cw-letters text"). A selector that declares no such property
@@ -213,7 +213,7 @@ def rule_values(rendered: str, prop: str, *selectors: str) -> list[str]:
     a loud failure.
 
     Scoped to `stylesheet(rendered)` rather than the whole document, so the
-    search really is over the stylesheet this docstring claims -- there is no
+    search really is over the stylesheet this docstring claims: there is no
     element text anywhere else that could satisfy the pattern by accident.
     """
     style = stylesheet(rendered)
@@ -230,8 +230,8 @@ def rule_values(rendered: str, prop: str, *selectors: str) -> list[str]:
 def page_rect(rendered: str) -> ElementTree.Element:
     """The rect that covers the whole viewBox: the page the document paints.
 
-    Found by GEOMETRY among the root's own children, not by a class name the
-    suite and the subject would otherwise share -- the question is what this
+    Found by geometry among the root's own children, not by a class name the
+    suite and the subject would otherwise share: the question is what this
     document actually paints behind everything it draws, and a name proves
     nothing about coverage. A document that paints no page has no such rect and
     this raises KeyError, which is the point: an assertion fed from here must
@@ -259,7 +259,7 @@ def cell_boxes(
 
     Rows and columns are recovered from the distinct y and x values the
     document itself carries, not from the emission order and not from the
-    geometry formula -- so a caller asking "which cell is this point in" gets
+    geometry formula, so a caller asking "which cell is this point in" gets
     an answer derived from the picture rather than from the code that drew it.
     """
     boxes = [
@@ -312,8 +312,8 @@ _ANCHORS = {
 def marker_cells(rendered: str, layer_class: str) -> dict[tuple[int, int], str]:
     """Which grid cell each marker sits inside, and what shape it is.
 
-    Located by containment of ONE ANCHOR POINT -- a circle's center, a rect's
-    center, a triangle's centroid -- in the cell boxes read out of the
+    Located by containment of one anchor point (a circle's center, a rect's
+    center, a triangle's centroid) in the cell boxes read out of the
     document, rather than by recomputing the marker's own offsets: the question
     a placement test has to answer is whether the marker landed on the right
     cell, not whether it reproduces one particular formula. A marker whose
@@ -322,7 +322,7 @@ def marker_cells(rendered: str, layer_class: str) -> dict[tuple[int, int], str]:
 
     The limit is worth stating, because it is easy to over-read: this locates
     the anchor, not the shape. A marker whose anchor stays home while its
-    outline bleeds into the neighboring cell is NOT caught here. Pinning the
+    outline bleeds into the neighboring cell is not caught here. Pinning the
     outline is the golden sample's job; this bounds gross misplacement only.
     """
     boxes = cell_boxes(rendered)

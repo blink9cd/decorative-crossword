@@ -1,7 +1,7 @@
 r"""cw_input: reads an input file's text, refusing what is not one, and splits its lines.
 
-Every file this tool reads -- a bank, a grid file, an excluded-terms list, a
-mask, a word or phrase list -- is read here, because a path on a command line
+Every file this tool reads (a bank, a grid file, an excluded-terms list, a
+mask, a word or phrase list) is read here, because a path on a command line
 can name a FIFO, a device or a terminal as easily as a file, and each is a
 hazard read as one: a FIFO waits for a writer that may never come, and a device
 such as `/dev/zero` never runs out, so the run would hang, or grow until memory
@@ -10,7 +10,7 @@ and only one no larger than `MAX_INPUT_BYTES`.
 
 `/dev/stdin` gets no rule of its own. It is judged by what it names, like any
 other path: a terminal or a pipe is not a regular file and is refused, while
-stdin redirected from a file IS that file, and is read and capped like one.
+stdin redirected from a file is that file, and is read and capped like one.
 
 The file's type and size are taken from the open descriptor, never from a
 second look at the path, which a file swapped in between the look and the open
@@ -44,8 +44,8 @@ from pathlib import Path
 _MIB = 1024 * 1024
 
 #: The largest input file this tool reads, in bytes. A ceiling far above any
-#: curated input -- a full dictionary word list is a few megabytes, a real bank
-#: far less -- whose job is to put an end to a read that would otherwise have
+#: curated input (a full dictionary word list is a few megabytes, a real bank
+#: far less), whose job is to put an end to a read that would otherwise have
 #: none.
 MAX_INPUT_BYTES = 32 * _MIB
 

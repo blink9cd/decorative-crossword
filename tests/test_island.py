@@ -3,7 +3,7 @@ only at a corner.
 
 An island is the one deliberate exception to "every filled cell belongs to an entry",
 so what qualifies is pinned narrowly: no letter above, below, left or right, and a
-letter of the ORIGINAL grid at a corner. The letter itself must read as a word on its
+letter of the original grid at a corner. The letter itself must read as a word on its
 own, and is the first of the operator's letters that no touching corner already shows.
 """
 
@@ -55,7 +55,7 @@ class TestFillIslands(unittest.TestCase):
 
     def test_only_letters_of_the_original_grid_make_a_cell_an_island(self) -> None:
         # (1, 3) touches the T at a corner. The cells around the letter placed
-        # there touch only THAT letter, so they stay blocked: islands never chain
+        # there touch only that letter, so they stay blocked: islands never chain
         # across empty space.
         rows, placed = cw_island.fill_islands(("CAT...", "......", "......"), _AIX)
         self.assertEqual(rows, ("CAT...", "...A..", "......"))
@@ -63,7 +63,7 @@ class TestFillIslands(unittest.TestCase):
 
     def test_two_neighboring_islands_never_both_take_a_letter(self) -> None:
         # (1, 1) and (1, 2) both qualify on the grid as given. Filling the first
-        # puts a letter beside the second, which is then no island -- otherwise
+        # puts a letter beside the second, which is then no island: otherwise
         # the two would spell a two-letter run no bank holds.
         rows, placed = cw_island.fill_islands(("C..C", "...."), _AIX)
         self.assertEqual(rows, ("C..C", ".A.."))
@@ -79,7 +79,7 @@ class TestFillIslands(unittest.TestCase):
 
     def test_a_placed_island_letter_counts_as_shown_to_a_later_island(self) -> None:
         # (1, 1) touches the corner A and takes I. (2, 2) touches the corner A
-        # below AND the I just placed, so it takes X.
+        # below and the I just placed, so it takes X.
         rows, placed = cw_island.fill_islands(("A...", "....", "....", "...A"), _AIX)
         self.assertEqual(rows, ("A...", ".I..", "..X.", "...A"))
         self.assertEqual(placed, ((1, 1, "I"), (2, 2, "X")))
@@ -106,12 +106,12 @@ class TestSpare(unittest.TestCase):
 
 
 class TestMaskedCells(unittest.TestCase):
-    """A masked cell is INELIGIBLE for an island, never a reason to refuse.
+    """A masked cell is ineligible for an island, never a reason to refuse.
 
     The other half of the pin/island asymmetry: an island is a choice the tool
     makes for itself, so a mask simply takes the cell off the table. A
     `--feature` pin in the same cell is refused instead, because that is
-    something the operator asked for -- `test_feature.py` owns that side.
+    something the operator asked for: `test_feature.py` owns that side.
     """
 
     def test_a_masked_cell_never_takes_an_island_letter(self) -> None:
@@ -179,7 +179,7 @@ class TestFixedLoneLetters(unittest.TestCase):
 class TestStrayLetters(unittest.TestCase):
     """Which lone letters of a grid this tool did not write are strays, not islands.
 
-    The READ side of the rule, so a corner counts only when an ENTRY covers it:
+    The read side of the rule, so a corner counts only when an entry covers it:
     the grid the letters were laid on is gone, and a letter walled in beside it
     may be a stray itself.
     """

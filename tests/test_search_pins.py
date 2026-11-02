@@ -91,7 +91,7 @@ class TestPinnedFeatures(unittest.TestCase):
     def test_several_anchors_are_the_starting_board_in_the_order_given(self) -> None:
         # A name-grid shape: one answer across the top, two hanging down from
         # its first and last letters. Every pin sits exactly where it was asked
-        # for, and the placement history opens with the pins in flag order --
+        # for, and the placement history opens with the pins in flag order:
         # they were applied, and `placed` is the record of what was applied.
         pins = (
             _pin("ALPHA", 0, 0, cw_grid.ACROSS),
@@ -150,7 +150,7 @@ class TestPinnedFeatures(unittest.TestCase):
 
     def test_every_bare_feature_is_placed_and_one_takes_the_seed(self) -> None:
         # With no pin the board starts empty, so the one unanchored placement
-        # the search makes must go to a feature -- any other opening word leaves
+        # the search makes must go to a feature: any other opening word leaves
         # the whole budget free to be spent on grids that cannot conform.
         outcome = cw_search.search(
             _themed_bank(),
@@ -199,7 +199,7 @@ class TestPinnedFeatures(unittest.TestCase):
         # One row, so nothing can cross and the only move on offer is JANET laid
         # over the pinned JANE. That leaves every pinned cell in place and still
         # removes JANE from the grid, because an entry is a whole run. The pinned
-        # board must be what comes back -- even though JANET would land inside a
+        # board must be what comes back, even though JANET would land inside a
         # window the pinned board misses, which is exactly what would make it the
         # "best" grid if a pin were held as cells rather than as an entry.
         outcome = cw_search.search(

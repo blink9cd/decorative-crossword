@@ -1,9 +1,9 @@
 """Grouped suite: pairs of placed entries that join into another word.
 
-Two shapes are pinned first because NEITHER is a crossing or a same-line
-neighbor: `WEB` meets `SITE` only at a corner and joins AGAINST reading order,
+Two shapes are pinned first because neither is a crossing or a same-line
+neighbor: `WEB` meets `SITE` only at a corner and joins against reading order,
 and `ATTA` meets `BOY` only at a corner. A finder that looked at crossings or
-at runs sharing a line would pass every other test here and miss both -- which
+at runs sharing a line would pass every other test here and miss both, which
 is why the pairs are looked for anywhere in the grid.
 
 Assertions on the report are whole-line and exact: the block is read by a

@@ -28,8 +28,8 @@ class TestPinnedPreflight(unittest.TestCase):
     def test_refuses_pins_that_form_a_run_the_bank_does_not_hold(self) -> None:
         # ALPHA directly over BRAVO: every column between them reads as a
         # two-letter run, and none of AB, LR, PA, HV or AO is an answer. The
-        # board the search would START from already breaks the one rule, so no
-        # amount of searching could repair it -- refused here, naming the run,
+        # board the search would start from already breaks the one rule, so no
+        # amount of searching could repair it: refused here, naming the run,
         # rather than returned as a search that silently found nothing.
         reasons = cw_search.preflight(
             _one_theme_bank(["ALPHA", "BRAVO"]),
@@ -95,8 +95,8 @@ class TestPinnedPreflight(unittest.TestCase):
         self.assertNotIn("'ALPHA'", reasons[0])
 
     def test_names_a_pinned_answer_the_bank_lacks_instead_of_raising(self) -> None:
-        # A caller reaching pre-flight without the CLI -- which would refuse
-        # this at exit 2 first -- must still get a reason, not a traceback from
+        # A caller reaching pre-flight without the CLI (which would refuse
+        # this at exit 2 first) must still get a reason, not a traceback from
         # building a board out of an answer no bank could hold.
         reasons = cw_search.preflight(
             _one_theme_bank(["ALPHA"]),
@@ -129,7 +129,7 @@ class TestFeatureAcceptance(unittest.TestCase):
         self.assertIn("'PIG'", missed[1])
 
     def test_a_pinned_answer_counts_only_at_its_own_cell(self) -> None:
-        # JANE is an entry in this grid, on row 0 -- and pinned to row 1. A pin
+        # JANE is an entry in this grid, on row 0, and pinned to row 1. A pin
         # is a position, so JANE elsewhere does not satisfy it: reading only
         # "is JANE a run anywhere" would accept a grid that dropped the pin.
         missed = cw_accept.missed_constraints(

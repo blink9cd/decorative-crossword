@@ -1,6 +1,6 @@
 """cw_commands: what a parsed `fill` command line actually does.
 
-The subcommands that READ a grid rather than search for one live beside it:
+The subcommands that read a grid rather than search for one live beside it:
 `preview` and `shade` in `cw_read_commands`, `gaps` in `cw_gaps_command`.
 
 Separate from the entry point from the first line of it, and not for size:
@@ -10,7 +10,7 @@ each option without following imports. Parsing lives there; everything a
 parsed namespace then causes lives here.
 
 **The exit-code policy is stated once, as `cw_command_base.REFUSALS`, rather
-than decided per call site**. Exit 2 is *the run could not happen* -- a schema
+than decided per call site**. Exit 2 is *the run could not happen*: a schema
 violation, an unreadable or unwritable path, a contradictory configuration.
 Exit 1 is *the run happened and did not succeed*, including the case where it
 could never have succeeded: an unsatisfiable request comes back from
@@ -20,8 +20,8 @@ reported like any other near miss.
 The one refusal that has to be picked out of the pre-flight reasons by hand is
 a featured answer the bank does not hold, which belongs on the exit-2 line
 because it is a flag naming something that does not exist. It is decided
-by calling `cw_accept.feature_missing_from_bank` -- the same function
-`preflight` calls -- rather than by matching on reason text, so the two cannot
+by calling `cw_accept.feature_missing_from_bank` (the same function
+`preflight` calls) rather than by matching on reason text, so the two cannot
 decide differently about the same bank.
 
 `fill --source` reads its grid through `cw_command_base.load_source`, the
@@ -75,7 +75,7 @@ _FILL_CELL = cast(int, cw_config.DEFAULTS["cell"])
 class _FillInputs:
     """Everything a `fill` run needs, once it is known the run can happen.
 
-    `dropped` travels with the bank because the bank is the SCREENED one: the
+    `dropped` travels with the bank because the bank is the screened one: the
     report has to name the removals separately or its headline count silently
     contradicts the operator's own input file.
 
@@ -88,8 +88,8 @@ class _FillInputs:
     holds; only the report reads it.
 
     `mask_file` is the `--mask` picture's path as the operator wrote it, None
-    without the flag; only the report reads it too. The picture's CELLS travel
-    on the config, where every decider reads them -- this carries the file's
+    without the flag; only the report reads it too. The picture's cells travel
+    on the config, where every decider reads them. This carries the file's
     name, which a config has no field for and no decider needs.
     """
 
@@ -110,10 +110,11 @@ def _config_from(
     A straight field-for-flag transcription with no defaulting of its own:
     every default was applied by the parser, from `cw_config.DEFAULTS`, so a
     second opinion here is the one way `--help` could come to disagree with
-    what the tool does.
+    what the tool does. An on/off flag is read through `bool()`: the parser
+    leaves it None when absent, so that `--help` prints no default for it.
 
-    Two fields are parsed rather than copied, each raising ConfigError -- exit
-    2 -- on a malformed value: every `--feature`, which `cw_feature.parse_feature`
+    Two fields are parsed rather than copied, each raising ConfigError (exit
+    2) on a malformed value: every `--feature`, which `cw_feature.parse_feature`
     turns into the typed pin, and `--island-letters`, which
     `cw_island.parse_island_letters` holds to the letters an island may carry.
     Parsing, not defaulting: an absent flag is still no features and no islands.
@@ -127,8 +128,8 @@ def _config_from(
 
     `mask` is the read `--mask` picture, or None. It reaches the size only
     through `cw_mask.requested_size`, which stands it in for a flag that was not
-    given and then leaves `resolve_size` to settle the size -- so a mask never
-    changes what a `--rows` the operator DID write means.
+    given and then leaves `resolve_size` to settle the size, so a mask never
+    changes what a `--rows` the operator did write means.
     Whether the picture matches the size that came out is
     `cw_config.validate_fill_config`'s question, asked next.
     """
@@ -155,7 +156,7 @@ def _config_from(
         ),
         start=cw_source.place_source(start, rows, cols),
         source_size=own,
-        absorb_entries=args.absorb_entries,
+        absorb_entries=bool(args.absorb_entries),
         max_two_letter=args.max_two_letter,
         prefer_symmetry=args.prefer_symmetry,
         masked=frozenset() if mask is None else mask.cells,
@@ -181,8 +182,8 @@ def _screen_bank(
 def _refuse_unusable_outputs(args: argparse.Namespace) -> None:
     """Raise ConfigError if `--out` or `--preview` is no place to write, or names a file this run reads.
 
-    Every file `fill` reads is handed over -- each `--bank` file and each
-    `--phrases` list, not only the first of each -- and the check runs before
+    Every file `fill` reads is handed over (each `--bank` file and each
+    `--phrases` list, not only the first of each) and the check runs before
     the first of them is read, so a run pointed back at its own input is
     refused as that, whatever the file holds.
     """
@@ -230,9 +231,9 @@ def _require_reachable_features(
 ) -> None:
     """Raise UsageError if any `--feature` names an answer the search cannot use.
 
-    The screen is checked FIRST, and gets its own message, because "the two
+    The screen is checked first, and gets its own message, because "the two
     flags contradict each other" is a different thing to tell the operator
-    than "that answer is not in your bank" -- and only they can say which of
+    than "that answer is not in your bank", and only they can say which of
     the two they meant. Features are checked in the order given, so the one
     named is the first the operator wrote.
 
@@ -306,7 +307,7 @@ def _prepare_fill(args: argparse.Namespace) -> _FillInputs:
     cw_config.validate_fill_config(config)
     cw_feature.validate_features(config)
     screened, dropped, terms = _screen_bank(args, bank)
-    # Judged as PLACED on the grid, not at its own size: a partial run at the
+    # Judged as placed on the grid, not at its own size: a partial run at the
     # source's edge may be completable into cells only a grown grid has.
     placed = None if document is None else replace(document, rows=config.start)
     start = _start_source(placed, screened, dropped, terms)
@@ -341,7 +342,7 @@ def _caption_settings(config: cw_config.FillConfig) -> dict[str, str]:
     # `--min-themes` of zero, which reads "0 theme(s) x N entry(s)". Rendering
     # a word like "none" there instead would make one line of the caption an
     # interpretation while the two above it stay literal, and would drop the
-    # per-theme number from the picture entirely -- and the caption exists so a
+    # per-theme number from the picture entirely, and the caption exists so a
     # reader can recover the settings, not so it can summarize them.
     return {
         "seed": str(config.seed),
@@ -374,7 +375,7 @@ def _with_islands(
 ) -> tuple[
     cw_search.SearchOutcome, tuple[cw_island.Island, ...], tuple[cw_island.Island, ...]
 ]:
-    """The outcome to WRITE, the islands laid on it, and the islands the floor declined.
+    """The outcome to write, the islands laid on it, and the islands the floor declined.
 
     Only on a conforming grid: islands decorate a grid the search chose, and on
     a best-effort miss they would move the very density figures the report's
@@ -391,7 +392,7 @@ def _with_islands(
     corner and islands cannot chain off it. The search places only whole runs,
     so each such letter is a `--source` letter the fill did not cross. The
     cells are read off the chosen grid, never off the source: a source letter
-    the fill DID cross is covered by an entry now, and qualifies a corner like
+    the fill did cross is covered by an entry now, and qualifies a corner like
     any other letter. Without a source nothing in the grid is lone, so nothing
     is fixed.
     """
@@ -419,11 +420,11 @@ def _fill(args: argparse.Namespace) -> int:
     outcome = cw_search.search(prepared.bank, prepared.config, kept=prepared.kept)
     written, islands, declined = _with_islands(outcome, prepared.config)
     document = cw_emit.build_document(written, prepared.bank, prepared.config)
-    # Rendered before ANYTHING is written, so that a refusal from the build or
+    # Rendered before anything is written, so that a refusal from the build or
     # the render leaves no grid on disk, since exit 2 writes no file. Neither
-    # is expected to refuse on this path -- the parse
+    # is expected to refuse on this path: the parse
     # boundary already screened the clues and the grid comes from a `Grid`, so
-    # nothing a real bank holds reaches either failure -- which is exactly why
+    # nothing a real bank holds reaches either failure, which is exactly why
     # the ordering needs stating: it is insurance whose absence would show up
     # only once something else changed.
     preview = (
@@ -436,7 +437,7 @@ def _fill(args: argparse.Namespace) -> int:
             _caption_settings(prepared.config),
             None,
             fixed=_source_letters(prepared.config.start),
-            empty_blocks=args.empty_blocks,
+            empty_blocks=bool(args.empty_blocks),
         )
     )
     # The grid is written before the preview: if the second write fails, what is
@@ -444,8 +445,8 @@ def _fill(args: argparse.Namespace) -> int:
     # picture nothing can turn back into a grid.
     #
     # Neither write is read back. Both go through `os.replace`, which either
-    # renames or raises, so the outcome is already observed at the call --
-    # a re-read would report what the NEXT reader sees, not whether this write
+    # renames or raises, so the outcome is already observed at the call:
+    # a re-read would report what the next reader sees, not whether this write
     # landed, and the two can only differ if something else is writing the
     # same path.
     cw_emit.write_document(args.out, document)

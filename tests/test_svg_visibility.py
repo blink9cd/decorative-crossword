@@ -1,4 +1,4 @@
-"""Tests that the render is VISIBLE and in the RIGHT PLACE, not merely present.
+"""Tests that the render is visible and in the right place, not merely present.
 
 Kept apart from `test_svg.py` because the two ask different questions: that file
 asks whether the document has the right parts, this one asks whether those parts
@@ -6,18 +6,18 @@ landed on the right cell and can actually be seen, and the two questions fail fo
 different reasons.
 
 The distinction is not academic. A marker counted, shaped correctly and drawn
-on the wrong cell reports the wrong grouping -- worse than no marker, because
+on the wrong cell reports the wrong grouping, which is worse than no marker, because
 the picture still looks finished. Any of the render's inks set to the paper
-color -- the shading, the marker, or the shared TEXT fill that paints the
-letters, the legend labels and the whole caption at once -- leaves the
+color (the shading, the marker, or the shared text fill that paints the
+letters, the legend labels and the whole caption at once) leaves the
 contract satisfied in the markup and erased on screen. None of it
 is visible to a test that counts elements or compares tags.
 
-What the placement tests here do NOT cover, stated so the coverage is not
+What the placement tests here do not cover, stated so the coverage is not
 over-read: they locate one anchor point per marker, not the marker's outline.
 A marker whose anchor stays in its own cell while its shape bleeds into the
-neighbor passes. That bound is deliberate -- pinning the outline is the golden
-sample's job -- and it is why the tests are named for the anchor.
+neighbor passes. That bound is deliberate (pinning the outline is the golden
+sample's job), and it is why the tests are named for the anchor.
 """
 
 import re
@@ -29,7 +29,7 @@ from tests import svg_fixtures as fixtures
 #: What a fill has to look like to be a color rather than a keyword the viewer
 #: resolves for itself. `fill:none` and `fill:transparent` are both legal CSS
 #: and both leave the page unpainted, so "the rule exists" is not the assertion
-#: that matters -- "the rule paints something" is.
+#: that matters: "the rule paints something" is.
 _COLOR_PATTERN = re.compile(r"^#[0-9a-f]{6}$")
 
 
@@ -61,7 +61,7 @@ class TestMarkerPlacement(unittest.TestCase):
         # mapping must be identical at any cell size; an inset that behaved
         # differently at one size would move an anchor into another cell.
         #
-        # ANCHOR, not outline. A marker can bleed well into its neighbor, or
+        # Anchor, not outline. A marker can bleed well into its neighbor, or
         # sit on top of the letter, without moving its anchor: the admissible
         # inset band this leaves open is roughly (-0.073, 0.89) against a
         # shipped 0.08. The golden sample is what pins the exact value.
@@ -76,7 +76,7 @@ class TestMarkerPlacement(unittest.TestCase):
     def test_shading_a_cell_does_not_move_its_marker(self) -> None:
         # Every PEAR cell is themed, so shading them exercises the composition
         # the contract requires: the shading is the fill, and the marker
-        # still draws over it -- in the same place it drew before.
+        # still draws over it, in the same place it drew before.
         rendered = cw_svg.render_svg(fixtures.wide_request(feature="PEAR"))
         self.assertEqual(
             fixtures.marker_cells(rendered, cw_svg.MARKER_LAYER),
@@ -97,7 +97,7 @@ class TestColorVisibility(unittest.TestCase):
     """Every ink the render depends on is distinguishable from what it sits on.
 
     "Every ink" is a claim, so it is enumerated: the cell fills (plain, block,
-    shading, each tint), the marker ink in both layers, the SHARED TEXT FILL
+    shading, each tint), the marker ink in both layers, the shared text fill
     that paints the letters, the legend labels and the caption together, and
     the stroke that rules the grid. Each is read back out of the stylesheet and
     compared with the surface it is actually drawn on.
@@ -126,16 +126,16 @@ class TestColorVisibility(unittest.TestCase):
         BLOCK_CLASS is deliberately absent, and shares the ink of the marks
         drawn elsewhere on purpose. For two of the three consumers the reason
         is that the collision cannot occur: a blocked cell is in no run, so it
-        carries no theme, no marker and no letter. For the THIRD -- the grid
-        rule -- the collision is real and intended. `.cw-block` fill and the
+        carries no theme, no marker and no letter. For the third (the grid
+        rule), the collision is real and intended. `.cw-block` fill and the
         cell stroke are both `_INK`, so a blocked cell's border merges into
         the cell. That is the crossword look, not a defect, and including
         BLOCK_CLASS here would fail the rule test for drawing it.
 
         PAGE_CLASS is absent for a different reason: it is not a cell fill at
         all. Every cell in the grid draws its own opaque rect over the page, so
-        nothing drawn INSIDE the grid is ever read against it. What IS read
-        against it -- the legend and the caption -- has its own test below.
+        nothing drawn inside the grid is ever read against it. What is read
+        against it (the legend and the caption) has its own test below.
         """
         return self._values(
             rendered,
@@ -180,7 +180,7 @@ class TestColorVisibility(unittest.TestCase):
     def test_marker_ink_differs_from_every_fill_it_can_be_drawn_on(self) -> None:
         # The marker is the channel that has to survive a monochrome print and
         # a color-vision difference. Ink matching a fill it
-        # is drawn over erases that channel on some cells and not others --
+        # is drawn over erases that channel on some cells and not others,
         # the grouping silently half-reported.
         rendered = cw_svg.render_svg(fixtures.wide_request(feature="PEAR"))
         (ink,) = self._values(rendered, "fill", cw_svg.MARKER_LAYER)
@@ -196,15 +196,15 @@ class TestColorVisibility(unittest.TestCase):
         self.assertEqual(grid, legend)
 
     def test_legend_marker_ink_differs_from_the_swatch_it_sits_on(self) -> None:
-        # A legend row's marker is drawn INSIDE its tint swatch, so the tints
+        # A legend row's marker is drawn inside its tint swatch, so the tints
         # are the surfaces that one has to stay legible against.
         rendered = cw_svg.render_svg(fixtures.wide_request())
         (ink,) = self._values(rendered, "fill", cw_svg.LEGEND_MARKER_LAYER)
         self.assertNotIn(ink, self._values(rendered, "fill", *self._tint_classes()))
 
     def test_letter_ink_differs_from_every_cell_it_can_sit_on(self) -> None:
-        # ONE fill paints the letters, and it is shared with the legend labels
-        # and the whole caption -- so setting it to the paper color erases
+        # One fill paints the letters, and it is shared with the legend labels
+        # and the whole caption, so setting it to the paper color erases
         # more of the picture than the shading and the marker together, with
         # every element count, every tag list and every parsed text node
         # completely intact.
@@ -215,8 +215,8 @@ class TestColorVisibility(unittest.TestCase):
     def test_the_document_paints_its_own_page(self) -> None:
         # The legend and the caption are drawn outside the grid, so the only
         # surface behind them is whatever the document itself paints across the
-        # whole canvas. If it paints nothing, that surface is the viewer's --
-        # white in a light-mode browser, near-black in a dark one -- and the
+        # whole canvas. If it paints nothing, that surface is the viewer's
+        # (white in a light-mode browser, near-black in a dark one), and the
         # ink comparison below has nothing to compare against.
         for description, request in (
             ("wide, featured, with settings", fixtures.wide_request(feature="PEAR")),
@@ -232,8 +232,8 @@ class TestColorVisibility(unittest.TestCase):
 
     def test_legend_and_caption_ink_differ_from_the_page(self) -> None:
         # These two sit outside the grid, on the page the document paints. That
-        # color is read back OUT OF THE RENDER -- the rect covering the whole
-        # viewBox, and the fill its class declares -- rather than borrowed from
+        # color is read back out of the render (the rect covering the whole
+        # viewBox, and the fill its class declares), rather than borrowed from
         # the plain cell fill, which is a color the page is under no
         # obligation to share and which the document paints nowhere near them.
         rendered = cw_svg.render_svg(

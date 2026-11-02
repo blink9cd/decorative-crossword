@@ -5,14 +5,14 @@ one this project never wrote, so it carries the `# fuzz-target` marker, paired
 with `test_fuzz_find_pairs` below.
 
 **The property re-derives the answer independently.** Every ordered pair of
-runs found by `property_strategies.scan_runs` -- a regex reading of the grid,
-not `cw_grid`'s accumulator -- whose join is in the vocabulary must be reported,
+runs found by `property_strategies.scan_runs` (a regex reading of the grid,
+not `cw_grid`'s accumulator) whose join is in the vocabulary must be reported,
 and nothing else may be. Pairs are compared as the two cell sets plus the joined
-text, which makes a join that reads the same either way ONE expectation rather
+text, which makes a join that reads the same either way one expectation rather
 than two without copying the subject's tie-break; a line reported twice is a
 failure of its own.
 
-The vocabulary is drawn mostly FROM the grid's own joins, because a random word
+The vocabulary is drawn mostly from the grid's own joins, because a random word
 almost never equals a join, and a property whose every example finds nothing
 asserts nothing.
 

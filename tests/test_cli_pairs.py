@@ -2,7 +2,7 @@
 
 What only a real run can settle: that `fill` and `gaps` both take the list, what
 reaches stdout, and which faults are exit 2 and leave no grid behind. And the
-one promise the block makes that no unit test can: the grid a run WRITES is the
+one promise the block makes that no unit test can: the grid a run writes is the
 same with a phrase list as without one, because a pair is reported and never
 scored.
 
@@ -130,7 +130,7 @@ class TestFillPhrases(cli_fixtures.QuietCase):
 
     def test_the_grid_written_is_the_same_with_phrases_as_without(self) -> None:
         # Every ordered join of every bank answer is offered, so whatever grid
-        # the search keeps holds pairs -- a list that matched nothing would
+        # the search keeps holds pairs: a list that matched nothing would
         # leave the two runs identical for no reason worth pinning.
         answers = [entry["answer"] for entry in cli_fixtures.ENTRIES]
         joins = "".join(f"{a}{b}\n" for a in answers for b in answers if a != b)

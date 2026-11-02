@@ -1,7 +1,7 @@
 """Tests for `fill --max-two-letter`: the flag reaches acceptance, end to end.
 
-Driven through `main` because what these cases prove is the WIRING -- parser, to
-`FillConfig`, to `cw_accept.missed_constraints` -- and each link of that chain is
+Driven through `main` because what these cases prove is the wiring (parser, to
+`FillConfig`, to `cw_accept.missed_constraints`), and each link of that chain is
 tested on its own elsewhere (`test_search_parts.py`, `test_config.py`). A flag that
 parsed but never reached the config would pass every one of those, and a search
 would go on accepting grids the caller had capped.

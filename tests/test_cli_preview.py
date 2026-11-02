@@ -1,7 +1,7 @@
 """Tests for the CLI's screen, its `preview` subcommand, and the single renderer.
 
 Organized along the seam the CLI draws: `fill` searches, `preview` draws, and
-the claim that binds them is that there is only ONE drawing implementation
+the claim that binds them is that there is only one drawing implementation
 behind both.
 """
 
@@ -18,7 +18,7 @@ from tests import cli_fixtures, svg_fixtures
 
 #: Layers whose content is a function of the grid alone. `fill --preview` and
 #: `preview` must produce these identically for one grid filled without
-#: `--source`: then the caption's configuration tier is the ONLY thing the two
+#: `--source`: then the caption's configuration tier is the only thing the two
 #: modes are allowed to differ by.
 _GRID_LAYERS = (
     cw_svg.CELL_LAYER,
@@ -45,13 +45,13 @@ class TestExcludedTerms(cli_fixtures.QuietCase):
 
     def test_the_screen_changes_which_answers_get_placed(self) -> None:
         # The test above passes for an answer the search never reached anyway.
-        # This one bars the answer THIS seed actually places, so a screen that
+        # This one bars the answer this seed actually places, so a screen that
         # dropped nothing would leave the grid unchanged and fail here.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
             self.assertEqual(decorative_crossword.main(space.fill()), 0)
             # AMBER is a DOWN entry here, so "is it in the grid" is a run
-            # lookup rather than a substring search on the joined rows -- the
+            # lookup rather than a substring search on the joined rows, the
             # search this suite would otherwise silently always pass.
             self.assertIsNotNone(cw_grid.find_answer(space.rows(), "AMBER"))
             terms = space.excluded("amber")
@@ -307,7 +307,7 @@ class TestPreviewSubcommand(cli_fixtures.QuietCase):
             with self.subTest(cell), tempfile.TemporaryDirectory() as folder:
                 space = cli_fixtures.Workspace(folder)
                 self._generated(space)
-                # QuietCase.setUp runs once per test METHOD, so self.errors
+                # QuietCase.setUp runs once per test method, so self.errors
                 # holds every earlier iteration's message too: without this
                 # mark, the second iteration's flag assertion is satisfied by
                 # the first one's output and proves nothing about "-5".
@@ -393,7 +393,7 @@ class TestOneRenderer(cli_fixtures.QuietCase):
     """One renderer behind `fill --preview` and `preview`, not a second renderer."""
 
     def _both(self, folder: str) -> tuple[str, str]:
-        """Render one grid twice -- once inside `fill`, once through `preview`."""
+        """Render one grid twice: once inside `fill`, once through `preview`."""
         space = cli_fixtures.Workspace(folder)
         self.assertEqual(
             decorative_crossword.main(space.fill("--preview", str(space.svg))), 0
@@ -430,12 +430,12 @@ class TestOneRenderer(cli_fixtures.QuietCase):
 
     def test_the_configuration_tier_stamps_the_values_it_was_given(self) -> None:
         # This tier is the one thing that must not carry a number nothing
-        # checked. Asserting only the seed would leave the density range DRAWN
-        # BUT UNREAD: swapping min and max would stamp "requested blocked:
+        # checked. Asserting only the seed would leave the density range drawn
+        # but unread: swapping min and max would stamp "requested blocked:
         # 95.0-0.0%" and still pass.
         #
-        # Every value below is distinct and asymmetric on purpose -- 35 vs 80,
-        # 2 vs 1 -- so neither pair can be transposed without the assertion
+        # Every value below is distinct and asymmetric on purpose (35 vs 80,
+        # 2 vs 1), so neither pair can be transposed without the assertion
         # seeing it.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder)
@@ -453,7 +453,7 @@ class TestOneRenderer(cli_fixtures.QuietCase):
 
     def test_neither_handler_draws_anything_of_its_own(self) -> None:
         # The provenance claim behind the two tests above: with the single
-        # renderer replaced, BOTH outputs become the replacement entirely --
+        # renderer replaced, both outputs become the replacement entirely,
         # so neither handler can be contributing markup beside it.
         sentinel = "<svg-stand-in/>\n"
         with (

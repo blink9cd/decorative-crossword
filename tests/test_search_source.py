@@ -3,7 +3,7 @@
 A source is the board the walk starts from: every letter stays, every entry is
 held as its exact run, and a refusal writes the source rather than an empty
 board. A lone letter the source brings must end in an entry or as an island.
-A partial run -- one the bank answers only by a longer word -- must be
+A partial run (one the bank answers only by a longer word) must be
 completed, and a source holding one is never itself written: it breaks the
 one rule, so a refusal or an unfinished walk writes an empty board instead.
 """
@@ -163,8 +163,8 @@ class TestPreflightUnderASource(unittest.TestCase):
 
     def test_a_source_exactly_at_the_blocked_floor_is_not_refused(self) -> None:
         # ALPHA across a 4x5 blocks 15 of 20 cells: exactly 75.0%. Only a board
-        # already UNDER --min-blocked is refused; one at the floor is inside the
-        # window, and any floor above it refuses -- 75.1 is just the probe.
+        # already under --min-blocked is refused; one at the floor is inside the
+        # window, and any floor above it refuses: 75.1 is just the probe.
         start = ("ALPHA", ".....", ".....", ".....")
         self.assertEqual(cw_grid.blocked_percent(start), 75.0)
         at_floor = _config(rows=4, cols=5, start=start, min_blocked=75.0)
@@ -174,7 +174,7 @@ class TestPreflightUnderASource(unittest.TestCase):
 
     def test_a_source_on_a_floor_floats_miss_is_not_refused(self) -> None:
         # 29 of 50 cells is exactly 58%, but 29 / 50 * 100 is 57.99999999999999,
-        # which a float comparison put under a 58.0 floor -- and refused with
+        # which a float comparison put under a 58.0 floor, and refused with
         # "already 58.0% blocked, under the requested 58.0% floor".
         start = ("ABCDEFGHIJ", "." * 10, "KLMNOPQRS.", "." * 10, "UV" + "." * 8)
         bank = _bank(["ABCDEFGHIJ", "KLMNOPQRS", "UV"])
@@ -257,7 +257,7 @@ class TestPartialSourceRuns(unittest.TestCase):
         self.assertIn(_run(0, 0, "ALPHA"), cw_grid.runs_from_rows(outcome.rows))
 
     def test_a_partial_run_is_no_detour_and_spends_no_detour_budget(self) -> None:
-        # A detour is a break the walk MADE; a source's half-written word is not
+        # A detour is a break the walk made; a source's half-written word is not
         # one, and the walk stays free around it. With no detour budget at all,
         # a board standing on ALPH must still be expanded: counted as a detour,
         # the very first board would be cut and nothing would ever finish it.

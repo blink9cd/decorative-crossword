@@ -1,7 +1,7 @@
 """cw_board: the board a `fill` run starts from, and the runs it must keep.
 
-Every search starts from one board -- the `--source` rows, or an empty grid,
-with each pin applied over it -- and must keep some runs of that board exactly
+Every search starts from one board (the `--source` rows, or an empty grid,
+with each pin applied over it) and must keep some runs of that board exactly
 as they are. Both are stated here once, because more than one module needs
 them and must not build them two ways: `cw_accept`'s pre-flight judges the
 board against the one rule, `cw_search` walks outward from it, and a refusal
@@ -38,7 +38,7 @@ def pinned_placements(config: cw_config.FillConfig) -> tuple[cw_place.Placement,
 def start_rows(config: cw_config.FillConfig) -> tuple[str, ...]:
     """The grid a run begins from before any pin: the --source rows, or an empty board.
 
-    PUBLIC because a refusal writes it: under --source the operator's own grid,
+    Public because a refusal writes it: under --source the operator's own grid,
     which the source checks made legal, never the pinned board that may not be.
     A source still holding a partial run is the one exception, and `cw_search`
     writes an empty board for it instead: that run breaks the one rule.
@@ -52,14 +52,14 @@ def pinned_board(config: cw_config.FillConfig) -> cw_grid.Grid:
     """The grid every search under `config` starts from: each pin, applied.
 
     Empty when nothing is pinned and no source was given. Under --source the
-    board starts from the source, and each pin is applied over it. PUBLIC
+    board starts from the source, and each pin is applied over it. Public
     because two modules need this board and must not build it two ways:
     `cw_accept.preflight` judges it against the one rule, and `cw_search`
     walks outward from it.
 
     Requires a config that passed `cw_config.validate_fill_config` and
     `cw_feature.validate_features`. A pin that runs off the grid or contradicts
-    another raises ValueError out of `cw_place.apply_placement`'s own guard --
+    another raises ValueError out of `cw_place.apply_placement`'s own guard,
     which that validation makes unreachable, so reaching it means a caller
     skipped the check.
     """
@@ -76,7 +76,7 @@ def pinned_board(config: cw_config.FillConfig) -> cw_grid.Grid:
 def pinned_runs(config: cw_config.FillConfig) -> tuple[cw_grid.Run, ...]:
     """The run each pin must stay, exactly: its answer at its anchor, in flag order.
 
-    PUBLIC because a pin is kept by holding this RUN, not merely its cells: a
+    Public because a pin is kept by holding this run, not merely its cells: a
     placement can leave every pinned cell alone and still end the pin, by
     filling the cell just past it and turning JANE into JANET. So
     `cw_accept.missed_constraints` accepts a pinned feature only as this exact
@@ -99,7 +99,7 @@ def growable_runs(
 ) -> tuple[cw_grid.Run, ...]:
     """Every --source entry `--absorb-entries` lets grow, in scan order; none without it.
 
-    An entry the BANK holds: a run `allowed`, the search bank, spells that is
+    An entry the bank holds: a run `allowed`, the search bank, spells that is
     not in `kept`, the entries carried in only because the source's clues
     declare them. A kept entry never grows, because absorbing it would retire
     the one thing vouching for it and leave it as vocabulary from outside the
@@ -125,13 +125,13 @@ def held_runs(
 ) -> tuple[cw_grid.Run, ...]:
     """Every run the walk must keep exactly: each --source entry not growable, then each pin.
 
-    A source ENTRY is a run `allowed` -- the search bank -- spells: a bank
+    A source entry is a run `allowed` (the search bank) spells: a bank
     answer, or one kept from the source. A partial run spells none, and the fill
     must complete it, which holding it exactly would forbid; so it is left out
     (`cw_reach.partial_runs`), and only the rule and its letters bind it. So is
     an entry `growable_runs` lets grow, which the rule alone binds as well.
 
-    Every PIN is held, whatever the flags say: a pin is where the operator put
+    Every pin is held, whatever the flags say: a pin is where the operator put
     an answer, and JANET over a pinned JANE is the fault this hold exists for.
 
     Separate from `pinned_runs`, which `cw_accept`'s feature check walks in step

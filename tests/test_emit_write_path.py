@@ -11,6 +11,11 @@ Two properties of the PATH rather than of the text, each driven through
 * **An output name near the filesystem's limit** is written like any other,
   although the staging file beside it would carry a longer name.
 
+The link case's branch is then driven once more on every host, with the link
+reported by an injected `os.lstat`: Windows skips the cases above, because
+making a real link there needs a privilege most accounts lack, yet a link can
+still sit at the output there, and the writer reads it the same way.
+
 The staging name's bound is then swept over every length a file name may have,
 through `cw_emit._stage` on a real directory, so the filesystem judges each
 name as well as the byte count does. Neither is enough alone: an APFS volume
@@ -34,6 +39,7 @@ import stat
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import cw_emit
 import decorative_crossword
@@ -88,7 +94,7 @@ def _name_of_bytes(size: int, character: str) -> str:
 def _longest_fitting(name: str, token: str) -> str:
     """The longest leading part of `name` a staging name holding `token` can carry.
 
-    The slow, obvious way -- one character off the end until it fits -- kept
+    The slow, obvious way (one character off the end until it fits) kept
     here as the oracle the writer's own answer is compared with.
     """
     kept = name
@@ -119,7 +125,7 @@ class TestALinkAtTheOutput(_PreviewCase):
     """A symbolic link at `--out` is replaced by a new file, and its target kept."""
 
     def setUp(self) -> None:
-        """Pin the umask for this case, restoring the process's own afterwards."""
+        """Pin the umask for this case, restoring the process's own afterward."""
         super().setUp()
         self.addCleanup(os.umask, os.umask(_UMASK))
 
@@ -134,8 +140,8 @@ class TestALinkAtTheOutput(_PreviewCase):
     ) -> None:
         """The planted case: the output must not take its mode from the target.
 
-        The link's own bits are no answer either -- they describe the link,
-        not a file -- so the output has to come back exactly as a file written
+        The link's own bits are no answer either (they describe the link,
+        not a file), so the output has to come back exactly as a file written
         there for the first time would.
         """
         target = self.root / "target.svg"
@@ -161,6 +167,31 @@ class TestALinkAtTheOutput(_PreviewCase):
         self.assertFalse(out.is_symlink())
         self.assertEqual(_mode_of(out), self.plain_mode())
         self.assertFalse(missing.exists())
+
+
+class TestALinkAsTheWriterReadsIt(unittest.TestCase):
+    """`cw_emit._existing_mode` keeps no bits from whatever `os.lstat` calls a link."""
+
+    def setUp(self) -> None:
+        """A real file at the output, carrying `_TARGET_MODE`, for `os.lstat` to read."""
+        folder = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        self.out = folder / "preview.svg"
+        self.out.write_text("target\n", encoding="utf-8", newline="\n")
+        os.chmod(self.out, _TARGET_MODE)
+
+    def test_a_link_reported_by_lstat_keeps_no_mode(self) -> None:
+        """The file's own status, retyped as a link, must yield no mode to carry over."""
+        status = os.lstat(self.out)
+        linked = os.stat_result(
+            (stat.S_IFLNK | stat.S_IMODE(status.st_mode), *status[1:])
+        )
+        with mock.patch.object(cw_emit.os, "lstat", return_value=linked) as lstat:
+            self.assertIsNone(cw_emit._existing_mode(self.out))
+        lstat.assert_called_once_with(self.out)
+
+    def test_the_same_file_unretyped_keeps_its_mode(self) -> None:
+        """The control: the file `os.lstat` really reports keeps its own bits."""
+        self.assertEqual(cw_emit._existing_mode(self.out), _mode_of(self.out))
 
 
 class TestALongOutputName(_PreviewCase):
@@ -230,7 +261,7 @@ class TestStagingName(unittest.TestCase):
 
         A name holding one opens today wherever the filesystem takes any bytes,
         so it has to be measured as the bytes the open sends rather than as
-        UTF-8 proper, which refuses the surrogate -- and, fitting, it is left
+        UTF-8 proper, which refuses the surrogate, and, fitting, it is left
         exactly as it is.
         """
         name = "caf\udce9.svg"

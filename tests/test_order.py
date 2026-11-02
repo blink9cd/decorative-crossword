@@ -22,7 +22,7 @@ from tests.search_fixtures import themed_bank as _themed_bank
 
 
 class TestOrderKey(unittest.TestCase):
-    """Ordering is a pure function of seed and token -- never builtin hash()."""
+    """Ordering is a pure function of seed and token, never builtin hash()."""
 
     def test_is_stable_across_calls(self) -> None:
         self.assertEqual(cw_order.order_key(7, "CAT"), cw_order.order_key(7, "CAT"))
@@ -53,7 +53,7 @@ class TestCenteredStart(unittest.TestCase):
     def test_centers_an_across_seed(self) -> None:
         # 7x11, length 5: row (7-1)//2 = 3, col (11-5)//2 = 3. A non-square grid
         # and a non-trivial length on purpose, so arithmetic replaced by a
-        # constant -- 0, or either dimension's midpoint -- cannot pass.
+        # constant (0, or either dimension's midpoint) cannot pass.
         self.assertEqual(cw_order._centered_start(7, 11, 5, cw_grid.ACROSS), (3, 3))
 
     def test_centers_a_down_seed(self) -> None:
@@ -62,7 +62,7 @@ class TestCenteredStart(unittest.TestCase):
 
     def test_centers_an_across_seed_on_an_even_grid(self) -> None:
         # Odd dimensions cannot see the `- 1` at all: (7-1)//2 and 7//2 are
-        # both 3. On 8 rows they part company -- (8-1)//2 is 3, 8//2 is 4 --
+        # both 3. On 8 rows they part company: (8-1)//2 is 3 and 8//2 is 4,
         # so only an even grid pins which of the two the code computes.
         self.assertEqual(cw_order._centered_start(8, 10, 4, cw_grid.ACROSS), (3, 3))
 
@@ -72,7 +72,7 @@ class TestCenteredStart(unittest.TestCase):
 
 
 class TestNewCellCount(unittest.TestCase):
-    """Scoring counts the cells a placement would ADD, not the ones it covers."""
+    """Scoring counts the cells a placement would add, not the ones it covers."""
 
     def test_counts_only_the_cells_a_placement_would_newly_fill(self) -> None:
         placement = cw_place.Placement("COW", 0, 0, cw_grid.DOWN)
@@ -92,7 +92,7 @@ class TestSortKey(unittest.TestCase):
         """Two placements, in the order their seeded tie-break key alone puts them.
 
         Returning them in that order is what makes the assertions decisive: the
-        candidate the tie-break would put LAST is the one given the winning
+        candidate the tie-break would put last is the one given the winning
         score, so a sort that dropped a scoring term flips the result rather
         than passing half the time on the hash's say-so.
         """
@@ -115,7 +115,7 @@ class TestSortKey(unittest.TestCase):
         )
 
     def test_prefers_a_bare_feature_over_every_other_ranking(self) -> None:
-        # The feature fills fewer cells AND its theme is already satisfied, and
+        # The feature fills fewer cells and its theme is already satisfied, and
         # it still sorts first: the rank leads both, it is not a later tie-break.
         first, second = self._by_tiebreak()
         self.assertLess(
@@ -187,7 +187,7 @@ class TestAWalkBreakOffersOnlyItsRepairs(unittest.TestCase):
 
     The walk stood on that board only because an unused answer could still be laid
     over the break, so a repair is always there to try, and every other placement
-    opens a subtree that must repair the break anyway -- on a bank rich in short
+    opens a subtree that must repair the break anyway: on a bank rich in short
     answers, one the walk never climbed back out of.
     """
 

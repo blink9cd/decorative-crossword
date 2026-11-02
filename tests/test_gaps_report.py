@@ -8,12 +8,12 @@ both borrowed rather than re-decided:
   candidates derived from them.
 - **A count that is not accounted for is a count that misleads.** The headline
   splits the blocked cells it counts into tiers, and `TestAccounting` pins, with
-  a mask and without, that those tiers add up to the blocked count it prints --
+  a mask and without, that those tiers add up to the blocked count it prints,
   so a reader can act on the headline instead of recounting the grid.
 
 The report's own reason for existing is a third rule, and it is the one worth
 testing hardest: a wall of coordinates is not a decision. `TestGrouping` pins
-that two gaps wanting the SAME pattern share one line, because the operator's
+that two gaps wanting the same pattern share one line, because the operator's
 unit of work is the word they have to think of, not the square it lands in.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s
@@ -31,7 +31,7 @@ import cw_gaps_summary
 
 
 #: 16 cells, 7 of them blocked. One gap absorbs HAY, one is an orphan, and the
-#: other five are pure additions -- one of each tier the report separates.
+#: other five are pure additions: one of each tier the report separates.
 GRID = ("HAY.", "E...", "D...", "GIRL")
 
 #: Pays the `Y?` demand at (1, 2) with the letter O, and nothing else.
@@ -41,15 +41,15 @@ VOCABULARY = frozenset({"YO"})
 #: line should print: the report shows some and says how many it held back.
 MANY_FILLS = frozenset({"YO", "YE", "YA", "YU"})
 
-#: Pays `Y?` as above, and pays each of (1, 1)'s two demands separately -- EX
-#: for `E?`, AM for `A?` -- with no letter paying both. That gap is a CROSSING.
+#: Pays `Y?` as above, and pays each of (1, 1)'s two demands separately (EX
+#: for `E?`, AM for `A?`), with no letter paying both. That gap is a crossing.
 CROSSING_VOCABULARY = frozenset({"YO", "EX", "AM"})
 
 #: Two of GRID's seven blocked cells, (0, 3) and (1, 3), drawn out by a mask.
 #: The headline then counts the other five, over the fourteen cells left.
 TWO_MASKED = frozenset({(0, 3), (1, 3)})
 
-#: Three gaps -- (0, 1) across, (1, 0) and (1, 3) down -- each demanding the
+#: Three gaps, at (0, 1) across and at (1, 0) and (1, 3) down, each demanding the
 #: pattern `A?` and nothing else. The two directions share one ask, so the
 #: report has a genuine chance to print one line or three.
 SHARED_PATTERN = ("A..A", "....")
@@ -107,7 +107,7 @@ class TestHeadline(unittest.TestCase):
         self.assertIn("7 of 16 cells blocked, 43.8%", _render())
 
     def test_counts_masked_cells_apart_from_the_blocked_ones(self) -> None:
-        # Masked, the two cells are still blocked -- the grid did not change --
+        # Masked, the two cells are still blocked (the grid did not change),
         # but they are no longer cells the operator could ever fill, so the
         # headline takes its count and percentage over what remains, 5 of 14,
         # and one line of their own, outside the indented tier list, says where
@@ -216,8 +216,8 @@ class TestOneWordingPerTier(unittest.TestCase):
 
     Read off one report that prints every block, so a heading worded apart from
     its label fails here however either is built: over `CROSSING_VOCABULARY`
-    there is a ready gap, gaps needing one and two new answers, and -- once
-    asked for -- the absorbing gap.
+    there is a ready gap, gaps needing one and two new answers, and (once
+    asked for) the absorbing gap.
     """
 
     def setUp(self) -> None:
@@ -347,7 +347,7 @@ class TestDensityAdvice(unittest.TestCase):
     def test_the_suggested_ceiling_accepts_the_denser_grid(self) -> None:
         # Derived, not guessed: `fill` accepts at `blocked <= max_blocked`, so
         # a ceiling at the denser grid's own figure accepts that grid and
-        # rejects today's. Rounded UP to one decimal, because a ceiling rounded
+        # rejects today's. Rounded up to one decimal, because a ceiling rounded
         # down would refuse the very grid it was printed to ask for.
         ceiling = cw_gaps_summary.ceiling_for(blocked=7, total=16)
         self.assertGreaterEqual(ceiling, 6 / 16 * 100)
@@ -357,8 +357,8 @@ class TestDensityAdvice(unittest.TestCase):
         self.assertNotIn("--max-blocked", _render(rows=("AB", "CD")))
 
     def test_one_gap_short_of_29_of_100_reads_28_percent(self) -> None:
-        # 28 of 100 is exactly 28.0%. The float 28.000000000000004 rounded UP
-        # to a tenth printed 28.1 -- as the grid's own figure, and as a ceiling
+        # 28 of 100 is exactly 28.0%. The float 28.000000000000004 rounded up
+        # to a tenth printed 28.1: as the grid's own figure, and as a ceiling
         # a tenth looser than the one that admits it. (8, 0) and (9, 1) are the
         # gaps: each joins the lone A in a new word and swallows no answer.
         rows = ("ABCDEFGHIJ",) * 7 + ("." * 10,) * 2 + ("A" + "." * 9,)
@@ -372,8 +372,8 @@ class TestDensityAdvice(unittest.TestCase):
     def test_the_figure_is_shown_as_fill_shows_it_and_the_ceiling_admits_it(
         self,
     ) -> None:
-        # 23 of 80 is 28.75%. `fill` would report that grid as 28.7 -- the
-        # float is 28.749999999999996 -- and a ceiling must be 28.8 to admit
+        # 23 of 80 is 28.75%. `fill` would report that grid as 28.7 (the
+        # float is 28.749999999999996), and a ceiling must be 28.8 to admit
         # it. One number cannot be both, so the sentence and the flag differ.
         rows = ("ABCDEFGHIJ",) * 5 + ("ABCDE.....", "." * 10, "A" + "." * 9)
         text = _render(rows=rows)
@@ -392,7 +392,7 @@ class TestCapping(unittest.TestCase):
 
     def test_a_cap_that_does_not_bite_is_not_mentioned(self) -> None:
         # "showing 25 of 25" invites a reader to wonder what was hidden when
-        # nothing was -- the reading `shade` already settled.
+        # nothing was: the reading `shade` already settled.
         self.assertNotIn("showing", _render().lower())
 
     def test_zero_shows_every_gap(self) -> None:

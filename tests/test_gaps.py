@@ -1,12 +1,12 @@
 """Grouped suite: what a letter in a blocked cell would demand of the bank.
 
 Two halves, and the second is the one that matters. Deciding *whether* a
-blocked cell could take a letter is nearly free -- almost every one could, so a
+blocked cell could take a letter is nearly free: almost every one could, so a
 suite that only checked "it found some candidates" would stay green against a
-tool that described every one of them wrongly. The DEMAND is the load-bearing
-half, and the obvious implementation of it -- read the cell's immediate
-neighbors -- is wrong in a way that matters: filling a cell between two
-existing runs WELDS them, so the run that has to be a bank answer afterward is
+tool that described every one of them wrongly. The demand is the load-bearing
+half, and the obvious implementation of it (read the cell's immediate
+neighbors) is wrong in a way that matters: filling a cell between two
+existing runs welds them, so the run that has to be a bank answer afterward is
 the whole thing, not the two letters either side of the gap.
 
 `TestWelding` is where that is pinned. On `AB.CD` a neighbors-only reader
@@ -33,10 +33,10 @@ import cw_grid
 PURE_ADDITION = ("A.", "B.")
 
 #: One row, two runs, one gap. The fill welds them into a single five-letter
-#: run and retires both -- the case a neighbors-only reader gets wrong.
+#: run and retires both: the case a neighbors-only reader gets wrong.
 WELD = ("AB.CD",)
 
-#: A blocked cell with a letter to its left AND a letter above it, so the fill
+#: A blocked cell with a letter to its left and a letter above it, so the fill
 #: creates two runs at once and both must be satisfied by the same letter.
 BOTH_AXES = ("HAY.", "E...", "D...", "GIRL")
 
@@ -91,7 +91,7 @@ class TestPureAddition(unittest.TestCase):
 
 
 class TestWelding(unittest.TestCase):
-    """Filling a gap between two runs demands the WHOLE welded run, and says so.
+    """Filling a gap between two runs demands the whole welded run, and says so.
 
     The distinction a neighbors-only reader loses. Both assertions matter: the
     pattern is what the operator has to match, and the absorbed list is what it
@@ -112,7 +112,7 @@ class TestWelding(unittest.TestCase):
 
     def test_a_single_letter_arm_is_not_absorbed(self) -> None:
         # A lone letter is no entry (cw_grid.MIN_RUN), so welding one costs
-        # nothing -- reporting it as absorbed would invent a loss.
+        # nothing: reporting it as absorbed would invent a loss.
         candidate = _at(cw_gaps.analyze_grid(("A.CD",)), 0, 1)
         self.assertEqual(
             (_patterns(candidate), candidate.absorbed), (("A?CD",), ("CD",))
@@ -170,7 +170,7 @@ class TestMaskedCells(unittest.TestCase):
 
     `gaps` exists to advise which letter to buy for a blocked cell. A cell the
     operator drew out of the grid is one they will never fill, so advising about
-    it would be advice they must throw away -- and silently dropping it would
+    it would be advice they must throw away, and silently dropping it would
     leave the report's own arithmetic short.
     """
 
@@ -179,7 +179,7 @@ class TestMaskedCells(unittest.TestCase):
         self.assertEqual(analysis.candidates, ())
 
     def test_a_masked_cell_is_no_orphan_either(self) -> None:
-        # Not quietly reclassified: an orphan is a cell a letter COULD take and
+        # Not quietly reclassified: an orphan is a cell a letter could take and
         # should not, which is a different sentence from one that may never.
         analysis = cw_gaps.analyze_grid(("..", ".A"), frozenset({(0, 0)}))
         self.assertNotIn((0, 0), analysis.orphans)
@@ -207,7 +207,7 @@ class TestAccounting(unittest.TestCase):
     def test_the_three_counts_add_up_under_a_mask(self) -> None:
         # The partition stays total: a reader who trusts the report's arithmetic
         # must still be able to add the tiers up to the blocked count.
-        # (0, 3) is a genuinely BLOCKED cell of this grid, so it really does
+        # (0, 3) is a genuinely blocked cell of this grid, so it really does
         # move from one tier to another rather than never having been in one.
         masked = frozenset({(0, 3)})
         analysis = cw_gaps.analyze_grid(BOTH_AXES, masked)

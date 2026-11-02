@@ -1,6 +1,13 @@
+[build-system]
+# 77 is the first setuptools to accept the SPDX `license` string in [project] (PEP 639).
+# Bounded below 85: the install was verified with setuptools 84, and a new major may
+# change how it reads this flat layout.
+requires = ["setuptools>=77,<85"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "decorative-crossword"
-version = "0.1.1"
+version = "0.1.2"
 description = "Offline crossword grid generator: fills a grid from a word bank"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
@@ -19,6 +26,13 @@ dependencies = []
 [project.optional-dependencies]
 # The property tests. Tests only: nothing at runtime imports it.
 test = ["hypothesis==6.165.10"]
+
+[tool.setuptools]
+# Deliberately empty. The tool is run directly and puts its own folders on sys.path, so
+# nothing here is imported from an installed location: installing this distribution
+# installs its metadata and the test extra, never code. Left to auto-discovery,
+# setuptools refuses this flat layout of sibling folders outright.
+packages = []
 
 [tool.ruff]
 target-version = "py312"
@@ -68,84 +82,4 @@ mypy_path = [
 exclude_also = [
   'pragma:\s*only-on\s+posix\b(?!${OS-})',
   'pragma:\s*only-on\s+win32\b${OS-}',
-]
-
-# The tables below configure the gates run over this tree before it is published. They are
-# inert for anyone who only runs the tool or its tests. The same gates read the few waivers
-# in the source, comments of the form `# prose: ignore[...]` or `# reliability: ignore[...]`,
-# each stating its reason on the line; a gate that needs no setting has no table here.
-
-[tool.pii_scan]
-# The license names its copyright holder, which is its purpose.
-exclude = ["LICENSE"]
-
-[tool.samples_presence]
-# Neither turns an input into an output: a strategy library and a stdio library.
-exempt = ["property_strategies", "stdio_utf8"]
-
-[tool.stdio_policy]
-# The whole tree, the vendored stdio library included.
-paths = ["."]
-
-[tool.dep_audit]
-# Pinning checks only in the inner loop; the network audit is run on demand.
-offline = "skip"
-
-# prose: ignore[fuzz_gate] the table this gate reads, named for it
-[tool.fuzz_gate]
-# Falsifying inputs land beside the tests that found them.
-corpus_dir = "tests/fuzz_corpus"
-
-# prose: ignore[cli_doc_consistency] the table this gate reads, named for it
-[tool.cli_doc_consistency]
-# README.md is the user guide and --help the option reference; no companion doc ships.
-exclude = ["decorative_crossword.py"]
-
-# prose: ignore[claim_check] the table this gate reads, named for it
-[tool.claim_check.bases]
-# The documents here cite paths from this repository's root, the directory every command
-# they print is run from, even when the document itself sits lower: samples/README.md
-# names tests/ files. "." adds this file's own directory as a resolution root for every
-# document under it, so a citation resolves wherever the checker's own root is taken to be.
-"." = ["."]
-
-[tool.context_budget]
-# Budgets the instruction files a coding assistant loads at the start of a session. This
-# repository carries none, so the table declares no subjects: the check then has a
-# declaration to read, and measures nothing.
-
-[tool.prose_terms]
-# Words this project's prose must not use, so they cannot creep back in. The first would
-# name who decided something, which a reason never needs: state the reason, and call
-# whoever runs the tool "the operator". The rest name a standards file, a notes folder and
-# the gate tools this project was developed beside, none of which is in this repository,
-# so a sentence that leans on one explains nothing to its reader: state the rule itself,
-# with a reason anyone can check. Code is read as well as prose, so a local that happens
-# to share one of these spellings is waived on its own line, with the reason. Each entry
-# waives itself: the declaration is not prose.
-terms = [
-  # prose: ignore[owner] the declaration itself
-  "owner",
-  # prose: ignore[AGENTS] the declaration itself
-  "AGENTS",
-  # prose: ignore[technical_notes] the declaration itself
-  "technical_notes",
-  # prose: ignore[python_gate] the declaration itself
-  "python_gate",
-  # prose: ignore[check_all] the declaration itself
-  "check_all",
-  # prose: ignore[claim_check] the declaration itself
-  "claim_check",
-  # prose: ignore[cli_doc_consistency] the declaration itself
-  "cli_doc_consistency",
-  # prose: ignore[fuzz_gate] the declaration itself
-  "fuzz_gate",
-  # prose: ignore[file_length] the declaration itself
-  "file_length",
-  # prose: ignore[reliability_lint] the declaration itself
-  "reliability_lint",
-  # prose: ignore[pyproject_lint] the declaration itself
-  "pyproject_lint",
-  # prose: ignore[folder_layout] the declaration itself
-  "folder_layout",
 ]

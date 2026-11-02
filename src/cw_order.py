@@ -1,6 +1,6 @@
 """cw_order: which placements one search node tries, and in what order.
 
-The walk itself -- its state, its budgets, acceptance and backtracking -- is
+The walk itself (its state, its budgets, acceptance and backtracking) is
 cw_search's. This module answers the question each node asks before it
 recurses: what may be laid next, best first. Kept apart from cw_search along
 that seam because the two change for different reasons: a new ranking level
@@ -63,7 +63,7 @@ def order_key(seed: int, token: str) -> bytes:
     blake2b rather than builtin hash(): hash() is salted by PYTHONHASHSEED and
     varies between processes, which would break the byte-identical guarantee
     between two runs of the same binary on the same machine. Not random.shuffle
-    either -- its stability across CPython releases is an implementation detail,
+    either: its stability across CPython releases is an implementation detail,
     and this project targets the oldest supported behavior.
     """
     return hashlib.blake2b(
@@ -76,7 +76,7 @@ def _placement_token(placement: cw_place.Placement) -> str:
 
     All four fields, not just the answer: two candidates for the same word must
     not share a key, or the choice between them would fall to the enumeration
-    order rather than to the seed -- and the seed is what the operator turns.
+    order rather than to the seed, and the seed is what the operator turns.
     """
     return f"{placement.answer}:{placement.row}:{placement.col}:{placement.direction}"
 
@@ -97,7 +97,7 @@ def _placement_cells(placement: cw_place.Placement) -> tuple[tuple[int, int], ..
 
 
 def _new_cell_count(grid: cw_grid.Grid, placement: cw_place.Placement) -> int:
-    """How many cells `placement` would NEWLY fill.
+    """How many cells `placement` would newly fill.
 
     The caller must have established that the placement fits: an out-of-bounds
     cell raises out of `Grid.letter` rather than being counted as empty.
@@ -120,7 +120,7 @@ def _sort_key(
     Five levels: a placement laid along a source's partial run first, then a
     bare feature, then fill more cells, then prefer an answer whose theme has
     yet to meet its floor, then the seeded tie-break. The count is negated
-    rather than sorted with `reverse=True`, so every level ascends together --
+    rather than sorted with `reverse=True`, so every level ascends together:
     reversing would also reverse the tie-break, making the seed's effect depend
     on which level happened to decide.
     """
@@ -147,7 +147,7 @@ def _centered_start(
 
 
 def _has_letters(rows: Sequence[str]) -> bool:
-    """Whether any cell is filled -- the seed slot is 'nothing on the board yet'."""
+    """Whether any cell is filled: the seed slot is 'nothing on the board yet'."""
     return any(cell != cw_grid.BLOCK for row in rows for cell in row)
 
 
@@ -169,16 +169,16 @@ def _seed_placements(
     conform. Otherwise every unused answer is a candidate, and the ranking in
     `ordered_candidates` decides which is tried first.
 
-    Only a BARE feature is ever offered here. A pinned one is already on the
+    Only a bare feature is ever offered here. A pinned one is already on the
     board before the walk starts, and a board with anything on it has no seed
-    slot at all -- `_has_letters` sends every node to `crossing_candidates`
+    slot at all: `_has_letters` sends every node to `crossing_candidates`
     instead. So a bare feature given beside a pin must be reached by crossing,
     as must every bare feature but the one seeded; `ordered_candidates` is
     what tries those crossings ahead of every other answer's.
 
     Both orientations are offered at the centered start for the answer's length.
-    One of them may start outside the grid -- a seven-letter answer centered
-    ACROSS in a five-wide grid begins at column -1 -- and `fits` is what drops
+    One of them may start outside the grid (a seven-letter answer centered
+    ACROSS in a five-wide grid begins at column -1), and `fits` is what drops
     it, which is why the arithmetic above it need not special-case the shape.
 
     A `--mask` is the same kind of fact, and is dropped the same way: the center
@@ -241,17 +241,17 @@ def ordered_candidates(
 
     Zero-progress candidates are dropped rather than ranked last. Such a
     placement leaves the grid byte-identical, so its child node re-derives its
-    own parent's state and the walk never terminates -- a budget would bound
+    own parent's state and the walk never terminates: a budget would bound
     that, but only by spending the whole budget on one repeated state.
 
     A placement laid along an unfinished `--source` partial run, and a bare
-    feature's crossings, are RANKED first, never offered alone: a ranking only
+    feature's crossings, are ranked first, never offered alone: a ranking only
     orders the walk, and the walk must stay free to lay any other letter. With
     no partial run standing, and every bare feature placed (a feature on the
     board is no candidate, `cw_reach.unused_answers`), each rank is one value
     for all and changes nothing.
 
-    A break the walk made (`cw_reach.walk_breaks`) is the one thing FILTERED
+    A break the walk made (`cw_reach.walk_breaks`) is the one thing filtered
     rather than ranked: while the board holds one, only a placement laid over
     it is offered. The reason a ranking must never become a filter does not
     apply here. The walk stood on this board only because an unused answer could
@@ -260,7 +260,7 @@ def ordered_candidates(
     anyway. Measured on a 1,817-answer bank, where nearly every run is one some
     answer could complete, that subtree was one the walk never climbed out of.
 
-    Those placements are BUILT from the break's own line
+    Those placements are built from the break's own line
     (`cw_reach.placements_over`), never filtered out of every crossing on the
     board: the set is the same, and the key below is total, so the order is too.
     Building every crossing to keep the few over a break was nearly all of a

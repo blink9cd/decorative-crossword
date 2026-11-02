@@ -3,7 +3,7 @@
 `json.loads` fails in more ways than `json.JSONDecodeError` names, and a JSON
 file can parse cleanly into a value the rest of the run cannot handle. Each
 case here is a file an operator could hand the tool, and each must be refused
-the way a malformed file is -- exit 2, naming the file -- rather than escaping
+the way a malformed file is (exit 2, naming the file) rather than escaping
 as a traceback. The difference matters more here than in most tools: an
 uncaught exception exits 1, which is also what this tool says for "the run
 happened and no conforming grid was found".
@@ -53,7 +53,7 @@ settings.register_profile(
 )
 settings.load_profile("crossword_json_properties")
 
-#: Nesting that `json.loads` parses but that `repr` cannot walk -- and every
+#: Nesting that `json.loads` parses but that `repr` cannot walk, and every
 #: refusal quotes the value at fault from its whole `repr`, however little of
 #: it the message keeps. Measured on CPython 3.14: ten thousand levels quote
 #: cleanly and a hundred thousand overflow the stack.

@@ -103,8 +103,8 @@ class TestBuildDocument(unittest.TestCase):
         self.assertEqual(clues["COW"], {"clue": "", "theme": "pets"})
 
     def test_every_entry_has_a_clue_key(self) -> None:
-        # The KEY, not a non-empty value: a clue is optional, but the record
-        # shape is uniform, so a missing key -- as opposed to an empty one -- is
+        # The key, not a non-empty value: a clue is optional, but the record
+        # shape is uniform, so a missing key (as opposed to an empty one) is
         # a defect.
         document = cw_emit.build_document(_outcome(), _bank(), _config())
         for run in cw_grid.runs_from_rows(_ROWS):
@@ -112,7 +112,7 @@ class TestBuildDocument(unittest.TestCase):
 
     def test_clues_a_run_the_bank_never_declared(self) -> None:
         # `fill` never writes a run its bank lacks, but `build_document` takes
-        # any bank, and a run that bank does not hold still gets a record --
+        # any bank, and a run that bank does not hold still gets a record,
         # with an empty clue, because there is no bank entry to have written
         # one and nothing invents one.
         document = cw_emit.build_document(_outcome(), _bank_without("WET"), _config())
@@ -171,11 +171,11 @@ class TestClueScreen(unittest.TestCase):
         # from one helper, so a swap between them would otherwise send an
         # operator who pasted markup hunting for a newline.
         #
-        # NOT `assertIn("</script", ...)`, which is the obvious assertion and
+        # Not `assertIn("</script", ...)`, which is the obvious assertion and
         # cannot fail: the message ends `got {text!r}`, echoing the very input
         # that contains the fragment, so it passes under the swap it is meant
-        # to catch. The structural fact is general -- any assertion on a
-        # substring of the INPUT is free -- so this one reads the half of the
+        # to catch. The structural fact is general (any assertion on a
+        # substring of the input is free), so this one reads the half of the
         # message only the description can supply, and denies the other.
         self.assertIn("CAT", str(caught.exception))
         self.assertIn("the literal", str(caught.exception))
@@ -200,8 +200,8 @@ class TestClueScreen(unittest.TestCase):
         self.assertIn("pets", str(caught.exception))
 
     def test_rejects_a_theme_key_carrying_the_script_close_tag(self) -> None:
-        # A key is emitted twice -- as the themes map's key and as each
-        # record's "theme" value -- so a Bank that reaches the emitter
+        # A key is emitted twice (as the themes map's key and as each
+        # record's "theme" value), so a Bank that reaches the emitter
         # unscreened would put the fragment in the page three times.
         with self.assertRaises(cw_emit.EmitError) as caught:
             cw_emit.build_document(_outcome(), _bank_keyed("pets</script>x"), _config())
@@ -223,7 +223,7 @@ class TestClueScreen(unittest.TestCase):
         self.assertIn("U+001B", str(caught.exception))
 
     def test_screens_the_key_that_reaches_both_emitted_places(self) -> None:
-        # The screened key is what lands in the themes map AND in every record,
+        # The screened key is what lands in the themes map and in every record,
         # so neither place can carry a spelling the other rejected.
         document = cw_emit.build_document(_outcome(), _bank_keyed("pets"), _config())
         self.assertEqual(
@@ -411,7 +411,7 @@ class TestWriteDocument(unittest.TestCase):
     def test_reports_text_the_encoder_refuses(self) -> None:
         # A lone surrogate has no UTF-8 encoding, so stream.write raises
         # UnicodeEncodeError, a ValueError rather than an OSError. No bank or
-        # grid file can carry one this far -- each refuses it on the way in --
+        # grid file can carry one this far (each refuses it on the way in),
         # but `write_atomically` takes any text, so the wrap is tested here,
         # where it can still fire.
         with tempfile.TemporaryDirectory() as folder:
@@ -425,7 +425,7 @@ class TestWriteDocument(unittest.TestCase):
 
     def test_touches_the_filesystem_only_after_serializing(self) -> None:
         # A document this module did not build can be unserializable. Nothing
-        # wraps that -- it is a caller's bug, not an operator's -- but it must
+        # wraps that (it is a caller's bug, not an operator's), but it must
         # not leave a temp file behind, which it would if the file were opened
         # before json.dumps ran.
         with tempfile.TemporaryDirectory() as folder:

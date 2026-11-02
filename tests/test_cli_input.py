@@ -1,18 +1,18 @@
 """Tests for an input path that names something other than a file, at the process boundary.
 
-Every input a subcommand reads -- a bank, an excluded-terms list, a mask, a
-word list and a grid file -- is refused at exit 2 when its path names a FIFO,
+Every input a subcommand reads (a bank, an excluded-terms list, a mask, a
+word list and a grid file) is refused at exit 2 when its path names a FIFO,
 naming the path, rather than waiting for a writer that may never come. Each
 input is its own case because each reaches its own reader: a reader left
 calling a plain read would pass every other case here.
 
-`/dev/stdin` is held to the same rule by what it IS, never by its name: fed
+`/dev/stdin` is held to the same rule by what it is, never by its name: fed
 from a pipe it is refused, and redirected from a file it is that file and is
 read like one.
 
 The FIFO case covers one flag for each reader. The routes the other flags take
-to those readers -- `fill`'s `--phrases` and `--source`, and each input of
-`shade` and `gaps` -- are held to the rule too, with a device standing for the
+to those readers (`fill`'s `--phrases` and `--source`, and each input of
+`shade` and `gaps`) are held to the rule too, with a device standing for the
 file: `os.devnull` reads as empty rather than blocking, so those run through
 `main` in this process and a route that stopped checking fails its own case.
 
@@ -45,8 +45,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 #: takes about a second, so anything near this is a read that is waiting.
 _CHILD_TIMEOUT = 60.0
 
-#: Runs the tool on the arguments after the first two -- the project root and a
-#: result file -- and writes the exit code, then everything the tool wrote to
+#: Runs the tool on the arguments after the first two (the project root and a
+#: result file), and writes the exit code, then everything the tool wrote to
 #: stderr, into that file. The parent captures nothing, deliberately: a
 #: timeout on a capturing call kills only the direct child and then blocks
 #: re-reading pipes a grandchild still holds, so handing the child a file to

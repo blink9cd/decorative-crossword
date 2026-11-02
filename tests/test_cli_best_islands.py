@@ -69,7 +69,7 @@ class TestBestGrid(cli_fixtures.QuietCase):
 
     def test_the_report_says_when_a_budget_cut_the_look_ahead_short(self) -> None:
         # At 60% the pinned board conforms at the first node, so the look-ahead
-        # opens at once -- and a three-node cap closes the run inside it.
+        # opens at once, and a three-node cap closes the run inside it.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder, _bank())
             argv = _argv(space)
@@ -134,11 +134,11 @@ class TestRatings(cli_fixtures.QuietCase):
             space = cli_fixtures.Workspace(folder, bank)
             self.assertEqual(decorative_crossword.main(_argv(space)), 0)
             self.assertIn("then worst rating, then themed entries.", self.printed)
-            self.assertIn("Worst rating in the grid: 2 -- VST.", self.printed)
+            self.assertIn("Worst rating in the grid: 2 (VST).", self.printed)
 
     def test_rating_every_answer_alike_writes_the_unrated_grid(self) -> None:
         # A uniform rating ties every grid on the rating level, so the grid on disk
-        # is the unrated bank's byte for byte -- and no rating reaches the document.
+        # is the unrated bank's byte for byte, and no rating reaches the document.
         answers = (*grids.ANSWERS, *grids.ALTERNATE_ANSWERS)
         uniform: dict[str, int] = dict.fromkeys(answers, cw_bank.MAX_RATING)
         written: list[bytes] = []
@@ -194,7 +194,7 @@ class TestIslands(cli_fixtures.QuietCase):
             self.assertEqual(decorative_crossword.main(argv), 0)
             self.assertEqual(space.rows()[0], "..ABC")
             self.assertIn(
-                "Islands: none laid -- each would take the grid under the requested "
+                "Islands: none laid, since each would take the grid under the requested "
                 "16.0% floor: (0, 0).",
                 self.printed.splitlines(),
             )
@@ -220,7 +220,7 @@ class TestIslands(cli_fixtures.QuietCase):
         # (4, 3) is drawn out of the grid, so 3 of the 24 cells left are blocked:
         # 12.5%, and the island would leave 2, 8.3%, under a 12% floor. Counted
         # over all 25 cells, the masked one a block among them, 4 blocked would
-        # seem to spare one -- 3 of 25 is exactly 12% -- and the island would be
+        # seem to spare one (3 of 25 is exactly 12%), and the island would be
         # laid through the floor the grid is judged by.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder, _bank())
@@ -230,7 +230,7 @@ class TestIslands(cli_fixtures.QuietCase):
             self.assertEqual(decorative_crossword.main(argv), 0)
             self.assertEqual(space.rows()[0], "..ABC")
             self.assertIn(
-                "Islands: none laid -- each would take the grid under the requested "
+                "Islands: none laid, since each would take the grid under the requested "
                 "12.0% floor: (0, 0).",
                 self.printed.splitlines(),
             )
@@ -244,7 +244,7 @@ class TestIslands(cli_fixtures.QuietCase):
 
     def test_island_letters_leave_a_best_effort_grid_alone(self) -> None:
         # No grid is 0% blocked, so the run misses. Islands decorate a grid the
-        # search CHOSE; laid on a miss they would move the density figures the
+        # search chose; laid on a miss they would move the density figures the
         # report's remedies are computed from.
         with tempfile.TemporaryDirectory() as folder:
             space = cli_fixtures.Workspace(folder, _bank())

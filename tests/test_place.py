@@ -76,7 +76,7 @@ class TestGridViolations(unittest.TestCase):
 
     def test_reports_a_run_that_is_not_an_allowed_answer(self) -> None:
         # The two T's stack into a vertical "TT" that nobody asked for and that
-        # is not in the bank -- exactly the accidental letter pair the rule
+        # is not in the bank: exactly the accidental letter pair the rule
         # exists to forbid. Asserted as the whole message:
         # a substring check reads as coverage of the position and direction it
         # never actually touches.
@@ -87,12 +87,12 @@ class TestGridViolations(unittest.TestCase):
 
     def test_reports_a_duplicated_answer(self) -> None:
         # Two entries sharing one answer cannot carry distinct clues downstream.
-        # The rows are chosen so duplication is the ONLY possible fault: both
+        # The rows are chosen so duplication is the only possible fault: both
         # columns read "A.A" and "B.B", single cells either side of a block, so
         # there is no perpendicular pair to report. Stacking the rows directly
         # instead ("AB", "AB") spells the non-bank columns "AA" and "BB", and a
         # merely non-empty assertion then passes with the distinctness clause
-        # deleted -- a test that cannot fail for its own stated reason.
+        # deleted: a test that cannot fail for its own stated reason.
         self.assertEqual(
             cw_place.grid_violations(("AB", "..", "AB"), {"AB"}),
             ("across run 'AB' at (2, 0) repeats an answer already placed",),
@@ -130,7 +130,7 @@ class TestGridViolations(unittest.TestCase):
 
     def test_reports_every_offending_run_in_scan_order(self) -> None:
         # Pins the documented order: every ACROSS run row-major, then every DOWN
-        # run column-major -- the order cw_grid.runs_from_rows guarantees.
+        # run column-major: the order cw_grid.runs_from_rows guarantees.
         self.assertEqual(
             cw_place.grid_violations(("AB", "CD"), {"AB"}),
             (
@@ -192,7 +192,7 @@ class TestApplyAndUndo(unittest.TestCase):
 
     def test_apply_rejects_a_placement_that_runs_off_the_grid(self) -> None:
         # Writing letter by letter until Grid.set_letter raises would leave the
-        # prefix on the board with no undo list returned -- unrecoverable state.
+        # prefix on the board with no undo list returned: unrecoverable state.
         grid = cw_grid.Grid(3, 3)
         with self.assertRaises(ValueError):
             cw_place.apply_placement(
@@ -218,7 +218,7 @@ class TestCrossingCandidates(unittest.TestCase):
         self.assertIn(cw_place.Placement("COW", 0, 0, cw_grid.DOWN), found)
 
     def test_offers_nothing_on_an_empty_grid(self) -> None:
-        # The seed placement is the search's job, not the candidate list's --
+        # The seed placement is the search's job, not the candidate list's:
         # there is no letter to cross yet.
         self.assertEqual(cw_place.crossing_candidates(cw_grid.Grid(3, 3), ["CAT"]), [])
 
@@ -234,7 +234,7 @@ class TestCrossingCandidates(unittest.TestCase):
         )
 
     def test_offers_an_alignment_that_starts_before_the_crossed_cell(self) -> None:
-        # The crossed B is the answer's SECOND letter, so each start sits one step
+        # The crossed B is the answer's second letter, so each start sits one step
         # back along its own direction. An enumerator that only ever aligned offset
         # 0 would return nothing here and still pass every other case in this class.
         grid = _grid(("...", ".B.", "..."))
@@ -252,7 +252,7 @@ class TestCrossingCandidates(unittest.TestCase):
         # or descending, and branch coverage cannot either: a single-offset
         # answer still reaches both arms of the offset loop.
         # "ATA" crosses the A at (2, 2) at offsets 0 and 2, and the exact list
-        # kills all three mutants -- first-offset-only drops the last two
+        # kills all three mutants: first-offset-only drops the last two
         # entries, last-offset-only drops the first two, descending reorders.
         grid = _grid((".....", ".....", "..A..", ".....", "....."))
         self.assertEqual(
@@ -319,7 +319,7 @@ class TestCrossingCandidates(unittest.TestCase):
     def test_reads_the_answers_once_so_a_generator_is_not_exhausted(self) -> None:
         # `answers` is an Iterable, and the walk visits it once per filled cell.
         # A one-shot iterator consumed at the first cell would silently offer
-        # nothing for every later one -- here the only match is at the third.
+        # nothing for every later one: here the only match is at the third.
         grid = _grid(("CAT", "...", "..."))
         answers: Iterator[str] = iter(["TOP"])
         self.assertEqual(
@@ -331,9 +331,9 @@ class TestCrossingCandidates(unittest.TestCase):
 class TestMaskedCells(unittest.TestCase):
     """A masked cell is one no placement may cover, in either generator.
 
-    Both are tested with the SAME grid and the same masked cell, because the two
-    make the judgment by different means -- `fits` reads the grid cell by cell,
-    `crossing_candidates` reads a derived line view -- and the whole point of
+    Both are tested with the same grid and the same masked cell, because the two
+    make the judgment by different means (`fits` reads the grid cell by cell,
+    `crossing_candidates` reads a derived line view), and the whole point of
     the design is that they cannot disagree.
     """
 

@@ -1,10 +1,10 @@
 """Tests for cw_select: what makes one conforming grid better than another,
 and the look-ahead window a search chooses within.
 
-The order of the score is the whole rule -- most letters, then answers the operator
+The order of the score is the whole rule (most letters, then answers the operator
 preferred, then the grid's worst rating, then its matching cell pairs under
 --prefer-symmetry, then themed entries, then the growable --source entries still
-standing -- so each case below
+standing), so each case below
 gives the grid that should win the worse figure on every later level, and a score
 that dropped or reordered a term picks the other one.
 """
@@ -86,7 +86,7 @@ class TestGridScore(unittest.TestCase):
 
 
 class TestWorstRating(unittest.TestCase):
-    """The grid's WORST entry, never an average; unrated counts as the middle."""
+    """The grid's worst entry, never an average; unrated counts as the middle."""
 
     _CAT = ("CAT..", ".....", "DOG..")
     _COW = ("COW..", ".....", "DOG..")
@@ -153,7 +153,7 @@ class TestWorstRating(unittest.TestCase):
 
 
 #: Six letters each, one themed (CAT) and one not (EEL); only EEL's grid is
-#: balanced under rotation -- 3 of 7 rotated pairs match against 7 of 7.
+#: balanced under rotation: 3 of 7 rotated pairs match against 7 of 7.
 _UNBALANCED = ("CAT..", ".....", "DOG..")
 _BALANCED = ("EEL..", ".....", "..DOG")
 
@@ -301,7 +301,7 @@ class TestSelection(unittest.TestCase):
         self.assertTrue(selection.closed(5))
 
     def test_a_later_offer_does_not_move_the_window(self) -> None:
-        # The window is measured from the FIRST grid. Reopening it on every better
+        # The window is measured from the first grid. Reopening it on every better
         # grid would let a long run of small improvements search without end.
         selection = cw_select.Selection(3)
         selection.offer(_snap(self._A), (6, 0, 3, 0, 1, 0), 5)

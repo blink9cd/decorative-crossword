@@ -123,11 +123,11 @@ class TestValidateFillConfig(unittest.TestCase):
         self.assertIn("--max-steps", str(caught.exception))
 
     def test_rejects_both_budgets_unlimited(self) -> None:
-        # Zero reads as "no limit" on BOTH budgets, which makes their
+        # Zero reads as "no limit" on both budgets, which makes their
         # combination the one request that has nothing at all to stop it.
         # Refused here, loudly and before any searching, rather than left to
-        # look like a hang -- the whole point of giving `--time-budget` a zero
-        # is a run bounded by something DETERMINISTIC, so the node cap has to
+        # look like a hang: the whole point of giving `--time-budget` a zero
+        # is a run bounded by something deterministic, so the node cap has to
         # be present for the clock to be dropped.
         with self.assertRaises(cw_config.ConfigError) as caught:
             cw_config.validate_fill_config(_config(time_budget=0.0, max_steps=0))
@@ -237,7 +237,7 @@ class TestMaskSize(unittest.TestCase):
         self.assertIn("4x5", message)
 
     def test_the_refusal_names_the_grown_grid_not_the_source(self) -> None:
-        # The grid a mask must match is the one a fill ENDS on. A source grown
+        # The grid a mask must match is the one a fill ends on. A source grown
         # past the picture is the case this catches, and naming the source's
         # size instead would send the operator to the wrong file.
         with self.assertRaises(cw_config.ConfigError) as caught:
@@ -389,10 +389,10 @@ class TestValidateShadeConfig(unittest.TestCase):
         cw_config.validate_shade_config(_shade_config())
 
     def test_accepts_a_word_and_the_exclusion_together(self) -> None:
-        """Two flags that CONTRADICT are refused by the handler, not by range.
+        """Two flags that contradict are refused by the handler, not by range.
 
         This validator's job is whether each value is usable on its own, so a
-        pairing it has no view on must pass here -- otherwise the handler's own
+        pairing it has no view on must pass here: otherwise the handler's own
         refusal, which is the one that can explain itself, becomes unreachable.
         """
         cw_config.validate_shade_config(
@@ -428,7 +428,7 @@ class TestValidateShadeConfig(unittest.TestCase):
         self.assertIn("--word", str(caught.exception))
 
     def test_rejects_a_non_positive_cell_in_either_mode(self) -> None:
-        """One rule, not a mode-dependent one -- see `validate_shade_config`."""
+        """One rule, not a mode-dependent one. See `validate_shade_config`."""
         with self.assertRaises(cw_config.ConfigError) as caught:
             cw_config.validate_shade_config(_shade_config(cell=0))
         self.assertIn("--cell", str(caught.exception))

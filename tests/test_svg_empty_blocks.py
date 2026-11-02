@@ -3,7 +3,7 @@
 The mechanism is one CSS rule and no new geometry. Every cell still emits its
 own rect; the open block's rule cancels the fill and the stroke the shared
 `.cw-cells rect` rule would otherwise give it. So the outline a reader sees is
-drawn entirely by the LETTERED cells around the hole, which is why the tests
+drawn entirely by the lettered cells around the hole, which is why the tests
 below assert on that boundary as well as on the block itself.
 
 Driven at two levels on purpose. The renderer tests pin what the document
@@ -23,7 +23,7 @@ import decorative_crossword
 from tests import cli_fixtures, samples_fixtures, svg_fixtures
 
 #: The grid the three read-side producers run against, and the word `shade`
-#: places in it -- the same pair `tests/test_samples_read.py` drives, so this
+#: places in it: the same pair `tests/test_samples_read.py` drives, so this
 #: suite exercises the flag on a real committed grid rather than a fixture.
 _READ_SOURCE = samples_fixtures.SAMPLES / "large_square"
 _HIDDEN_WORD = "LANTERN"
@@ -102,7 +102,7 @@ class TestEmptyBlockRender(unittest.TestCase):
         svg_fixtures.parse(self.empty)
 
     def test_the_rule_needs_no_function_the_stylesheet_forbids(self) -> None:
-        """SVG IS THE PRODUCT, and `tests/test_svg_containment.py` owns the rest.
+        """SVG is the product, and `tests/test_svg_containment.py` owns the rest.
 
         That suite renders this flag too, so the document answers to every
         containment rule there rather than to a weaker copy here. What is

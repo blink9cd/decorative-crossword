@@ -7,17 +7,17 @@ paired with `test_fuzz_stray_letters` below.
 Two properties, for two different claims:
 
 - **The reader re-derived independently.** Every filled cell outside the runs
-  `property_strategies.scan_runs` finds -- a regex reading of the grid, not
-  `cw_grid`'s accumulator -- is a stray unless its letter is an island letter
-  with a covered cell at a corner. Compared as a LIST, so the row-major order is
+  `property_strategies.scan_runs` finds (a regex reading of the grid, not
+  `cw_grid`'s accumulator) is a stray unless its letter is an island letter
+  with a covered cell at a corner. Compared as a list, so the row-major order is
   pinned along with the membership. Its oracle restates the rule's two clauses,
-  so it checks the implementation and RATIFIES the rule: what the rule says is
+  so it checks the implementation and ratifies the rule: what the rule says is
   pinned by the hand-worked cases in `test_island.py`.
 - **The filler and the reader stay in step.** `fill_islands` and `stray_letters`
   state the corner rule two ways: the filler asks for any letter of the grid it
   was handed outside `fixed`, the reader for a letter some entry covers. `fill`
-  hands the filler a grid whose every letter outside `fixed` is in an entry --
-  under `--source`, `fixed` is each lone letter the fill left -- so the two must
+  hands the filler a grid whose every letter outside `fixed` is in an entry
+  (under `--source`, `fixed` is each lone letter the fill left), so the two must
   agree, and nothing `fill_islands` lays may read back as a stray. The draw
   below is that grid with nothing fixed: every letter is in an entry.
 

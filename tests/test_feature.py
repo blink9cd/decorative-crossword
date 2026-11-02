@@ -1,7 +1,7 @@
 """Tests for cw_feature: the `--feature` grammar, and the pin checks the flags alone decide.
 
-Every refusal here is a `cw_config.ConfigError` -- the exit-2 line -- and names
-`--feature`. Whether pins that pass these checks also suit a BANK is
+Every refusal here is a `cw_config.ConfigError` (the exit-2 line) and names
+`--feature`. Whether pins that pass these checks also suit a bank is
 `cw_accept`'s question, and its tests are in `test_accept_features.py`.
 """
 
@@ -68,7 +68,7 @@ class TestParseFeature(unittest.TestCase):
     def test_rejects_a_coordinate_that_is_not_a_plain_integer(self) -> None:
         # `int()` would accept every one of the last four: a sign, padding, and
         # a non-ASCII digit. A pin is a cell index typed by hand, so the grammar
-        # is the digits 0-9 and nothing else -- a negative row is refused here
+        # is the digits 0-9 and nothing else, so a negative row is refused here
         # rather than reaching the bounds check as a cell before the grid.
         for text in (
             "CHALK@a,0,down",
@@ -205,7 +205,7 @@ class TestValidateFeatures(unittest.TestCase):
 
     def test_rejects_a_perpendicular_pin_starting_just_past_another(self) -> None:
         # CRANE's first cell is the one after CHALK's last, so the top row reads
-        # CHALKC. The cell AFTER a pin is checked, whatever direction the other
+        # CHALKC. The cell after a pin is checked, whatever direction the other
         # pin runs.
         with self.assertRaises(cw_config.ConfigError) as caught:
             cw_feature.validate_features(
@@ -220,7 +220,7 @@ class TestValidateFeatures(unittest.TestCase):
 
     def test_rejects_a_pin_starting_just_after_another_pinned_cell(self) -> None:
         # DOG starts at (0, 3) and CAT runs DOWN through (0, 2), so the top row
-        # reads CDOG. Nothing sits past DOG's END: only the cell BEFORE its start
+        # reads CDOG. Nothing sits past DOG's end: only the cell before its start
         # catches this one, so the two directions are pinned separately.
         with self.assertRaises(cw_config.ConfigError) as caught:
             cw_feature.validate_features(
@@ -250,7 +250,7 @@ class TestPinsAgainstAMask(unittest.TestCase):
     """A pin is an operator's claim, so a masked cell refuses it rather than losing.
 
     The asymmetry with an island is deliberate: a pin is something the operator
-    ASKED for, and silently dropping it would give them a grid that is not what
+    asked for, and silently dropping it would give them a grid that is not what
     they wrote. An island is a choice the tool makes for itself, so a mask
     merely makes the cell ineligible.
     """
@@ -281,7 +281,7 @@ class TestPinsAgainstAMask(unittest.TestCase):
         )
 
     def test_an_off_grid_pin_is_still_named_for_the_grid(self) -> None:
-        # Ordering: the bounds check runs first, so a pin that is BOTH off the
+        # Ordering: the bounds check runs first, so a pin that is both off the
         # grid and over a masked cell is named for the fault the operator must
         # fix first. Named for the mask instead, the message would point at a
         # picture that cannot describe cells the grid does not have.

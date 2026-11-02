@@ -1,8 +1,8 @@
 """cw_answer: what an answer's written form may be, and the letters it lays in the grid.
 
-A bank answer may be written as more than one word -- `HELLO THERE`,
-`ATTA-BOY`, `JACK-O'-LANTERN` -- but a grid holds letters only, so every
-comparison in this project reads an answer's GRID form, the letters left once
+A bank answer may be written as more than one word (`HELLO THERE`,
+`ATTA-BOY`, `JACK-O'-LANTERN`), but a grid holds letters only, so every
+comparison in this project reads an answer's grid form, the letters left once
 its spaces, hyphens and apostrophes close up. `grid_form` is that one
 normalization, applied wherever an operator types an answer: the bank, and
 `--feature`, `--prefer`, `--phrases` and `--excluded-terms`. Keeping it in one
@@ -25,7 +25,7 @@ import re
 _JOINERS = str.maketrans("", "", "-'")
 
 #: What each word break prints as in an enumeration: a space between words is
-#: a comma, a hyphen stays a hyphen. The apostrophe is absent on purpose -- it
+#: a comma, a hyphen stays a hyphen. The apostrophe is absent on purpose: it
 #: separates no words, and the letters either side of it count as one word.
 _ENUMERATION_BREAKS = {" ": ",", "-": "-"}
 
@@ -72,7 +72,7 @@ def is_spelling(text: str) -> bool:
 def enumeration(spelling: str) -> str | None:
     """The word lengths of a multi-word `spelling`, as `(5,5)` or `(4-1-7)`, else None.
 
-    A single word -- `CHEMEX`, and `O'CLOCK` too -- has none, since only a word
+    A single word (`CHEMEX`, and `O'CLOCK` too) has none, since only a word
     break makes an answer's letters read as more than one word. Letters are
     counted; an apostrophe is neither counted nor a break.
     """

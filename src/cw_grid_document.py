@@ -31,16 +31,16 @@ class GridDocument:
     A typed struct rather than the raw `dict[str, object]` `json.loads` hands
     back: genuinely-untyped external data is modeled rather than left dynamic.
     The alternative pushes a cast into every caller, and the caller here is the
-    CLI -- the one place where a wrong narrowing would surface as a traceback
+    CLI, the one place where a wrong narrowing would surface as a traceback
     instead of as exit 2.
 
     `entry_themes` is flattened out of the `clues` map because that is the
     shape `cw_svg.RenderRequest` asks for; deriving it once here is what keeps
     `fill --preview` and `preview` from each deriving it their own way.
 
-    `clues` maps EVERY key of the `clues` map to its clue text, `""` where the
+    `clues` maps every key of the `clues` map to its clue text, `""` where the
     record has none. `fill --source` needs it for two things: a key is how a
-    source DECLARES a run the bank lacks, and the text is the clue that run
+    source declares a run the bank lacks, and the text is the clue that run
     keeps.
     """
 
@@ -93,9 +93,9 @@ def _parse_themes(payload: object) -> dict[str, cw_bank.ThemeInfo]:
     """The declared themes, or EmitError naming the bad one.
 
     Reuses `cw_bank.ThemeInfo` rather than defining a parallel struct: the
-    document's theme record IS the bank's, minus the themes no entry placed,
+    document's theme record is the bank's, minus the themes no entry placed,
     and two identical dataclasses in one project are two things to keep in
-    step. Emptiness is NOT enforced here -- unlike the bank, which is the
+    step. Emptiness is not enforced here: unlike the bank, which is the
     operator's input boundary, `preview` is documented to work on a
     hand-authored file, and a thin summary is for whatever consumes the grid to
     judge rather than a reason to refuse to draw.
@@ -156,7 +156,7 @@ def _parse_entry_clues(records: Mapping[str, Mapping[str, object]]) -> dict[str,
     """Each declared answer's clue text, "" where its record carries none.
 
     Every key counts, clued or not: `fill --source` keeps a run the bank lacks
-    only when the source DECLARES it, and a declaration is a key of this map.
+    only when the source declares it, and a declaration is a key of this map.
     A non-string clue is refused as a non-string theme already is, because a
     kept entry would otherwise lose its clue without a word.
     """
@@ -178,12 +178,12 @@ def parse_document(payload: object) -> GridDocument:
 
     Split from `load_document` for the reason `cw_bank.parse_bank` is split
     from `load_bank`: the whole validation surface stays reachable without
-    touching the filesystem -- and `fill --preview` narrows the document it
-    just BUILT through here, so every caller of the renderer reaches it holding
+    touching the filesystem, and `fill --preview` narrows the document it
+    just built through here, so every caller of the renderer reaches it holding
     a value derived exactly one way.
 
-    The grid's own coherence -- ragged rows, an empty grid, a cell that is
-    neither a letter nor a block -- is `cw_grid.validate_rows`, not a second
+    The grid's own coherence (ragged rows, an empty grid, a cell that is
+    neither a letter nor a block) is `cw_grid.validate_rows`, not a second
     statement of it here.
     """
     if not isinstance(payload, Mapping):
@@ -210,7 +210,7 @@ def load_document(path: Path) -> GridDocument:
 
     Wraps `OSError`, `UnicodeDecodeError` and whatever `cw_json.loads` refuses
     into `EmitError` so the CLI has one exception type to catch whether the file
-    was unreadable, mis-encoded, unparsable or incoherent -- all four are
+    was unreadable, mis-encoded, unparsable or incoherent: all four are
     `preview`'s single exit-2 case, and `preview` has no exit 1 at all.
 
     `UnicodeDecodeError` is named separately because it is a `ValueError` and

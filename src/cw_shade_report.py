@@ -14,11 +14,11 @@ borrowed from that module rather than re-decided:
   `tests/test_shade_report.py` pins that they do.
 
 Separate from `cw_report` rather than added to it: that module is about a
-search for a GRID -- density, theme floors, shortage by word length -- and
+search for a grid (density, theme floors, shortage by word length), and
 none of its blocks or its vocabulary apply here.
 
-Every ordering here comes from an ordered source -- the ranked candidate
-tuple, the word list's own order, or an explicit slice -- because two runs
+Every ordering here comes from an ordered source (the ranked candidate
+tuple, the word list's own order, or an explicit slice) because two runs
 must produce byte-identical output.
 """
 
@@ -48,7 +48,7 @@ def _headline_lines(
 ) -> list[str]:
     """Grid size, how many words the search was handed, and the candidate count.
 
-    The word count is DISTINCT words, not lines of the file: `load_word_list`
+    The word count is distinct words, not lines of the file: `load_word_list`
     collapses duplicates and folds case before the search sees them, so a list
     holding a word twice has fewer words than it has lines. Saying "read" would
     invite the reader to check the number against their file's line count and
@@ -168,7 +168,7 @@ def _miss_lines(
 
     Modeled on `cw_report_remedy`'s "What would clear each": a verdict with no
     route out of it sends the reader back to `--help` for a knob that may not
-    help. Each remedy is offered only when it could actually apply -- dropping
+    help. Each remedy is offered only when it could actually apply: dropping
     `--exclude-grid-answers` cannot help a run where it removed nothing, and
     lowering `--min-length` cannot help a run where no word fell short of it;
     advertising either there would be advice that is simply false.
@@ -206,8 +206,8 @@ def render_search_report(
 
     An orchestrator only: each block is built by its own helper above, blocks
     are separated by a blank line so one can be found by its heading, and an
-    empty block drops out rather than leaving a heading with nothing under it
-    -- the same shape `cw_report.render_report` has.
+    empty block drops out rather than leaving a heading with nothing under it,
+    the same shape `cw_report.render_report` has.
 
     `distinct_words` is recovered from the result's own four counts rather
     than taken as a parameter: they partition the list by construction, so

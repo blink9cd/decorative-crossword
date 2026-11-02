@@ -1,8 +1,8 @@
 """Grouped suite: drawing the gaps `gaps --out` listed, on top of the blocks.
 
-`shade --out` could reuse the existing shading because it marks LETTERED cells.
+`shade --out` could reuse the existing shading because it marks lettered cells.
 This cannot: `cw_svg._cell_class` returns `BLOCK_CLASS` before it ever consults
-`shaded_cells`, deliberately -- shading IS the cell fill,
+`shaded_cells`, deliberately: shading is the cell fill,
 and a block's fill is the block. So a blocked cell handed to the shading path
 draws as an ordinary block and the operator sees nothing at all.
 
@@ -12,8 +12,8 @@ stylesheet actually paints the layer in something that shows against ink,
 because a mark present in the markup and invisible on the page is the exact
 failure this suite exists to prevent.
 
-`TestNoRegression` guards the other side. Every other render -- `fill`,
-`preview`, `shade` -- carries no gaps, so it must carry no gap layer or rule,
+`TestNoRegression` guards the other side. Every other render (`fill`,
+`preview`, `shade`) carries no gaps, so it must carry no gap layer or rule,
 which is what keeps `tests/test_samples.py` and `tests/test_samples_read.py`
 passing without the committed SVGs being churned for no reader's benefit.
 
@@ -86,7 +86,7 @@ class TestTheMarks(unittest.TestCase):
         self.assertEqual(len(_centers(_render(gaps=SAME_ROW_GAPS))), 2)
 
     def test_a_column_step_moves_the_mark_one_cell_right(self) -> None:
-        # Asserted as a DIFFERENCE so the test does not restate the geometry
+        # Asserted as a difference so the test does not restate the geometry
         # arithmetic it is checking: a second copy of that sum would pass
         # against a renderer that had drifted with it.
         first, second = _centers(_render(gaps=SAME_ROW_GAPS))
@@ -114,7 +114,7 @@ class TestVisible(unittest.TestCase):
     def test_the_layer_is_painted_in_the_page_color(self) -> None:
         # The block underneath is ink, so a mark inheriting the marker layer's
         # own ink would be a black ring on a black square. The page's own rule
-        # supplies the expected color, so this asserts a RELATION between two
+        # supplies the expected color, so this asserts a relation between two
         # rules of the one document rather than restating a hex literal that
         # would then be free to drift from the stylesheet.
         drawn = _render(gaps=SAME_ROW_GAPS)

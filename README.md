@@ -23,14 +23,29 @@ such letter that is not an island. The search may pass through a board that brea
 its way to a grid that keeps it, but no such board is ever accepted or written: whatever comes
 back, conforming or best-effort, obeys the rule in full.
 
-## Requirements
+## Install
 
-- Python 3.12 or newer. Every command below spells the interpreter `python`.
-- Standard library only: nothing to install to run the tool, and `dependencies` in
-  `pyproject.toml` is empty.
-- Offline: it opens no network connection, and the SVG it draws references no external font,
-  image, stylesheet or script.
-- Hypothesis, only to run the tests; see [Running the tests](#running-the-tests).
+Needs Python 3.12 or newer. Install into a virtual
+environment, because Homebrew and Debian Python refuse a
+system-wide `pip install`:
+
+```bash
+python3 -m venv .venv
+# shellcheck source=/dev/null # the activate script exists only once the line above has run
+source .venv/bin/activate
+pip install '.[test]'
+```
+
+The commands below assume the venv is active, so `python`
+is the venv's interpreter.
+
+On a system whose `python3` is older than 3.12, such as stock macOS, create the venv
+with `python3.12 -m venv .venv` instead.
+
+The tool itself uses only the standard library, and `dependencies` in `pyproject.toml` is
+empty; the `test` extra installs Hypothesis, which only the tests need. It runs offline: it
+opens no network connection, and the SVG it draws references no external font, image,
+stylesheet or script.
 
 ## Quickstart
 
@@ -366,18 +381,22 @@ before reporting one of those as a defect.
 
 ## Running the tests
 
-From the repository root:
+From the repository root, in the venv [Install](#install) set up:
 
 ```bash
-python -m pip install "hypothesis==6.165.10"
 python test_decorative_crossword.py
 ```
 
-The pin is the one `pyproject.toml` declares as the `test` extra, and nothing at runtime imports
-it. `test_decorative_crossword.py` runs every suite under `tests/`, the byte-for-byte sample
-comparisons included. The two libraries beside it carry their own:
-`python property_strategies/test_property_strategies.py` and
+`pip install '.[test]'` installed the Hypothesis pin `pyproject.toml` declares as the `test`
+extra, and nothing at runtime imports it. `test_decorative_crossword.py` runs every suite under
+`tests/`, the byte-for-byte sample comparisons included. The two libraries beside it carry their
+own: `python property_strategies/test_property_strategies.py` and
 `python stdio_utf8/test_stdio_utf8.py`.
+
+Two kinds of comment in the source are read by checks run before each release, and nothing
+here reads them. A `# fuzz-target` line marks a function that parses untrusted input, which
+must have a Hypothesis property test beside it. A `# reliability: ignore[RLnnn]` comment is a
+waiver for a reliability check, with its reason on the same line.
 
 ## License
 

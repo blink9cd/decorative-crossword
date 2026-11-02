@@ -9,7 +9,7 @@ aligned every answer on every letter, read the board cell by cell for each
 alignment and derived its runs twice per tried step, an 11x11 window took about 76
 seconds rather than 20. No grid, sample or node count differs between the two.
 
-So this suite pins the WORK, deterministically -- never a clock. Each test runs the
+So this suite pins the work, deterministically, never a clock. Each test runs the
 bounded-detour fixture of `test_search_interlock.py` and asserts two things: the
 walk reached the same grid on the same node, and no node read more than its
 question needs. The equivalence that lets the cheaper reads stand in for the
@@ -69,7 +69,7 @@ class TestADetourNodeBuildsOnlyItsRepairs(unittest.TestCase):
     def test_no_board_holding_a_walk_break_enumerates_every_crossing(self) -> None:
         # Every crossing on the board is the whole-board question; a detour node
         # keeps only the placements laid over its break, so building the rest
-        # was the cost -- on a 13x13 of a 1,758-answer bank, 62,600 fit checks a
+        # was the cost: on a 13x13 of a 1,758-answer bank, 62,600 fit checks a
         # node to keep about 150. The broken-board count proves the walk really
         # stood on such boards, so the empty list below is not vacuous.
         enumerated_on_broken: list[tuple[str, ...]] = []
@@ -136,8 +136,8 @@ class TestAStepCheckDerivesTheBoardsRunsOnce(unittest.TestCase):
     def test_no_step_check_derives_the_runs_twice(self) -> None:
         # A step that broke the rule derived the runs a second time, for the
         # answers already on the board, and a pinned board a third, for its
-        # pins. The step check is the walk's most frequent question -- about
-        # 455,000 tried steps in an 11x11 window, nearly all of them refused --
+        # pins. The step check is the walk's most frequent question (about
+        # 455,000 tried steps in an 11x11 window, nearly all of them refused),
         # so the runs are derived once and every half of the check reads them.
         per_check: list[int] = []
         derived = [0]
@@ -304,8 +304,8 @@ class TestTheFragmentIndexHoldsOnlyAnswersThatFit(unittest.TestCase):
     def test_the_index_holds_answers_up_to_the_longer_side_and_no_longer(
         self,
     ) -> None:
-        # One that fits only the LONGER side of a non-square grid can be laid,
-        # and leaving it out would prune legal paths -- so the bound is that
+        # One that fits only the longer side of a non-square grid can be laid,
+        # and leaving it out would prune legal paths, so the bound is that
         # side, either way round, which a square grid cannot tell apart.
         fits, too_long = "ABCDEFG", "ABCDEFGH"
         for rows, cols in ((5, 7), (7, 5)):

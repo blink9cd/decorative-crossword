@@ -1,21 +1,21 @@
 """What the picture says about itself: the caption's two tiers.
 
 Kept apart from `cw_svg` along a real seam, with its own suite
-(`tests/test_svg_caption.py`): everything here turns values into TEXT, and
+(`tests/test_svg_caption.py`): everything here turns values into text, and
 nothing here knows a rect from a viewBox.
 
 The caption has two tiers, and the division is the whole point of the module:
 
-- **Derivable from the grid** -- its size, its achieved blocked percentage, its
+- **Derivable from the grid**: its size, its achieved blocked percentage, its
   per-theme counts. Present on every render, however it was reached, because
   the grid alone supplies them.
-- **Configuration** -- the seed, the requested density range, the theme floor.
+- **Configuration**: the seed, the requested density range, the theme floor.
   These live nowhere in `grid_source.json`, so a bare `preview` cannot know
   them and stamps none of them. Inventing or defaulting them would put a number
   on the picture that nothing checked, which is worse than an absent field.
 
-Three lines sit in neither tier -- the featured answer, the hidden word and
-the count of fixed letters -- because each is supplied directly to the render
+Three lines sit in neither tier (the featured answer, the hidden word and
+the count of fixed letters) because each is supplied directly to the render
 and each names something actually marked on it.
 
 These functions take plain values rather than a `cw_svg.RenderRequest`: the
@@ -79,13 +79,13 @@ def derivable_line(
     every render however the render was reached. The percentage is `cw_grid`'s,
     not a second implementation of the density arithmetic.
 
-    A `--mask` is deliberately NOT consulted, so under one this figure and the
+    A `--mask` is deliberately not consulted, so under one this figure and the
     `fill` report's differ: the report measures over the cells the picture
     leaves and says so, while this measures the whole grid. That is the point.
     A caption is drawn by `preview` as much as by `fill`, from a
     `grid_source.json` that records no mask, so a mask-aware caption would
     either be a lie on the standalone path or a reason to write the mask into
-    the emitted grid -- and the picture is an input, not a property of the grid
+    the emitted grid, and the picture is an input, not a property of the grid
     it shaped.
     """
     cols = max((len(row) for row in rows), default=0)
@@ -129,7 +129,7 @@ def fixed_line(count: int) -> str:
 
     Without it the weight would be a mark with no key: the legend explains
     tints and markers, and nothing else on the picture says why some letters
-    are heavier. `count` is of letters DRAWN bold, so the line cannot claim
+    are heavier. `count` is of letters drawn bold, so the line cannot claim
     more than the grid shows.
     """
     return f"{_FIXED_PREFIX}{count}{_FIXED_SUFFIX}"

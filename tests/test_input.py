@@ -91,7 +91,7 @@ def _sparse(folder: str, size: int) -> Path:
 def _descriptors_seen() -> Iterator[tuple[list[int], list[int]]]:
     """The descriptors `cw_input` opens, and those it closes, inside the block.
 
-    Both calls are recorded as they happen rather than inferred afterwards:
+    Both calls are recorded as they happen rather than inferred afterward:
     a descriptor number freed by a close can be handed straight back out by
     the next open, so probing the old number later proves nothing.
     """

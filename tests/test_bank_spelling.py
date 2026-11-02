@@ -1,8 +1,8 @@
 """Tests for a bank answer written with spaces, hyphens or apostrophes.
 
-The bank keys such an entry by its GRID form, letters only, and keeps what the
-operator wrote as `spelling`. Everything that compares answers -- the repeat
-check, the merge of several banks, the `--excluded-terms` screen -- therefore
+The bank keys such an entry by its grid form, letters only, and keeps what the
+operator wrote as `spelling`. Everything that compares answers (the repeat
+check, the merge of several banks, the `--excluded-terms` screen) therefore
 compares letters, and two spellings of one answer are one answer.
 
 Entry point assumptions: run through `test_decorative_crossword.py`'s

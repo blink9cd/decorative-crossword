@@ -28,7 +28,7 @@ class TestRunsFromRows(unittest.TestCase):
     def test_across_run_start_is_not_always_the_line_origin(self) -> None:
         # Every other case in this class starts its run at offset 0 of its scan
         # line, which never exercises the "start partway through the line"
-        # arithmetic -- a stretch_start hardcoded to 0 would still pass them
+        # arithmetic: a stretch_start hardcoded to 0 would still pass them
         # all. This run starts at column 1.
         (run,) = cw_grid.runs_from_rows((".AB",))
         self.assertEqual((run.row, run.col), (0, 1))
@@ -56,7 +56,7 @@ class TestFindAnswer(unittest.TestCase):
 
 
 class TestBlockedPercent(unittest.TestCase):
-    """Density is percent BLOCKED cells."""
+    """Density is percent blocked cells."""
 
     def test_counts_blocks_over_area(self) -> None:
         # 3x3 = 9 cells, 3 of them blocked: "O.." and "W.T" contribute 2 + 1.
@@ -68,7 +68,7 @@ class TestBlockedPercent(unittest.TestCase):
         self.assertEqual(cw_grid.blocked_percent(("..", "..")), 100.0)
 
     def test_empty_grid_is_zero_not_a_division_error(self) -> None:
-        # No cells at all -- the divide-by-zero guard, not the general formula.
+        # No cells at all: the divide-by-zero guard, not the general formula.
         self.assertEqual(cw_grid.blocked_percent(()), 0.0)
 
     def test_a_masked_cell_leaves_both_the_numerator_and_the_denominator(self) -> None:
@@ -91,7 +91,7 @@ class TestBlockedPercent(unittest.TestCase):
 
     def test_a_masked_grid_with_no_usable_cell_is_zero(self) -> None:
         # `cw_mask` refuses a wholly-masked picture, so no command line reaches
-        # this -- but the guard is the same honest answer the empty grid gets,
+        # this, but the guard is the same honest answer the empty grid gets,
         # and without it the arithmetic divides by zero.
         self.assertEqual(
             cw_grid.blocked_percent(("..",), frozenset({(0, 0), (0, 1)})), 0.0
@@ -144,12 +144,12 @@ class TestGrid(unittest.TestCase):
             grid.set_letter(2, 0, "A")
 
     def test_letter_rejects_a_negative_column(self) -> None:
-        # The COLUMN half of the same wrap the negative-row case above covers.
+        # The column half of the same wrap the negative-row case above covers.
         # `_validate_index` is `0 <= row < rows` and `0 <= col < cols`, and the
         # two halves are independent: with only the row case tested, deleting
         # `0 <= col` leaves every negative column wrapping silently to the far
-        # edge -- the exact failure the guard's docstring says it exists to
-        # catch -- with the whole suite green.
+        # edge (the exact failure the guard's docstring says it exists to
+        # catch), with the whole suite green.
         grid = cw_grid.Grid(2, 2)
         with self.assertRaises(ValueError):
             grid.letter(0, -1)
@@ -168,7 +168,7 @@ class TestGrid(unittest.TestCase):
 
     def test_set_letter_rejects_a_letter_outside_a_to_z(self) -> None:
         # A single character that fails the length check trivially (it is
-        # exactly one character) still must not pass the range check -- this
+        # exactly one character) still must not pass the range check: this
         # is a distinct assertion from the multi-character case above, since
         # `len(letter) != 1 or not ("A" <= letter <= "Z")` short-circuits on
         # the first clause and would never reach the second for "AB".
@@ -177,10 +177,10 @@ class TestGrid(unittest.TestCase):
             grid.set_letter(0, 0, "a")
 
     def test_set_letter_rejects_the_block_character(self) -> None:
-        # The LOWER half of the same range check. "a" is above "Z" and so is
+        # The lower half of the same range check. "a" is above "Z" and so is
         # rejected by `letter <= "Z"` alone; BLOCK is below "A" and is the only
         # case that needs `"A" <= letter`. Deleting that clause leaves the
-        # suite green while `set_letter` happily writes a BLOCK -- which the
+        # suite green while `set_letter` happily writes a BLOCK, which the
         # guard's own docstring names as a case it rejects, and which corrupts
         # the one-character-per-cell row string every consumer parses. `clear`
         # is how a caller blocks a cell.
@@ -229,7 +229,7 @@ class TestValidateRows(unittest.TestCase):
             cw_grid.validate_rows([["C", "A", "T"]])
 
     def test_rejects_a_later_row_that_is_not_a_string(self) -> None:
-        # Distinct from the case above: a non-string FIRST row is refused by
+        # Distinct from the case above: a non-string first row is refused by
         # the width-establishing check, so the per-row type check is reachable
         # only from row 1 onward.
         with self.assertRaises(ValueError) as caught:

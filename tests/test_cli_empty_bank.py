@@ -1,9 +1,9 @@
 """End-to-end: `--excluded-terms` empties a bank that parsed perfectly well.
 
 `cw_bank.parse_bank` refuses an empty `entries` list at exit 2, so this state
-is unreachable from a file -- but `screen_excluded` is
+is unreachable from a file, but `screen_excluded` is
 documented never to fail a run, which makes an emptied bank reachable from a
-term list. It is an input SHAPE the rest of the suite never contains, and every
+term list. It is an input shape the rest of the suite never contains, and every
 block of the report that reasons over `bank.entries` reads differently on it:
 three separate sentences would be vacuously true, or vacuously false, at once.
 
@@ -19,7 +19,7 @@ import decorative_crossword
 from tests import cli_fixtures
 
 #: Two answers, no themes. Two rather than one so "the bank holds no answers"
-#: is reached by REMOVING several, which is the shape an operator's term list
+#: is reached by removing several, which is the shape an operator's term list
 #: actually produces, and so the partial case below has something to leave.
 _TWO_ANSWERS = ("ALPHA", "AMBER")
 
@@ -29,7 +29,7 @@ _SMALL_BANK: dict[str, object] = {
 }
 
 #: The sentence a vacuous `any()` over an empty bank would produce. Asserted
-#: ABSENT: it is flatly untrue of zero answers, and it points the operator at
+#: absent: it is flatly untrue of zero answers, and it points the operator at
 #: the grid size when the cause is their own term list.
 _FALSE_LENGTH_CLAIM = "no bank answer is short enough"
 
@@ -94,7 +94,7 @@ class TestScreenedEmptyBank(cli_fixtures.QuietCase):
     def test_a_partly_screened_bank_keeps_every_block_it_should(self) -> None:
         # The other side of every guard added for the empty case. One answer
         # survives, so the length block, the ordinary "unplaced" wording and
-        # the absence of the empty-bank sentence must all come back -- a guard
+        # the absence of the empty-bank sentence must all come back: a guard
         # that fired unconditionally would pass the four tests above and fail
         # this one. Exit 0: one five-letter answer on this 9x9 at the
         # workspace's own 0-95% window is a conforming grid.

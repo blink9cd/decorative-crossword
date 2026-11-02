@@ -1,8 +1,8 @@
 """Tests for cw_svg: a well-formed, self-contained, stable render.
 
 Every assertion about structure goes through a real XML parse. The failure this
-subject exists to prevent -- an unescaped `&` producing a document that renders
-as a blank page with no error -- satisfies "the file was written" and every
+subject exists to prevent (an unescaped `&` producing a document that renders
+as a blank page with no error) satisfies "the file was written" and every
 substring check, and is caught only by parsing.
 """
 
@@ -21,7 +21,7 @@ def _cell_position(index: int, cols: int) -> tuple[int, int]:
 class TestDocumentShape(unittest.TestCase):
     """The render parses, roots as SVG, and repeats itself byte for byte.
 
-    It does NOT ask whether the document reaches outside itself: every fetch
+    It does not ask whether the document reaches outside itself: every fetch
     assertion lives in `test_svg_containment.py`, beside the whitelists that
     make that question answerable.
     """
@@ -40,7 +40,7 @@ class TestDocumentShape(unittest.TestCase):
 
     def test_declares_the_svg_namespace(self) -> None:
         # A document without the SVG namespace parses as XML and renders as
-        # nothing at all -- the same blank page an escaping bug produces, so it
+        # nothing at all, the same blank page an escaping bug produces, so it
         # needs its own pin rather than riding on the parse test.
         root = fixtures.parse(cw_svg.render_svg(fixtures.request()))
         self.assertEqual(root.tag, f"{{{cw_svg.SVG_NAMESPACE}}}svg")
@@ -85,7 +85,7 @@ class TestGridDrawing(unittest.TestCase):
         self.assertEqual(len(fixtures.cell_classes(rendered)), expected)
 
     def test_blocked_cells_carry_the_block_class_in_row_major_order(self) -> None:
-        # Pins BOTH the block class and the emission order every other
+        # Pins both the block class and the emission order every other
         # index-to-cell assertion in this suite relies on.
         rendered = cw_svg.render_svg(fixtures.wide_request())
         cols = len(fixtures.WIDE_ROWS[0])
@@ -116,8 +116,8 @@ class TestGridDrawing(unittest.TestCase):
 
     def test_letters_land_at_their_own_cells(self) -> None:
         # Reading the drawn letters back in geometric order reconstructs the
-        # grid. On a NON-SQUARE grid this fails loudly if rows and columns are
-        # transposed anywhere in the geometry -- on a square one it would not.
+        # grid. On a non-square grid this fails loudly if rows and columns are
+        # transposed anywhere in the geometry: on a square one it would not.
         rendered = cw_svg.render_svg(fixtures.wide_request())
         drawn = fixtures.children(rendered, cw_svg.LETTER_LAYER, "text")
         in_reading_order = sorted(
@@ -291,14 +291,14 @@ class TestFeatureShading(unittest.TestCase):
 
     def test_shaded_cell_count_matches_the_answer_length(self) -> None:
         # Counting the shading class is what catches a render that shades a whole
-        # row instead of one entry -- a picture that still looks plausible.
+        # row instead of one entry: a picture that still looks plausible.
         rendered = cw_svg.render_svg(fixtures.request(feature="COW"))
         self.assertEqual(rendered.count(cw_svg.FEATURE_CLASS), 3)
 
     def test_shades_exactly_the_cells_the_answer_occupies(self) -> None:
         # PEAR runs DOWN the first column of the wide grid. Reading the shaded
         # positions back out is what separates a coordinate bug from a render
-        # that merely shades the right NUMBER of cells.
+        # that merely shades the right number of cells.
         rendered = cw_svg.render_svg(fixtures.wide_request(feature="PEAR"))
         cols = len(fixtures.WIDE_ROWS[0])
         shaded = {

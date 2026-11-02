@@ -5,7 +5,7 @@ grid file follow a schema this tool defines, so a label carrying a control
 character is refused at exit 2 before anything is written or printed. A word
 list is free text read line by line, whose unusable lines are skipped and
 named in the report, so a skipped line is shown with each such character
-escaped -- visibly, so the operator can see the line held something odd --
+escaped (visibly, so the operator can see the line held something odd)
 rather than refused.
 
 A bidi control is escaped wherever the report prints a label or a skipped

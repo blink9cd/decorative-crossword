@@ -2,14 +2,15 @@
   "files": {
     ".gitattributes": "sha256:41cabf61036eea9e0e50802ddf5c7a32cf120e7ed00c873b53cf71cb72594a2f",
     ".gitignore": "sha256:80b73fae99ab3443d9ffc2ab91b52bc4ec3efa2c7092c24d2d7ba48a90090066",
-    "CHANGELOG.md": "sha256:c8b4286da92ceb7dc94deeab44dcfe3f675c284c0be9e4acf934be7df1f84d22",
+    "CHANGELOG.md": "sha256:dc625d0557d36812d1525e3a37767900588c081fa9b0f9f1f585e363e4fd43e4",
     "KNOWN_TRADEOFFS.md": "sha256:f1bff37f20ae47ccba3074c701770d3277a1748efbf75e9ff953b03cf2cc5431",
-    "LICENSE": "sha256:480bc086cc31abd0ec8598db97abf2a5490bf30613bc209342a4e2c71a0f8b87",
+    "LICENSE": "sha256:57c8ff33c9c0cfc3ef00e650a1cc910d7ee479a8bc509f6c9209a7c2a11399d6",
+    "NOTICE": "sha256:327ceae4f0e5a0b8baa3c5cef657cc5bf1ed0d00964e056974dd774243224489",
     "README.md": "sha256:1c4384f6bdaf9ccd9862bafec417a3b1647862b48491b00bc5b2cf5a85f5c617",
     "decorative_crossword.py": "sha256:9bd662d2ee732bfb9f633b049017bbcafdf2424bcc7244412ab4b2cdadb2fb23",
     "property_strategies/property_strategies.py": "sha256:1a1961f13c5a04ab5c744fe03f3fd25407a5a5336bd8227ce391a1f9e31cb310",
     "property_strategies/test_property_strategies.py": "sha256:6591d231ac48cf2d3516377d0f5e2a434c980d718a773bea09a5020a9691d591",
-    "pyproject.toml": "sha256:7e7430ee2e9cdf8d4b5baa0ef289b8e75f17219d4468ed77bfb82a95ab2c94a4",
+    "pyproject.toml": "sha256:3a28524923951d752e2f2fa3a25a96e3879d9217dc43279d07f3ccaa430563ef",
     "samples/README.md": "sha256:00f249b30d96ebb1e198b5b71a668c7f41343753acf54c5de5a9f97048b8afcb",
     "samples/absorbed_grid/bank.json": "sha256:79e5ebff5fe58dbddf222dcad263ba13f1a74f698f17b3bdb23472d5c10028d2",
     "samples/absorbed_grid/grid_source.json": "sha256:44f37055f94b210671d359f5f58020e8bad142c8115d83bd52d7e1c15aac51d9",
@@ -247,6 +248,6 @@
   },
   "name": "decorative-crossword",
   "schema": 1,
-  "source_commit": "daae2208d560b950347288aba8070bf9b91b8922",
-  "version": "0.1.2"
+  "source_commit": "9afc032130366c58dfaa87269ce45983b633921e",
+  "version": "0.1.3"
 }

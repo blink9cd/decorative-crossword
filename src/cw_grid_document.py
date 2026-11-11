@@ -5,7 +5,7 @@
 document that cannot be used is refused as `cw_emit.EmitError`, the writer's
 own error type, so a caller has one name to catch whether a document failed
 on its way out or on its way back in. A theme label or summary read here
-passes the writer's own screen, `cw_emit._screened`, so each is refused on
+passes the writer's own screen, `cw_emit.screened`, so each is refused on
 the way in exactly as it would be on the way out.
 """
 
@@ -21,7 +21,7 @@ import cw_grid
 import cw_input
 import cw_json
 import cw_text
-from cw_emit import EmitError, _screened
+from cw_emit import EmitError, screened
 
 
 @dataclass(frozen=True)
@@ -86,7 +86,7 @@ def _theme_field(record: Mapping[str, object], key: str, field: str) -> str:
             f"theme {cw_text.shown(key)} {field} must be a string, "
             f"got {cw_text.shown(value)}"
         )
-    return _screened(value, f"the {field} for theme {cw_text.shown(key)}")
+    return screened(value, f"the {field} for theme {cw_text.shown(key)}")
 
 
 def _parse_themes(payload: object) -> dict[str, cw_bank.ThemeInfo]:

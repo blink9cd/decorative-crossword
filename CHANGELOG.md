@@ -2,6 +2,15 @@
 
 Notable changes to this project, newest first.
 
+## 0.1.4 - 2026-11-11
+
+### Fixed
+
+- Checking how deeply a bank or grid file nests now uses memory in
+  proportion to the nesting, not to the file's width. A file that is
+  one long array of objects or arrays used to need about twice the
+  memory of parsing it, and now needs about the same.
+
 ## 0.1.3 - 2026-11-10
 
 ### Changed

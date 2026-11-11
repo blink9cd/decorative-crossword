@@ -82,7 +82,7 @@ class EmitError(ValueError):
     """Raised when a document cannot be built or written safely."""
 
 
-def _screened(text: str, description: str) -> str:
+def screened(text: str, description: str) -> str:
     """Return `text`, or raise EmitError naming what makes it unsafe to emit.
 
     Rejects rather than sanitizes, for the same reason `cw_bank` rejects such
@@ -91,6 +91,10 @@ def _screened(text: str, description: str) -> str:
     one hazard should not get two different answers. `description` names the
     offending string in the operator's own vocabulary, so the message points at
     the record to fix.
+
+    Public because `cw_grid_document` screens each theme field it reads back
+    with this same call, so a document is refused on the way in exactly as it
+    would be on the way out.
     """
     fragment = cw_config.forbidden_clue_fragment(text)
     if fragment is not None:
@@ -117,7 +121,7 @@ def _clue_for(answer: str, entry: cw_bank.BankEntry | None) -> str:
     """
     if entry is not None and entry.clue is not None:
         clue = cw_answer.with_enumeration(entry.clue, entry.spelling)
-        return _screened(clue, f"the bank clue for {cw_text.shown(answer)}")
+        return screened(clue, f"the bank clue for {cw_text.shown(answer)}")
     return ""
 
 
@@ -136,7 +140,7 @@ def _screened_theme_key(entry: cw_bank.BankEntry | None) -> str | None:
     """
     if entry is None or entry.theme is None:
         return None
-    return _screened(entry.theme, "an entry's theme key")
+    return screened(entry.theme, "an entry's theme key")
 
 
 def _clue_record(
@@ -190,10 +194,10 @@ def build_document(
             # the half-covered seam this screen exists to close.
             info = bank.themes[theme]
             themes[theme] = {
-                "label": _screened(
+                "label": screened(
                     info.label, f"the label for theme {cw_text.shown(theme)}"
                 ),
-                "summary": _screened(
+                "summary": screened(
                     info.summary, f"the summary for theme {cw_text.shown(theme)}"
                 ),
             }

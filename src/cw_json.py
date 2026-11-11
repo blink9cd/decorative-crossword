@@ -36,7 +36,7 @@ from __future__ import annotations
 
 import functools
 import json
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterator
 
 import cw_text
 
@@ -54,6 +54,10 @@ _TOO_DEEP = (
     f"it nests more than {MAX_DEPTH} objects and arrays deep, and neither a "
     "bank nor a grid file needs more than three"
 )
+
+#: What `_deeper_than` reads from an iterator it has used up. Its own object,
+#: because every value a JSON member can hold, `None` included, is a member.
+_EXHAUSTED = object()
 
 #: One step from a value to a member of it: an object's key or an array's index.
 type _Step = str | int
@@ -189,24 +193,22 @@ def _deeper_than(payload: object, limit: int) -> bool:
     """Whether `payload` nests more than `limit` objects and arrays deep.
 
     An explicit stack rather than recursion, because its whole job is to
-    measure a value that may be too deep for recursion to walk. Only objects
-    and arrays are pushed: a scalar adds no depth, and an entry kept for each
-    one would cost several times what the parsed value itself does when a
-    file is one long array of numbers.
+    measure a value that may be too deep for recursion to walk. The stack
+    holds one iterator per object or array still open on the way down, so its
+    length is the depth reached and its cost is the nesting's, never the
+    width's: an entry kept for each sibling cost about twice what parsing did
+    on a long array of containers, and several times that on one of numbers.
+    The bottom iterator yields `payload` alone, so the top-level value is met
+    at depth one like any other.
     """
-    pending: list[tuple[object, int]] = [(payload, 1)]
-    while pending:
-        value, depth = pending.pop()
-        children: Iterable[object]
-        if isinstance(value, dict):
-            children = value.values()
-        elif isinstance(value, list):
-            children = value
-        else:
-            continue
-        if depth > limit:
-            return True
-        pending.extend(
-            (child, depth + 1) for child in children if isinstance(child, (dict, list))
-        )
+    open_levels: list[Iterator[object]] = [iter((payload,))]
+    while open_levels:
+        child = next(open_levels[-1], _EXHAUSTED)
+        if child is _EXHAUSTED:
+            open_levels.pop()
+        elif isinstance(child, (dict, list)):
+            if len(open_levels) > limit:
+                return True
+            members = child.values() if isinstance(child, dict) else child
+            open_levels.append(iter(members))
     return False

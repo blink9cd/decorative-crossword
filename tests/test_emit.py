@@ -233,6 +233,15 @@ class TestClueScreen(unittest.TestCase):
         self.assertEqual(_clues(document)["CAT"]["theme"], "pets")
         self.assertEqual(_clues(document)["COW"]["theme"], "pets")
 
+    def test_the_screen_is_public_for_a_reader_of_the_document(self) -> None:
+        # `cw_grid_document` screens the theme fields it reads with this same
+        # call, so it is part of the writer's public surface, not a private
+        # helper another module reaches into.
+        self.assertEqual(cw_emit.screened("Pets", "a label"), "Pets")
+        with self.assertRaises(cw_emit.EmitError) as caught:
+            cw_emit.screened("Pets </script>", "a label")
+        self.assertIn("a label must not contain", str(caught.exception))
+
 
 class TestDumpsDocument(unittest.TestCase):
     """Serialization is stable, so a committed sample can be pinned."""

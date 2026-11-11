@@ -68,6 +68,11 @@ _DEEPER = 1_000_000
 #: small integer, so the parsed array costs a pointer per value and no more.
 _FLAT_LENGTH = 100_000
 
+#: How many times the parse's own peak an array of empty arrays may cost.
+#: Between the two walks measured on CPython 3.14: one entry per sibling came
+#: to about 2.1, one entry per level of nesting to about 1.0.
+_CONTAINER_BOUND = 1.5
+
 #: An object naming one key twice at the top of the file. Neither format has a
 #: key `a`, which does not matter: the repeat is refused before the file's
 #: shape is looked at.
@@ -242,6 +247,15 @@ class TestDepthCost(unittest.TestCase):
         # entry for every value in the array measured about nine times what
         # parsing alone did, on CPython 3.14.
         self.assertLess(_peak_bytes(cw_json.loads, text), 2 * parsed)
+
+    def test_an_array_of_containers_costs_little_more_than_parsing_it(self) -> None:
+        # Every member is a container, so none is filtered out the way a
+        # scalar is: a walk that kept an entry for each sibling measured about
+        # twice what parsing alone did, on CPython 3.14. A walk holding one
+        # entry per level of nesting stays near the parse's own cost.
+        text = "[" + ",".join(["[]"] * _FLAT_LENGTH) + "]"
+        parsed = _peak_bytes(json.loads, text)
+        self.assertLess(_peak_bytes(cw_json.loads, text), _CONTAINER_BOUND * parsed)
 
 
 class TestRepeatedKey(unittest.TestCase):

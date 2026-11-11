@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "decorative-crossword"
-version = "0.1.3"
+version = "0.1.4"
 description = "Offline crossword grid generator: fills a grid from a word bank"
 readme = "README.md"
 license = "AGPL-3.0-or-later"
